@@ -78,3 +78,6 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+flob_foundation:
+    theme: { form: true, knp_menu: true, knp_paginator: true }
