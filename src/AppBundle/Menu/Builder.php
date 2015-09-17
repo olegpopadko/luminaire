@@ -27,7 +27,7 @@ class Builder extends ContainerAware
         );
 
         if ($this->container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
-            $menu->addChild('Logout', ['route' => 'logout']);
+            $menu->addChild($this->container->get('translator')->trans('Logout'), ['route' => 'logout']);
         }
 
         return $menu;
