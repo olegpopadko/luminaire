@@ -12,14 +12,23 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 
 class Builder extends ContainerAware
 {
-    public function mainMenu(FactoryInterface $factory, array $options)
+    /**
+     * @param FactoryInterface $factory
+     * @return \Knp\Menu\ItemInterface
+     */
+    public function mainMenu(FactoryInterface $factory)
     {
         $menu = $factory->createItem(
-            'Luminaire', [
+            'Luminaire',
+            [
                 'route'  => 'homepage',
                 'extras' => ['menu_type' => 'topbar']
             ]
         );
+
+        if ($this->container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            $menu->addChild('Logout', ['route' => 'logout']);
+        }
 
         return $menu;
     }

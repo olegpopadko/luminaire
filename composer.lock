@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "972f967771d49fd6c016bff40fc34bfe",
-    "content-hash": "b94e1d8f35fc2ee4e1d808a7b91cb074",
+    "hash": "8d967e1551576b098ce1116fe329c4a0",
+    "content-hash": "437bea987d0205ccfbde152354beed3e",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1123,23 +1123,23 @@
         },
         {
             "name": "knplabs/knp-paginator-bundle",
-            "version": "2.4.2",
+            "version": "2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/KnpPaginatorBundle.git",
-                "reference": "800eb12f225573869b6f04d77a6e329a6da9110f"
+                "reference": "4a1daf55560ca7cf9c13b357135d72f4dc13375f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/KnpPaginatorBundle/zipball/800eb12f225573869b6f04d77a6e329a6da9110f",
-                "reference": "800eb12f225573869b6f04d77a6e329a6da9110f",
+                "url": "https://api.github.com/repos/KnpLabs/KnpPaginatorBundle/zipball/4a1daf55560ca7cf9c13b357135d72f4dc13375f",
+                "reference": "4a1daf55560ca7cf9c13b357135d72f4dc13375f",
                 "shasum": ""
             },
             "require": {
                 "knplabs/knp-components": "~1.2",
                 "php": ">=5.3.3",
-                "symfony/framework-bundle": "~2.0",
-                "twig/twig": "~1.5"
+                "symfony/framework-bundle": "~2.3",
+                "twig/twig": "~1.12"
             },
             "require-dev": {
                 "symfony/expression-language": "~2.4"
@@ -1180,7 +1180,7 @@
                 "pagination",
                 "paginator"
             ],
-            "time": "2015-05-20 15:09:02"
+            "time": "2015-09-07 04:31:31"
         },
         {
             "name": "kriswallsmith/assetic",
@@ -2012,7 +2012,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.4"
+        "php": ">=5.5"
     },
     "platform-dev": []
 }

@@ -3,6 +3,8 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\Role\Role;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * User
@@ -10,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="AppBundle\Entity\UserRepository")
  */
-class User
+class User implements UserInterface, \Serializable
 {
     /**
      * @var integer
@@ -55,7 +57,6 @@ class User
      * @ORM\Column(name="timezone", type="smallint")
      */
     private $timezone;
-
 
     /**
      * Get id
@@ -194,5 +195,44 @@ class User
     public function getTimezone()
     {
         return $this->timezone;
+    }
+
+    /**
+     * {@inheritdoc}}
+     */
+    public function eraseCredentials()
+    {
+    }
+
+    /**
+     * {@inheritdoc}}
+     */
+    public function getRoles()
+    {
+        return ['ROLE_OPERATOR'];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->username,
+            $this->password,
+        ));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->username,
+            $this->password,
+            ) = unserialize($serialized);
     }
 }
