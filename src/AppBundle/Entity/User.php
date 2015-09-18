@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -26,6 +27,9 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=255)
+     * @Assert\NotBlank(groups={"update"})
+     * @Assert\Length(max=255, groups={"update"})
+     * @Assert\Email(groups={"update"})
      */
     private $email;
 
@@ -33,6 +37,8 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="username", type="string", length=45)
+     * @Assert\NotBlank(groups={"update"})
+     * @Assert\Length(max=45, groups={"update"})
      */
     private $username;
 
@@ -40,6 +46,8 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="full_name", type="string", length=255)
+     * @Assert\NotBlank(groups={"update"})
+     * @Assert\Length(max=255, groups={"update"})
      */
     private $fullName;
 
@@ -47,13 +55,17 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="password", type="string", length=64)
+     * @Assert\NotBlank()
+     * @Assert\Length(max=4096, groups={"update"})
      */
     private $password;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="timezone", type="smallint")
+     * @ORM\Column(name="timezone", type="string", length=45)
+     * @Assert\NotBlank(groups={"update"})
+     * @Assert\Length(max=45, groups={"update"})
      */
     private $timezone;
 
@@ -65,6 +77,7 @@ class User implements UserInterface, \Serializable
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
      *      )
+     * @Assert\NotBlank(groups={"update"})
      */
     private $roles;
 
@@ -259,11 +272,11 @@ class User implements UserInterface, \Serializable
      */
     public function serialize()
     {
-        return serialize(array(
+        return serialize([
             $this->id,
             $this->username,
             $this->password,
-        ));
+        ]);
     }
 
     /**

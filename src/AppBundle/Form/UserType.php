@@ -17,10 +17,15 @@ class UserType extends AbstractType
             ->add('email')
             ->add('username')
             ->add('fullName')
-            ->add('password')
-            ->add('timezone')
-            ->add('roles')
-        ;
+            ->add('password', 'password', [
+                'required' => false,
+            ])
+            ->add('timezone', 'timezone')
+            ->add('roles', null, [
+                'required' => true,
+                'expanded' => true,
+                'multiple' => true,
+            ]);
     }
 
     /**
@@ -28,9 +33,9 @@ class UserType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'data_class' => 'AppBundle\Entity\User'
-        ));
+        ]);
     }
 
     /**

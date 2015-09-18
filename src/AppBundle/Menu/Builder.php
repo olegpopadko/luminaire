@@ -8,13 +8,14 @@
 namespace AppBundle\Menu;
 
 use Knp\Menu\FactoryInterface;
+use Knp\Menu\ItemInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
 class Builder extends ContainerAware
 {
     /**
      * @param FactoryInterface $factory
-     * @return \Knp\Menu\ItemInterface
+     * @return ItemInterface
      */
     public function mainMenu(FactoryInterface $factory)
     {
@@ -26,10 +27,23 @@ class Builder extends ContainerAware
             ]
         );
 
+        $this->buildAdminItem($menu);
+
         if ($this->container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             $menu->addChild($this->container->get('translator')->trans('Logout'), ['route' => 'logout']);
         }
 
         return $menu;
+    }
+
+    /**
+     * @param ItemInterface $menu
+     */
+    private function buildAdminItem(ItemInterface $menu)
+    {
+        if ($this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+            $menu->addChild($this->container->get('translator')->trans('Adminstration'))
+                ->addChild($this->container->get('translator')->trans('Users'), ['route' => 'admin_user']);
+        }
     }
 }
