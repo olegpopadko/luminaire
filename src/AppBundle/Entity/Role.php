@@ -30,6 +30,14 @@ class Role implements RoleInterface
     private $role;
 
     /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return ucfirst(strtolower(preg_replace('/^ROLE_/', '', $this->getRole())));
+    }
+
+    /**
      * Get id
      *
      * @return integer
