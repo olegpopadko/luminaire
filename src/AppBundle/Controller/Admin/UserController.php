@@ -91,7 +91,6 @@ class UserController extends Controller
      * @Route("/new", name="admin_user_new")
      * @Method("GET")
      * @Template()
-     * @Security("has_role('ROLE_ADMIN')")
      */
     public function newAction()
     {
