@@ -22,7 +22,8 @@
         "florianbelhomme/flob-foundation-bundle": "~2.1.0",
         "knplabs/knp-menu-bundle": "~2",
         "knplabs/knp-paginator-bundle": "~2",
-        "phpunit/phpunit": "~4.8"
+        "phpunit/phpunit": "~4.8",
+        "doctrine/doctrine-fixtures-bundle": "~2.2"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"
