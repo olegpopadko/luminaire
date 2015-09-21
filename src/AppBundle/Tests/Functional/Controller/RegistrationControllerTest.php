@@ -49,20 +49,41 @@ class RegistrationControllerTest extends \AppBundle\Tests\Functional\TestCase
         $this->assertTrue($container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'));
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testRegistrationEmptyTimezone()
+    public function testRegistrationEmailIsAlreadyUsed()
     {
         $client = static::createClient();
 
         $crawler = $client->request('GET', '/sign_up');
 
         $form = $crawler->filter('button')->form([
-            'appbundle_registration[timezone]' => '',
+            'appbundle_registration[email]' => 'new@test.com',
         ]);
 
-        $client->submit($form);
+        $crawler = $client->submit($form);
+
+        $this->assertEquals(
+            'This email is already used.',
+            $crawler->filter('small.error')->first()->html()
+        );
+    }
+
+    public function testRegistrationUserNameIsAlreadyUsed()
+    {
+        $client = static::createClient();
+
+        $crawler = $client->request('GET', '/sign_up');
+
+        $form = $crawler->filter('button')->form([
+            'appbundle_registration[email]'    => 'new2@test.com',
+            'appbundle_registration[username]' => 'new',
+        ]);
+
+        $crawler = $client->submit($form);
+
+        $this->assertEquals(
+            'This username is already used.',
+            $crawler->filter('small.error')->first()->html()
+        );
     }
 
     public function testRegistrationWrongEmail()
@@ -81,6 +102,22 @@ class RegistrationControllerTest extends \AppBundle\Tests\Functional\TestCase
             'This value is not a valid email address.',
             $crawler->filter('small.error')->first()->html()
         );
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testRegistrationEmptyTimezone()
+    {
+        $client = static::createClient();
+
+        $crawler = $client->request('GET', '/sign_up');
+
+        $form = $crawler->filter('button')->form([
+            'appbundle_registration[timezone]' => '',
+        ]);
+
+        $client->submit($form);
     }
 
     public function testRegistrationErrorField()

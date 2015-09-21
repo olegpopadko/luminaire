@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -11,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="AppBundle\Entity\UserRepository")
+ * @UniqueEntity("email", message="This email is already used.")
+ * @UniqueEntity("username", message="This username is already used.")
  */
 class User implements UserInterface, \Serializable
 {
@@ -26,7 +29,7 @@ class User implements UserInterface, \Serializable
     /**
      * @var string
      *
-     * @ORM\Column(name="email", type="string", length=255)
+     * @ORM\Column(name="email", type="string", length=255, unique=true)
      * @Assert\NotBlank()
      * @Assert\Length(max=255)
      * @Assert\Email()
@@ -36,7 +39,7 @@ class User implements UserInterface, \Serializable
     /**
      * @var string
      *
-     * @ORM\Column(name="username", type="string", length=45)
+     * @ORM\Column(name="username", type="string", length=45, unique=true)
      * @Assert\NotBlank()
      * @Assert\Length(max=45)
      */
