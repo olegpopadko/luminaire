@@ -1,12 +1,19 @@
 <?php
 
-namespace AppBundle\Tests\Controller;
+namespace AppBundle\Tests\Functional\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
-class DefaultControllerTest extends WebTestCase
+class DefaultControllerTest extends \AppBundle\Tests\Functional\TestCase
 {
-    public function testIndex()
+    public function testRedirectForAnonymous()
+    {
+        $client = static::createClient();
+
+        $client->request('GET', '/');
+
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
+    }
+
+    public function testLogin()
     {
         $client = static::createClient();
 

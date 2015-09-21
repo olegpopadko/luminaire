@@ -10,3 +10,5 @@
 /vendor/
 /web/bundles/
 .idea/
+/app/data/*
+!app/data/.gitkeep

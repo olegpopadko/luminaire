@@ -207,7 +207,7 @@ class User implements UserInterface, \Serializable
     /**
      * Set timezone
      *
-     * @param integer $timezone
+     * @param string $timezone
      *
      * @return User
      */
@@ -221,7 +221,7 @@ class User implements UserInterface, \Serializable
     /**
      * Get timezone
      *
-     * @return integer
+     * @return string
      */
     public function getTimezone()
     {
