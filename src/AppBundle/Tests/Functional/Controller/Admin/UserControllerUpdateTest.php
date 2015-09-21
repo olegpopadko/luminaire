@@ -4,7 +4,7 @@ namespace AppBundle\Tests\Functional\Controller\Admin;
 
 use AppBundle\Tests\Functional\TestCase;
 
-class UserControllerTest extends TestCase
+class UserControllerUpdateTest extends TestCase
 {
     public function setUp()
     {
@@ -12,48 +12,31 @@ class UserControllerTest extends TestCase
         $this->logInAdmin();
     }
 
-    public function testRestrictions()
+    public function testUserUpdate()
     {
-        $this->logInOperator();
-        $this->client->request('GET', '/admin/user/');
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testUserList()
-    {
-        $crawler = $this->client->request('GET', '/admin/user/');
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $crawler = $this->client->click($crawler->selectLink('Create new user')->link());
-        $this->assertEquals('User creation', $crawler->filter('title')->text());
-
-        $crawler = $this->client->request('GET', '/admin/user/');
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $crawler = $this->client->click($crawler->selectLink('Edit')->link());
-        $this->assertEquals('User edit', $crawler->filter('title')->text());
-    }
-
-    public function testUserCreate()
-    {
-        $crawler = $this->client->request('GET', '/admin/user/new');
-
         $container = static::$kernel->getContainer();
 
         $em = $container->get('doctrine')->getManager();
 
-        $email    = 'new@test.com';
-        $username = 'new';
-        $fullName = 'New Test User';
-        $password = 'new';
+        $userId = $em->getRepository('AppBundle:User')->findOneBy(['email' => 'operator@test.com'])->getId();
+
+        $crawler = $this->client->request('GET', "/admin/user/{$userId}/edit");
+
+        $email    = 'new_second@test.com';
+        $username = 'new_second';
+        $fullName = 'New Second Test User';
+        $password = 'new_second';
         $timezone = 'Asia/Almaty';
 
-        $form = $crawler->selectButton('Create')->form([
+        $form = $crawler->selectButton('Update')->form([
             'appbundle_user[email]'    => $email,
             'appbundle_user[username]' => $username,
             'appbundle_user[fullName]' => $fullName,
             'appbundle_user[password]' => $password,
             'appbundle_user[timezone]' => $timezone,
-            'appbundle_user[roles][1]' => $em->getRepository('AppBundle:Role')->findManagerRole()->getId(),
         ]);
+        $form['appbundle_user[roles]'][0]->tick();
+        $form['appbundle_user[roles]'][1]->untick();
 
         $this->client->submit($form);
 
@@ -73,19 +56,19 @@ class UserControllerTest extends TestCase
         $this->assertEquals($username, $user->getUsername());
         $this->assertEquals($fullName, $user->getFullName());
         $this->assertEquals($timezone, $user->getTimezone());
-        $this->assertEquals([$em->getRepository('AppBundle:Role')->findManagerRole()], $user->getRoles());
+        $this->assertEquals([$em->getRepository('AppBundle:Role')->findOperatorRole()], $user->getRoles());
         $this->assertTrue($container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'));
     }
 
     /**
-     * @depends testUserCreate
+     * @depends testUserUpdate
      */
-    public function testUserCreateEmailIsAlreadyUsed()
+    public function testUserUpdateEmailIsAlreadyUsed()
     {
-        $crawler = $this->client->request('GET', '/admin/user/new');
+        $crawler = $this->client->request('GET', "/admin/user/{$this->getCreatedUser()->getId()}/edit");
 
-        $form = $crawler->selectButton('Create')->form([
-            'appbundle_user[email]' => 'new@test.com',
+        $form = $crawler->selectButton('Update')->form([
+            'appbundle_user[email]' => 'admin@test.com',
         ]);
 
         $crawler = $this->client->submit($form);
@@ -97,15 +80,15 @@ class UserControllerTest extends TestCase
     }
 
     /**
-     * @depends testUserCreate
+     * @depends testUserUpdate
      */
-    public function testUserCreateUserNameIsAlreadyUsed()
+    public function testUserUpdateUserNameIsAlreadyUsed()
     {
-        $crawler = $this->client->request('GET', '/admin/user/new');
+        $crawler = $this->client->request('GET', "/admin/user/{$this->getCreatedUser()->getId()}/edit");
 
-        $form = $crawler->selectButton('Create')->form([
-            'appbundle_user[email]'    => 'new2@test.com',
-            'appbundle_user[username]' => 'new',
+        $form = $crawler->selectButton('Update')->form([
+            'appbundle_user[email]'    => 'new_second2@test.com',
+            'appbundle_user[username]' => 'admin',
         ]);
 
         $crawler = $this->client->submit($form);
@@ -116,11 +99,14 @@ class UserControllerTest extends TestCase
         );
     }
 
-    public function testUserCreateWrongEmail()
+    /**
+     * @depends testUserUpdate
+     */
+    public function testUserUpdateWrongEmail()
     {
-        $crawler = $this->client->request('GET', '/admin/user/new');
+        $crawler = $this->client->request('GET', "/admin/user/{$this->getCreatedUser()->getId()}/edit");
 
-        $form = $crawler->selectButton('Create')->form([
+        $form = $crawler->selectButton('Update')->form([
             'appbundle_user[email]' => 'wrong_email',
         ]);
 
@@ -134,25 +120,34 @@ class UserControllerTest extends TestCase
 
     /**
      * @expectedException \InvalidArgumentException
+     * @depends testUserUpdate
      */
-    public function testUserCreateEmptyTimezone()
+    public function testUserUpdateEmptyTimezone()
     {
-        $crawler = $this->client->request('GET', '/admin/user/new');
+        $crawler = $this->client->request('GET', "/admin/user/{$this->getCreatedUser()->getId()}/edit");
 
-        $form = $crawler->selectButton('Create')->form([
+        $form = $crawler->selectButton('Update')->form([
             'appbundle_user[timezone]' => '',
         ]);
 
         $this->client->submit($form);
     }
 
-    public function testUserCreateErrorField()
+    /**
+     * @depends testUserUpdate
+     */
+    public function testUserUpdateErrorField()
     {
-        $crawler = $this->client->request('GET', '/admin/user/new');
+        $crawler = $this->client->request('GET', "/admin/user/{$this->getCreatedUser()->getId()}/edit");
 
-        $form = $crawler->selectButton('Create')->form([
+        $form = $crawler->selectButton('Update')->form([
+            'appbundle_user[email]'    => '',
+            'appbundle_user[username]' => '',
+            'appbundle_user[fullName]' => '',
+            'appbundle_user[password]' => '',
             'appbundle_user[timezone]' => 'Asia/Almaty',
         ]);
+        $form['appbundle_user[roles]'][0]->untick();
 
         $crawler = $this->client->submit($form);
 
@@ -164,10 +159,19 @@ class UserControllerTest extends TestCase
             $this->assertEquals('This value should not be blank.', $error->nodeValue);
             $count++;
         }
-        $this->assertEquals(4, $count);
+        $this->assertEquals(3, $count);
         $this->assertEquals(
             'This collection should contain exactly 1 element.',
             $crawler->filter('small.error')->last()->text()
         );
+    }
+
+    private function getCreatedUser()
+    {
+        $container = static::$kernel->getContainer();
+
+        $em = $container->get('doctrine')->getManager();
+
+        return $em->getRepository('AppBundle:User')->findOneBy(['email' => 'new_second@test.com']);
     }
 }
