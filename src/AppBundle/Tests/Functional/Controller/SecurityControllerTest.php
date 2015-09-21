@@ -4,6 +4,13 @@ namespace AppBundle\Tests\Functional\Controller;
 
 class SecurityControllerTest extends \AppBundle\Tests\Functional\TestCase
 {
+    public function testLoginRedirect()
+    {
+        $this->logInOperator();
+        $this->client->request('GET', '/login');
+        $this->assertTrue($this->client->getResponse()->isRedirect('/'));
+    }
+
     public function testRedirectForAnonymous()
     {
         $client = static::createClient();

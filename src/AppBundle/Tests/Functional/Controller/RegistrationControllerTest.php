@@ -6,6 +6,13 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class RegistrationControllerTest extends \AppBundle\Tests\Functional\TestCase
 {
+    public function testRegistrationRedirect()
+    {
+        $this->logInOperator();
+        $this->client->request('GET', '/sign_up');
+        $this->assertTrue($this->client->getResponse()->isRedirect('/'));
+    }
+
     public function testRegistration()
     {
         $client = static::createClient();

@@ -12,11 +12,26 @@ class UserControllerTest extends TestCase
         $this->logInAdmin();
     }
 
-    public function testRestrictions()
+    /**
+     * @dataProvider uriRestrictionsProvider
+     */
+    public function testRestrictions($uri)
     {
         $this->logInOperator();
-        $this->client->request('GET', '/admin/user/');
+        $this->client->request('GET', $uri);
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+
+        $this->logInManager();
+        $this->client->request('GET', $uri);
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function uriRestrictionsProvider()
+    {
+        return [
+            ['/admin/user/'],
+            ['/admin/user/new'],
+        ];
     }
 
     public function testUserList()

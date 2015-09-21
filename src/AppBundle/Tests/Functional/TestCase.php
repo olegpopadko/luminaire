@@ -62,4 +62,9 @@ class TestCase extends WebTestCase
     {
         $this->logIn('operator');
     }
+
+    protected function logInManager()
+    {
+        $this->logIn('manager', ['ROLE_MANAGER']);
+    }
 }

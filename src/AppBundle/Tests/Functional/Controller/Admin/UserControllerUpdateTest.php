@@ -12,6 +12,27 @@ class UserControllerUpdateTest extends TestCase
         $this->logInAdmin();
     }
 
+    /**
+     * @dataProvider uriRestrictionsProvider
+     */
+    public function testRestrictions($uri)
+    {
+        $this->logInOperator();
+        $this->client->request('GET', $uri);
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+
+        $this->logInManager();
+        $this->client->request('GET', $uri);
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function uriRestrictionsProvider()
+    {
+        return [
+            ['/admin/user/1/edit'],
+        ];
+    }
+
     public function testUserUpdate()
     {
         $container = static::$kernel->getContainer();
