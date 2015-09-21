@@ -29,6 +29,10 @@ class Builder extends ContainerAware
 
         $this->buildAdminItem($menu);
 
+        if (!$this->container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            $menu->addChild($this->container->get('translator')->trans('Login'), ['route' => 'login_route']);
+        }
+
         if ($this->container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             $menu->addChild($this->container->get('translator')->trans('Logout'), ['route' => 'logout']);
         }
@@ -42,7 +46,7 @@ class Builder extends ContainerAware
     private function buildAdminItem(ItemInterface $menu)
     {
         if ($this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
-            $menu->addChild($this->container->get('translator')->trans('Adminstration'))
+            $menu->addChild($this->container->get('translator')->trans('Adminstration'), ['uri' => '#'])
                 ->addChild($this->container->get('translator')->trans('Users'), ['route' => 'admin_user']);
         }
     }
