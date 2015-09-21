@@ -53,7 +53,7 @@ class SecurityControllerTest extends \AppBundle\Tests\Functional\TestCase
         $crawler = $client->followRedirect();
 
         $this->assertEquals(
-            'Недействительные аутентификационные данные.',
+            'Invalid credentials.',
             $crawler->filter('div.login > div')->extract(['_text'])[0]
         );
     }
