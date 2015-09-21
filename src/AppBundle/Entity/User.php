@@ -80,7 +80,7 @@ class User implements UserInterface, \Serializable
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
      *      )
-     * @Assert\NotBlank()
+     * @Assert\Count(min=1, max=1)
      */
     private $roles;
 

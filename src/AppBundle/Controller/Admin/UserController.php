@@ -41,7 +41,7 @@ class UserController extends Controller
      *
      * @Route("/", name="admin_user_create")
      * @Method("POST")
-     * @Template("AppBundle:User:new.html.twig")
+     * @Template("AppBundle:Admin/User:new.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -153,7 +153,7 @@ class UserController extends Controller
      *
      * @Route("/{id}", name="admin_user_update")
      * @Method("PUT")
-     * @Template("AppBundle:User:edit.html.twig")
+     * @Template("AppBundle:Admin/User:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
