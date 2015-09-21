@@ -17,11 +17,7 @@ class SecurityControllerTest extends \AppBundle\Tests\Functional\TestCase
     {
         $client = static::createClient();
 
-        $client->request('GET', '/');
-
-        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
-
-        $crawler = $client->followRedirect();
+        $crawler = $client->request('GET', '/login');
 
         $form = $crawler->filter('button')->form([
             '_username' => 'admin',
@@ -33,15 +29,11 @@ class SecurityControllerTest extends \AppBundle\Tests\Functional\TestCase
         $this->assertTrue($client->getResponse()->isRedirect('http://localhost/'));
     }
 
-    public function testLoginFailed()
+    public function testLoginInvalidCredentials()
     {
         $client = static::createClient();
 
-        $client->request('GET', '/');
-
-        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
-
-        $crawler = $client->followRedirect();
+        $crawler = $client->request('GET', '/login');
 
         $form = $crawler->filter('button')->form([
             '_username' => 'failed',
@@ -52,9 +44,19 @@ class SecurityControllerTest extends \AppBundle\Tests\Functional\TestCase
 
         $crawler = $client->followRedirect();
 
-        $this->assertEquals(
-            'Invalid credentials.',
-            $crawler->filter('div.login > div')->extract(['_text'])[0]
-        );
+        $this->assertEquals('Invalid credentials.', $crawler->filter('div.login > div')->html());
+    }
+
+    public function testLoginRegistrationButton()
+    {
+        $client = static::createClient();
+
+        $crawler = $client->request('GET', '/login');
+
+        $link = $crawler->filter('a[href="/sign_up"]')->link();
+
+        $crawler = $client->click($link);
+
+        $this->assertEquals('Sign up', $crawler->filter('title')->html());
     }
 }
