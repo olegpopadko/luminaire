@@ -27,9 +27,9 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=255)
-     * @Assert\NotBlank(groups={"update"})
-     * @Assert\Length(max=255, groups={"update"})
-     * @Assert\Email(groups={"update"})
+     * @Assert\NotBlank()
+     * @Assert\Length(max=255)
+     * @Assert\Email()
      */
     private $email;
 
@@ -37,8 +37,8 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="username", type="string", length=45)
-     * @Assert\NotBlank(groups={"update"})
-     * @Assert\Length(max=45, groups={"update"})
+     * @Assert\NotBlank()
+     * @Assert\Length(max=45)
      */
     private $username;
 
@@ -46,8 +46,8 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="full_name", type="string", length=255)
-     * @Assert\NotBlank(groups={"update"})
-     * @Assert\Length(max=255, groups={"update"})
+     * @Assert\NotBlank()
+     * @Assert\Length(max=255)
      */
     private $fullName;
 
@@ -55,17 +55,17 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="password", type="string", length=64)
-     * @Assert\NotBlank()
-     * @Assert\Length(max=4096, groups={"update"})
+     * @Assert\NotBlank(groups={"not_blank_password"})
+     * @Assert\Length(max=4096)
      */
     private $password;
 
     /**
-     * @var integer
+     * @var string
      *
      * @ORM\Column(name="timezone", type="string", length=45)
-     * @Assert\NotBlank(groups={"update"})
-     * @Assert\Length(max=45, groups={"update"})
+     * @Assert\NotBlank()
+     * @Assert\Length(max=45)
      */
     private $timezone;
 
@@ -77,7 +77,7 @@ class User implements UserInterface, \Serializable
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
      *      )
-     * @Assert\NotBlank(groups={"update"})
+     * @Assert\NotBlank()
      */
     private $roles;
 

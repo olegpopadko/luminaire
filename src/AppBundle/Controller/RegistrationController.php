@@ -39,7 +39,7 @@ class RegistrationController extends Controller
      *
      * @Route("/sign_up", name="sign_up")
      * @Method("POST")
-     * @Template("AppBundle:User:register.html.twig")
+     * @Template("AppBundle:Registration:index.html.twig")
      */
     public function signUpAction(Request $request)
     {
@@ -84,6 +84,7 @@ class RegistrationController extends Controller
         $form = $this->createForm(new RegistrationType(), $entity, [
             'action' => $this->generateUrl('sign_up'),
             'method' => 'POST',
+            'validation_groups' => ['Default', 'not_blank_password'],
         ]);
 
         $form->add('submit', 'submit', ['label' => 'Join']);

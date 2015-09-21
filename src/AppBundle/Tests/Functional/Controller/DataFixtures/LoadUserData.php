@@ -35,7 +35,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, D
             $entity->setEmail($role . '@test');
             $entity->setFullName(ucfirst($role));
             $entity->setTimezone('Europe/Kiev');
-            $entity->setPassword($this->container->get('security.password_encoder')->encodePassword($entity, 'secret'));
+            $entity->setPassword($this->container->get('security.password_encoder')->encodePassword($entity, $role));
 
             /** @var \AppBundle\Entity\Role $roleEntity */
             $roleEntity = $this->getReference($role . '-role');

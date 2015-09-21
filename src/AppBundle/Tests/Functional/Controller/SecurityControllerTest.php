@@ -21,7 +21,7 @@ class SecurityControllerTest extends \AppBundle\Tests\Functional\TestCase
 
         $form = $crawler->filter('button')->form([
             '_username' => 'admin',
-            '_password' => 'secret',
+            '_password' => 'admin',
         ]);
 
         $client->submit($form);

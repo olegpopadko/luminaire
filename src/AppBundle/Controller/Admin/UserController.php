@@ -76,8 +76,9 @@ class UserController extends Controller
     private function createCreateForm(User $entity)
     {
         $form = $this->createForm(new UserType(), $entity, [
-            'action' => $this->generateUrl('admin_user_create'),
-            'method' => 'POST',
+            'action'            => $this->generateUrl('admin_user_create'),
+            'method'            => 'POST',
+            'validation_groups' => ['Default', 'not_blank_password'],
         ]);
 
         $form->add('submit', 'submit', ['label' => 'Create']);
@@ -138,9 +139,8 @@ class UserController extends Controller
     private function createEditForm(User $entity)
     {
         $form = $this->createForm(new UserType(), $entity, [
-            'action'            => $this->generateUrl('admin_user_update', ['id' => $entity->getId()]),
-            'method'            => 'PUT',
-            'validation_groups' => ['update']
+            'action' => $this->generateUrl('admin_user_update', ['id' => $entity->getId()]),
+            'method' => 'PUT'
         ]);
 
         $form->add('submit', 'submit', ['label' => 'Update']);
