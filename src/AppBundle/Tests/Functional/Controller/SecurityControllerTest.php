@@ -60,7 +60,7 @@ class SecurityControllerTest extends \AppBundle\Tests\Functional\TestCase
 
         $crawler = $client->followRedirect();
 
-        $this->assertEquals('Invalid credentials.', $crawler->filter('div.login > div')->html());
+        $this->assertEquals('Invalid credentials.', $crawler->filter('div.login > div')->text());
     }
 
     public function testLoginRegistrationButton()
@@ -73,6 +73,6 @@ class SecurityControllerTest extends \AppBundle\Tests\Functional\TestCase
 
         $crawler = $client->click($link);
 
-        $this->assertEquals('Sign up', $crawler->filter('title')->html());
+        $this->assertEquals('Sign up', $crawler->filter('title')->text());
     }
 }

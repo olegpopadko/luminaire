@@ -47,16 +47,17 @@ class RegistrationController extends Controller
             return $this->redirectToRoute('homepage');
         }
 
+        $em = $this->getDoctrine()->getManager();
+
         $entity = new User();
+        $entity->addRole($em->getRepository('AppBundle:Role')->findOperatorRole());
+
         $form   = $this->createRegistrationForm($entity);
         $form->handleRequest($request);
-
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             $entity->setPassword(
                 $this->container->get('security.password_encoder')->encodePassword($entity, $entity->getPassword())
             );
-            $entity->addRole($em->getRepository('AppBundle:Role')->findOperatorRole());
             $em->persist($entity);
             $em->flush();
 

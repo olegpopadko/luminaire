@@ -18,7 +18,7 @@ class RegistrationControllerTest extends \AppBundle\Tests\Functional\TestCase
         $password = 'new';
         $timezone = 'Asia/Almaty';
 
-        $form = $crawler->filter('button')->form([
+        $form = $crawler->selectButton('Join')->form([
             'appbundle_registration[email]'              => $email,
             'appbundle_registration[username]'           => $username,
             'appbundle_registration[fullName]'           => $fullName,
@@ -49,13 +49,16 @@ class RegistrationControllerTest extends \AppBundle\Tests\Functional\TestCase
         $this->assertTrue($container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'));
     }
 
+    /**
+     * @depends testRegistration
+     */
     public function testRegistrationEmailIsAlreadyUsed()
     {
         $client = static::createClient();
 
         $crawler = $client->request('GET', '/sign_up');
 
-        $form = $crawler->filter('button')->form([
+        $form = $crawler->selectButton('Join')->form([
             'appbundle_registration[email]' => 'new@test.com',
         ]);
 
@@ -63,17 +66,20 @@ class RegistrationControllerTest extends \AppBundle\Tests\Functional\TestCase
 
         $this->assertEquals(
             'This email is already used.',
-            $crawler->filter('small.error')->first()->html()
+            $crawler->filter('small.error')->first()->text()
         );
     }
 
+    /**
+     * @depends testRegistration
+     */
     public function testRegistrationUserNameIsAlreadyUsed()
     {
         $client = static::createClient();
 
         $crawler = $client->request('GET', '/sign_up');
 
-        $form = $crawler->filter('button')->form([
+        $form = $crawler->selectButton('Join')->form([
             'appbundle_registration[email]'    => 'new2@test.com',
             'appbundle_registration[username]' => 'new',
         ]);
@@ -82,7 +88,7 @@ class RegistrationControllerTest extends \AppBundle\Tests\Functional\TestCase
 
         $this->assertEquals(
             'This username is already used.',
-            $crawler->filter('small.error')->first()->html()
+            $crawler->filter('small.error')->first()->text()
         );
     }
 
@@ -92,7 +98,7 @@ class RegistrationControllerTest extends \AppBundle\Tests\Functional\TestCase
 
         $crawler = $client->request('GET', '/sign_up');
 
-        $form = $crawler->filter('button')->form([
+        $form = $crawler->selectButton('Join')->form([
             'appbundle_registration[email]' => 'wrong_email',
         ]);
 
@@ -100,7 +106,7 @@ class RegistrationControllerTest extends \AppBundle\Tests\Functional\TestCase
 
         $this->assertEquals(
             'This value is not a valid email address.',
-            $crawler->filter('small.error')->first()->html()
+            $crawler->filter('small.error')->first()->text()
         );
     }
 
@@ -113,7 +119,7 @@ class RegistrationControllerTest extends \AppBundle\Tests\Functional\TestCase
 
         $crawler = $client->request('GET', '/sign_up');
 
-        $form = $crawler->filter('button')->form([
+        $form = $crawler->selectButton('Join')->form([
             'appbundle_registration[timezone]' => '',
         ]);
 
@@ -126,7 +132,7 @@ class RegistrationControllerTest extends \AppBundle\Tests\Functional\TestCase
 
         $crawler = $client->request('GET', '/sign_up');
 
-        $form = $crawler->filter('button')->form([
+        $form = $crawler->selectButton('Join')->form([
             'appbundle_registration[email]'              => '',
             'appbundle_registration[username]'           => '',
             'appbundle_registration[fullName]'           => '',
@@ -141,5 +147,6 @@ class RegistrationControllerTest extends \AppBundle\Tests\Functional\TestCase
             /** @var Crawler $error */
             $this->assertEquals('This value should not be blank.', $error->html());
         });
+        $this->assertCount(4, $crawler->filter('small.error'));
     }
 }
