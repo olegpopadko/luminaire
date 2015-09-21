@@ -29,6 +29,22 @@ class SecurityControllerTest extends \AppBundle\Tests\Functional\TestCase
         $this->assertTrue($client->getResponse()->isRedirect('http://localhost/'));
     }
 
+    public function testLoginViaEmail()
+    {
+        $client = static::createClient();
+
+        $crawler = $client->request('GET', '/login');
+
+        $form = $crawler->filter('button')->form([
+            '_username' => 'admin@test.com',
+            '_password' => 'admin',
+        ]);
+
+        $client->submit($form);
+
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/'));
+    }
+
     public function testLoginInvalidCredentials()
     {
         $client = static::createClient();

@@ -32,7 +32,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, D
         foreach (['operator', 'manager', 'admin'] as $role) {
             $entity = new User();
             $entity->setUsername($role);
-            $entity->setEmail($role . '@test');
+            $entity->setEmail($role . '@test.com');
             $entity->setFullName(ucfirst($role));
             $entity->setTimezone('Europe/Kiev');
             $entity->setPassword($this->container->get('security.password_encoder')->encodePassword($entity, $role));
