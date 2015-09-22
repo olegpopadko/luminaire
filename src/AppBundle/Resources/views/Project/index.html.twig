@@ -18,7 +18,7 @@
             <tr>
                 <td><a href="{{ path('project_show', { 'code': entity.code }) }}">{{ entity.code }}</a></td>
                 <td>{{ entity.label }}</td>
-                <td>{% if entity.createdAt %}{{ entity.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ macro.user_date(entity.createdAt) }}</td>
             </tr>
         {% endfor %}
         </tbody>

@@ -18,7 +18,7 @@
         </tr>
         <tr>
             <th>{{ "Created at"|trans }}</th>
-            <td>{{ entity.createdAt|date('Y-m-d H:i:s') }}</td>
+            <td>{{ macro.user_date(entity.createdAt) }}</td>
         </tr>
         <tr>
             <th>{{ "Users"|trans }}</th>

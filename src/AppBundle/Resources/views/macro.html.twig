@@ -1,0 +1,3 @@
+{% macro user_date(date) %}
+    {{ date|date('Y-m-d H:i:s', app.user.timezone) }}
+{% endmacro %}
