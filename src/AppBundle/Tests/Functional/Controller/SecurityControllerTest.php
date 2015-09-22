@@ -22,18 +22,7 @@ class SecurityControllerTest extends \AppBundle\Tests\Functional\TestCase
 
     public function testLogin()
     {
-        $client = static::createClient();
-
-        $crawler = $client->request('GET', '/login');
-
-        $form = $crawler->filter('button')->form([
-            '_username' => 'admin',
-            '_password' => 'admin',
-        ]);
-
-        $client->submit($form);
-
-        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/'));
+        $this->successLoginCheck('admin', 'admin');
     }
 
     public function testLoginViaEmail()

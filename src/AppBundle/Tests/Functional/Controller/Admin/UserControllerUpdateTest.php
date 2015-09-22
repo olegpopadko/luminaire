@@ -79,6 +79,38 @@ class UserControllerUpdateTest extends TestCase
         $this->assertEquals($timezone, $user->getTimezone());
         $this->assertEquals([$em->getRepository('AppBundle:Role')->findOperatorRole()], $user->getRoles());
         $this->assertTrue($container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'));
+
+        $this->successLoginCheck('new_second', 'new_second');
+    }
+
+    /**
+     * @depends testUserUpdate
+     */
+    public function testUserUpdateWithoutPassword()
+    {
+        $container = static::$kernel->getContainer();
+
+        $em = $container->get('doctrine')->getManager();
+
+        $userId = $em->getRepository('AppBundle:User')->findOneBy(['email' => 'new_second@test.com'])->getId();
+
+        $crawler = $this->client->request('GET', "/admin/user/{$userId}/edit");
+
+        $timezone = 'Arctic/Longyearbyen';
+
+        $form = $crawler->selectButton('Update')->form([
+            'appbundle_user[timezone]' => $timezone,
+        ]);
+
+        $this->client->submit($form);
+
+        $this->assertTrue($this->client->getResponse()->isRedirect());
+        $this->assertEquals(
+            1,
+            preg_match('/^\/admin\/user\/[0-9]+\/edit/', $this->client->getResponse()->headers->get('Location'))
+        );
+
+        $this->successLoginCheck('new_second', 'new_second_password');
     }
 
     /**

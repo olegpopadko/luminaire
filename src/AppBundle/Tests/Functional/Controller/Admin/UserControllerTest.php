@@ -90,6 +90,8 @@ class UserControllerTest extends TestCase
         $this->assertEquals($timezone, $user->getTimezone());
         $this->assertEquals([$em->getRepository('AppBundle:Role')->findManagerRole()], $user->getRoles());
         $this->assertTrue($container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'));
+
+        $this->successLoginCheck('new', 'new');
     }
 
     /**

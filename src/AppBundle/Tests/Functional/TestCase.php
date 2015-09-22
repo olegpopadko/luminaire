@@ -79,7 +79,7 @@ class TestCase extends WebTestCase
      * @param array $roles
      * @return \AppBundle\Entity\User
      */
-    protected function logIn($username, $roles = ['ROLE_OPERATOR'])
+    private function logIn($username)
     {
         $session = $this->client->getContainer()->get('session');
 
@@ -87,7 +87,7 @@ class TestCase extends WebTestCase
         $user = $em->getRepository('AppBundle:User')->findOneBy(['username' => $username]);
 
         $firewall = 'main';
-        $token    = new UsernamePasswordToken($user, null, $firewall, $roles);
+        $token    = new UsernamePasswordToken($user, null, $firewall, $user->getRoles());
         $session->set('_security_' . $firewall, serialize($token));
         $session->save();
 
@@ -96,12 +96,22 @@ class TestCase extends WebTestCase
         return $user;
     }
 
+    private function logout()
+    {
+        $session = $this->client->getContainer()->get('session');
+
+        $session->clear();
+        $session->save();
+
+        $this->client->getCookieJar()->clear();
+    }
+
     /**
      * @return \AppBundle\Entity\User
      */
     protected function logInAdmin()
     {
-        return $this->logIn('admin', ['ROLE_ADMIN']);
+        return $this->logIn('admin');
     }
 
     /**
@@ -117,7 +127,27 @@ class TestCase extends WebTestCase
      */
     protected function logInManager()
     {
-        return $this->logIn('manager', ['ROLE_MANAGER']);
+        return $this->logIn('manager');
+    }
+
+    /**
+     * @param $username
+     * @param $password
+     */
+    protected function successLoginCheck($username, $password)
+    {
+        $this->logout();
+
+        $crawler = $this->client->request('GET', '/login');
+
+        $form = $crawler->filter('button')->form([
+            '_username' => $username,
+            '_password' => $password,
+        ]);
+
+        $this->client->submit($form);
+
+        $this->assertTrue($this->client->getResponse()->isRedirect('http://localhost/'));
     }
 
     /**

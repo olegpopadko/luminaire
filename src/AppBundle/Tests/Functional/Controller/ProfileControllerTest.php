@@ -125,6 +125,31 @@ class ProfileControllerTest extends TestCase
         $this->assertEquals($fullName, $user->getFullName());
         $this->assertEquals($timezone, $user->getTimezone());
         $this->assertEquals([$em->getRepository('AppBundle:Role')->findOperatorRole()], $user->getRoles());
+
+        $this->successLoginCheck('new_second', 'new_second');
+    }
+
+    public function testProfileEditWithoutPassword()
+    {
+        $operator = $this->logInManager();
+        $crawler  = $this->client->request('GET', '/profile/' . $operator->getId() . '/edit');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $fullName = 'New Second Full Name';
+
+        $form = $crawler->selectButton('Update')->form([
+            'appbundle_profile[fullName]' => $fullName,
+        ]);
+
+        $this->client->submit($form);
+
+        $this->assertTrue($this->client->getResponse()->isRedirect());
+        $this->assertEquals(
+            1,
+            preg_match('/^\/profile\/[0-9]+/', $this->client->getResponse()->headers->get('Location'))
+        );
+
+        $this->successLoginCheck('new_second', 'manager');
     }
 
     public function testAssignedIssues()
