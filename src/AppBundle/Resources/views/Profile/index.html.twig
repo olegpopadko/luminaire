@@ -1,0 +1,34 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}{{ "Profile"|trans({}, "profile") }}{% endblock %}
+
+{% block body -%}
+    <h1>{{ "Profile"|trans({}, "profile") }}</h1>
+
+    <table class="record_properties">
+        <tbody>
+        <tr>
+            <th>{{ "Email"|trans }}</th>
+            <td>{{ entity.email }}</td>
+        </tr>
+        <tr>
+            <th>{{ "Username"|trans }}</th>
+            <td>{{ entity.username }}</td>
+        </tr>
+        <tr>
+            <th>{{ "Full name"|trans }}</th>
+            <td>{{ entity.fullName }}</td>
+        </tr>
+        <tr>
+            <th>{{ "Timezone"|trans }}</th>
+            <td>{{ entity.timezone }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    {% if is_granted("edit", entity) %}
+        <a href="{{ path('profile_edit', { 'id': entity.id }) }}" class="button">
+            Edit
+        </a>
+    {% endif %}
+{% endblock %}

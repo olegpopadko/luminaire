@@ -1,7 +1,9 @@
 Login: Вход
 Logout: Выход
+Email: Email
 Username: Логин
 Password: Пароль
+Confirm: Подтверждение
 Full name: Полное имя
 Timezone: Часовой пояс
 Roles: Роли
@@ -9,11 +11,11 @@ Update: Обновить
 Operator: Оператор
 Manager: Менеджер
 Admin: Администратор
+Administration: Администрирование
 Back to the list: Вернуться к списку
 Create: Создать
 Edit: Редактировать
 Actions: Действия
 Users: Пользователи
-Adminstration: Администрирование
 Sign up: Регистрация
 Join: Присоединиться

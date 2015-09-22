@@ -44,8 +44,11 @@ class TestCase extends WebTestCase
     {
         $session = $this->client->getContainer()->get('session');
 
+        $em = $this->client->getContainer()->get('doctrine')->getManager();
+        $user = $em->getRepository('AppBundle:User')->findOneBy(['username' => $username]);
+
         $firewall = 'main';
-        $token    = new UsernamePasswordToken($username, null, $firewall, $roles);
+        $token    = new UsernamePasswordToken($user, null, $firewall, $roles);
         $session->set('_security_' . $firewall, serialize($token));
         $session->save();
 

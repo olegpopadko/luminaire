@@ -34,7 +34,7 @@ class Builder extends ContainerAware
         }
 
         if ($this->container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
-            $menu->addChild($this->container->get('translator')->trans('Logout'), ['route' => 'logout']);
+            $this->buildAuthenticatedFullyItems($menu);
         }
 
         return $menu;
@@ -43,10 +43,26 @@ class Builder extends ContainerAware
     /**
      * @param ItemInterface $menu
      */
+    private function buildAuthenticatedFullyItems(ItemInterface $menu)
+    {
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $menu->addChild($this->container->get('translator')->trans('Profile', [], 'profile'), [
+            'route'           => 'profile',
+            'routeParameters' => [
+                'id' => $user->getId(),
+            ]
+        ]);
+
+        $menu->addChild($this->container->get('translator')->trans('Logout'), ['route' => 'logout']);
+    }
+
+    /**
+     * @param ItemInterface $menu
+     */
     private function buildAdminItem(ItemInterface $menu)
     {
         if ($this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
-            $menu->addChild($this->container->get('translator')->trans('Adminstration'), ['uri' => '#'])
+            $menu->addChild($this->container->get('translator')->trans('Administration'), ['uri' => '#'])
                 ->addChild($this->container->get('translator')->trans('Users'), ['route' => 'admin_user']);
         }
     }
