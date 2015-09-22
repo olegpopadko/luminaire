@@ -45,6 +45,10 @@ class Builder extends ContainerAware
      */
     private function buildAuthenticatedFullyItems(ItemInterface $menu)
     {
+        $menu->addChild($this->container->get('translator')->trans('Project list', [], 'project'), [
+            'route' => 'project',
+        ]);
+
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $menu->addChild($this->container->get('translator')->trans('Profile', [], 'profile'), [
             'route'           => 'profile',

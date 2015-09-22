@@ -1,0 +1,41 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}{{ "Project"|trans({}, "project") }}{% endblock %}
+
+{% block body -%}
+    <h3>{{ "Project"|trans({}, "project") }}</h3>
+    <h1>{{ entity.label }}</h1>
+
+    <table class="record_properties">
+        <tbody>
+        <tr>
+            <th>{{ "Code"|trans }}</th>
+            <td>{{ entity.code }}</td>
+        </tr>
+        <tr>
+            <th>{{ "Summary"|trans }}</th>
+            <td>{{ entity.summary }}</td>
+        </tr>
+        <tr>
+            <th>{{ "Created at"|trans }}</th>
+            <td>{{ entity.createdAt|date('Y-m-d H:i:s') }}</td>
+        </tr>
+        <tr>
+            <th>{{ "Users"|trans }}</th>
+            <td>
+                <ul>
+                {% for user in entity.users %}
+                    <li>{{ user }}</li>
+                {% endfor %}
+                </ul>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    {% if is_granted("create", entity) %}
+        <a href="{{ path('project_edit', { 'code': entity.code }) }}" class="button">
+            {{ "Edit"|trans }}
+        </a>
+    {% endif %}
+{% endblock %}

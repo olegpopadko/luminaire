@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="AppBundle\Entity\ProjectRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class Project
 {
@@ -24,7 +25,7 @@ class Project
     /**
      * @var string
      *
-     * @ORM\Column(name="`label`", type="string", length=255)
+     * @ORM\Column(name="`label`", type="string", length=255, unique=true)
      */
     private $label;
 
@@ -36,9 +37,9 @@ class Project
     private $summary;
 
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(name="code", type="integer")
+     * @ORM\Column(name="code", type="string", length=45, unique=true)
      */
     private $code;
 
@@ -48,6 +49,30 @@ class Project
      * @ORM\Column(name="created_at", type="datetime")
      */
     private $createdAt;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", inversedBy="projects")
+     * @ORM\JoinTable(name="user_to_project")
+     */
+    private $users;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function initCreatedAtOnPrePersist()
+    {
+        $this->createdAt = new \DateTime();
+    }
 
     /**
      * Get id
@@ -110,7 +135,7 @@ class Project
     /**
      * Set code
      *
-     * @param integer $code
+     * @param string $code
      *
      * @return Project
      */
@@ -124,7 +149,7 @@ class Project
     /**
      * Get code
      *
-     * @return integer
+     * @return string
      */
     public function getCode()
     {
@@ -153,5 +178,39 @@ class Project
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+
+    /**
+     * Add user
+     *
+     * @param \AppBundle\Entity\User $user
+     *
+     * @return Project
+     */
+    public function addUser(\AppBundle\Entity\User $user)
+    {
+        $this->users[] = $user;
+
+        return $this;
+    }
+
+    /**
+     * Remove user
+     *
+     * @param \AppBundle\Entity\User $user
+     */
+    public function removeUser(\AppBundle\Entity\User $user)
+    {
+        $this->users->removeElement($user);
+    }
+
+    /**
+     * Get users
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUsers()
+    {
+        return $this->users;
     }
 }

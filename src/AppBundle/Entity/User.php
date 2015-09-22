@@ -85,6 +85,21 @@ class User implements UserInterface, \Serializable
     private $roles;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Project", mappedBy="users")
+     */
+    private $projects;
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf('%s (@%s)', $this->getFullName(), $this->getUsername());
+    }
+
+    /**
      *
      */
     public function __construct()
@@ -292,5 +307,25 @@ class User implements UserInterface, \Serializable
             $this->username,
             $this->password,
             ) = unserialize($serialized);
+    }
+
+    /**
+     * Get projects
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProjects()
+    {
+        return $this->projects;
+    }
+
+    /**
+     * Has project
+     *
+     * @param \AppBundle\Entity\Project $project
+     */
+    public function hasProject(\AppBundle\Entity\Project $project)
+    {
+        return $this->projects->contains($project);
     }
 }

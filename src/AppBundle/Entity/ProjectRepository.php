@@ -10,4 +10,12 @@ namespace AppBundle\Entity;
  */
 class ProjectRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param $code
+     * @return null|Project
+     */
+    public function findOneByCode($code)
+    {
+        return $this->findOneBy(['code' => $code]);
+    }
 }
