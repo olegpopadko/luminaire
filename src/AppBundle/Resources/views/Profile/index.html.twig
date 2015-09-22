@@ -28,7 +28,7 @@
 
     {% if is_granted("edit", entity) %}
         <a href="{{ path('profile_edit', { 'id': entity.id }) }}" class="button">
-            Edit
+            {{ "Edit"|trans }}
         </a>
     {% endif %}
 {% endblock %}

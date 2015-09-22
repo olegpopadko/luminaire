@@ -41,6 +41,6 @@ class ProfileType extends AbstractType
      */
     public function getName()
     {
-        return 'appbundle_user';
+        return 'appbundle_profile';
     }
 }

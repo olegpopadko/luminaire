@@ -12,6 +12,9 @@ use AppBundle\Tests\Functional\Controller\DataFixtures\LoadUserData;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
+/**
+ * Class TestCase
+ */
 class TestCase extends WebTestCase
 {
     /**
@@ -19,11 +22,17 @@ class TestCase extends WebTestCase
      */
     protected $client;
 
+    /**
+     *
+     */
     public function setUp()
     {
         $this->client = static::createClient();
     }
 
+    /**
+     *
+     */
     public static function setUpBeforeClass()
     {
         static::bootKernel();
@@ -40,6 +49,11 @@ class TestCase extends WebTestCase
         $executor->execute($loader->getFixtures());
     }
 
+    /**
+     * @param $username
+     * @param array $roles
+     * @return \AppBundle\Entity\User
+     */
     private function logIn($username, $roles = ['ROLE_OPERATOR'])
     {
         $session = $this->client->getContainer()->get('session');
@@ -54,20 +68,30 @@ class TestCase extends WebTestCase
 
         $cookie = new Cookie($session->getName(), $session->getId());
         $this->client->getCookieJar()->set($cookie);
+        return $user;
     }
 
+    /**
+     * @return \AppBundle\Entity\User
+     */
     protected function logInAdmin()
     {
-        $this->logIn('admin', ['ROLE_ADMIN']);
+        return $this->logIn('admin', ['ROLE_ADMIN']);
     }
 
+    /**
+     * @return \AppBundle\Entity\User
+     */
     protected function logInOperator()
     {
-        $this->logIn('operator');
+        return $this->logIn('operator');
     }
 
+    /**
+     * @return \AppBundle\Entity\User
+     */
     protected function logInManager()
     {
-        $this->logIn('manager', ['ROLE_MANAGER']);
+        return $this->logIn('manager', ['ROLE_MANAGER']);
     }
 }
