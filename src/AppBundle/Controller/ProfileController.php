@@ -2,6 +2,8 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Form\Model\UserWithPlainPassword;
+use AppBundle\Form\UserWithPlainPasswordType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -56,10 +58,10 @@ class ProfileController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createEditForm(User $entity)
+    private function createEditForm(UserWithPlainPassword $entity)
     {
-        $form = $this->createForm(new ProfileType(), $entity, [
-            'action' => $this->generateUrl('profile_update', ['id' => $entity->getId()]),
+        $form = $this->createForm(new UserWithPlainPasswordType(new ProfileType()), $entity, [
+            'action' => $this->generateUrl('profile_update', ['id' => $entity->getUser()->getId()]),
             'method' => 'PUT',
         ]);
 
@@ -78,13 +80,16 @@ class ProfileController extends Controller
      */
     public function updateAction(Request $request, User $entity)
     {
-        $editForm = $this->createEditForm($entity);
+        $editForm = $this->createEditForm(new UserWithPlainPassword($entity));
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
-            $entity->setPassword(
-                $this->container->get('security.password_encoder')->encodePassword($entity, $entity->getPassword())
-            );
+            $password = $editForm->getData()->getPlainPassword();
+            if (!is_null($password)) {
+                $entity->setPassword(
+                    $this->container->get('security.password_encoder')->encodePassword($entity, $password)
+                );
+            }
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirect($this->generateUrl('profile', ['id' => $entity->getId()]));

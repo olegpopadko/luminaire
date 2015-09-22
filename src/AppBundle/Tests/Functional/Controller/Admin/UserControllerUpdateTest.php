@@ -50,22 +50,20 @@ class UserControllerUpdateTest extends TestCase
         $timezone = 'Asia/Almaty';
 
         $form = $crawler->selectButton('Update')->form([
-            'appbundle_user[email]'    => $email,
-            'appbundle_user[username]' => $username,
-            'appbundle_user[fullName]' => $fullName,
-            'appbundle_user[password]' => $password,
-            'appbundle_user[timezone]' => $timezone,
+            'appbundle_user[user][email]'             => $email,
+            'appbundle_user[user][username]'          => $username,
+            'appbundle_user[user][fullName]'          => $fullName,
+            'appbundle_user[plainPassword][password]' => $password,
+            'appbundle_user[plainPassword][confirm]'  => $password,
+            'appbundle_user[user][timezone]'          => $timezone,
         ]);
-        $form['appbundle_user[roles]'][0]->tick();
-        $form['appbundle_user[roles]'][1]->untick();
+        $form['appbundle_user[user][roles]'][0]->tick();
+        $form['appbundle_user[user][roles]'][1]->untick();
 
         $this->client->submit($form);
 
         $this->assertTrue($this->client->getResponse()->isRedirect());
-        $this->assertEquals(
-            1,
-            preg_match('/^\/admin\/user\/[0-9]+\/edit/', $this->client->getResponse()->headers->get('Location'))
-        );
+        $this->assertEquals("/admin/user/{$userId}/edit", $this->client->getResponse()->headers->get('Location'));
 
         $users = $em->getRepository('AppBundle:User')->findBy([
             'email' => $email,
@@ -88,29 +86,23 @@ class UserControllerUpdateTest extends TestCase
      */
     public function testUserUpdateWithoutPassword()
     {
-        $container = static::$kernel->getContainer();
-
-        $em = $container->get('doctrine')->getManager();
-
-        $userId = $em->getRepository('AppBundle:User')->findOneBy(['email' => 'new_second@test.com'])->getId();
-
-        $crawler = $this->client->request('GET', "/admin/user/{$userId}/edit");
+        $crawler = $this->client->request('GET', "/admin/user/{$this->getCreatedUser()->getId()}/edit");
 
         $timezone = 'Arctic/Longyearbyen';
 
         $form = $crawler->selectButton('Update')->form([
-            'appbundle_user[timezone]' => $timezone,
+            'appbundle_user[user][timezone]' => $timezone,
         ]);
 
         $this->client->submit($form);
 
         $this->assertTrue($this->client->getResponse()->isRedirect());
         $this->assertEquals(
-            1,
-            preg_match('/^\/admin\/user\/[0-9]+\/edit/', $this->client->getResponse()->headers->get('Location'))
+            "/admin/user/{$this->getCreatedUser()->getId()}/edit",
+            $this->client->getResponse()->headers->get('Location')
         );
 
-        $this->successLoginCheck('new_second', 'new_second_password');
+        $this->successLoginCheck('new_second', 'new_second');
     }
 
     /**
@@ -121,7 +113,7 @@ class UserControllerUpdateTest extends TestCase
         $crawler = $this->client->request('GET', "/admin/user/{$this->getCreatedUser()->getId()}/edit");
 
         $form = $crawler->selectButton('Update')->form([
-            'appbundle_user[email]' => 'admin@test.com',
+            'appbundle_user[user][email]' => 'admin@test.com',
         ]);
 
         $crawler = $this->client->submit($form);
@@ -140,8 +132,8 @@ class UserControllerUpdateTest extends TestCase
         $crawler = $this->client->request('GET', "/admin/user/{$this->getCreatedUser()->getId()}/edit");
 
         $form = $crawler->selectButton('Update')->form([
-            'appbundle_user[email]'    => 'new_second2@test.com',
-            'appbundle_user[username]' => 'admin',
+            'appbundle_user[user][email]'    => 'new_second2@test.com',
+            'appbundle_user[user][username]' => 'admin',
         ]);
 
         $crawler = $this->client->submit($form);
@@ -160,7 +152,7 @@ class UserControllerUpdateTest extends TestCase
         $crawler = $this->client->request('GET', "/admin/user/{$this->getCreatedUser()->getId()}/edit");
 
         $form = $crawler->selectButton('Update')->form([
-            'appbundle_user[email]' => 'wrong_email',
+            'appbundle_user[user][email]' => 'wrong_email',
         ]);
 
         $crawler = $this->client->submit($form);
@@ -180,7 +172,7 @@ class UserControllerUpdateTest extends TestCase
         $crawler = $this->client->request('GET', "/admin/user/{$this->getCreatedUser()->getId()}/edit");
 
         $form = $crawler->selectButton('Update')->form([
-            'appbundle_user[timezone]' => '',
+            'appbundle_user[user][timezone]' => '',
         ]);
 
         $this->client->submit($form);
@@ -194,13 +186,14 @@ class UserControllerUpdateTest extends TestCase
         $crawler = $this->client->request('GET', "/admin/user/{$this->getCreatedUser()->getId()}/edit");
 
         $form = $crawler->selectButton('Update')->form([
-            'appbundle_user[email]'    => '',
-            'appbundle_user[username]' => '',
-            'appbundle_user[fullName]' => '',
-            'appbundle_user[password]' => '',
-            'appbundle_user[timezone]' => 'Asia/Almaty',
+            'appbundle_user[user][email]'             => '',
+            'appbundle_user[user][username]'          => '',
+            'appbundle_user[user][fullName]'          => '',
+            'appbundle_user[plainPassword][password]' => '',
+            'appbundle_user[plainPassword][confirm]'  => '',
+            'appbundle_user[user][timezone]'          => 'Asia/Almaty',
         ]);
-        $form['appbundle_user[roles]'][0]->untick();
+        $form['appbundle_user[user][roles]'][0]->untick();
 
         $crawler = $this->client->submit($form);
 

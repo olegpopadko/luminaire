@@ -17,9 +17,6 @@ class UserType extends AbstractType
             ->add('email')
             ->add('username')
             ->add('fullName')
-            ->add('password', 'password', [
-                'required' => false,
-            ])
             ->add('timezone', 'timezone')
             ->add('roles', null, [
                 'required' => true,

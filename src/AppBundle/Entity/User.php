@@ -59,7 +59,7 @@ class User implements UserInterface, \Serializable
      *
      * @ORM\Column(name="password", type="string", length=64)
      * @Assert\NotBlank(groups={"not_blank_password"})
-     * @Assert\Length(max=4096)
+     * @Assert\Length(max=64)
      */
     private $password;
 

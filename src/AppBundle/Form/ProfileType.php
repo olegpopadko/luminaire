@@ -17,12 +17,6 @@ class ProfileType extends AbstractType
             ->add('email')
             ->add('username')
             ->add('fullName')
-            ->add('password', 'repeated', [
-                'first_name'  => 'password',
-                'second_name' => 'confirm',
-                'type'        => 'password',
-                'required'    => false,
-            ])
             ->add('timezone', 'timezone');
     }
 

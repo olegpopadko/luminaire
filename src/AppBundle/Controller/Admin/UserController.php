@@ -2,6 +2,8 @@
 
 namespace AppBundle\Controller\Admin;
 
+use AppBundle\Form\Model\UserWithPlainPassword;
+use AppBundle\Form\UserWithPlainPasswordType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -78,7 +80,7 @@ class UserController extends Controller
         $form = $this->createForm(new UserType(), $entity, [
             'action'            => $this->generateUrl('admin_user_create'),
             'method'            => 'POST',
-            'validation_groups' => ['Default', 'not_blank_password'],
+            'validation_groups' => ['User', 'not_blank_password'],
         ]);
 
         $form->add('submit', 'submit', ['label' => 'Create']);
@@ -121,7 +123,7 @@ class UserController extends Controller
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
-        $editForm = $this->createEditForm($entity);
+        $editForm = $this->createEditForm(new UserWithPlainPassword($entity));
 
         return [
             'entity'    => $entity,
@@ -136,10 +138,10 @@ class UserController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createEditForm(User $entity)
+    private function createEditForm(UserWithPlainPassword $entity)
     {
-        $form = $this->createForm(new UserType(), $entity, [
-            'action' => $this->generateUrl('admin_user_update', ['id' => $entity->getId()]),
+        $form = $this->createForm(new UserWithPlainPasswordType(new UserType()), $entity, [
+            'action' => $this->generateUrl('admin_user_update', ['id' => $entity->getUser()->getId()]),
             'method' => 'PUT'
         ]);
 
@@ -165,16 +167,19 @@ class UserController extends Controller
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
-        $editForm = $this->createEditForm($entity);
+        $editForm = $this->createEditForm(new UserWithPlainPassword($entity));
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
-            $entity->setPassword(
-                $this->container->get('security.password_encoder')->encodePassword($entity, $entity->getPassword())
-            );
+            $password = $editForm->getData()->getPlainPassword();
+            if (!is_null($password)) {
+                $entity->setPassword(
+                    $this->container->get('security.password_encoder')->encodePassword($entity, $password)
+                );
+            }
             $em->flush();
 
-            return $this->redirect($this->generateUrl('admin_user_edit', ['id' => $id]));
+            return $this->redirect($this->generateUrl('admin_user'));
         }
 
         return [

@@ -93,22 +93,18 @@ class ProfileControllerTest extends TestCase
         $timezone = 'Asia/Almaty';
 
         $form = $crawler->selectButton('Update')->form([
-            'appbundle_profile[email]'              => $email,
-            'appbundle_profile[username]'           => $username,
-            'appbundle_profile[fullName]'           => $fullName,
-            'appbundle_profile[password][password]' => $password,
-            'appbundle_profile[password][confirm]'  => $password,
-            'appbundle_profile[timezone]'           => $timezone,
+            'appbundle_profile[user][email]'             => $email,
+            'appbundle_profile[user][username]'          => $username,
+            'appbundle_profile[user][fullName]'          => $fullName,
+            'appbundle_profile[plainPassword][password]' => $password,
+            'appbundle_profile[plainPassword][confirm]'  => $password,
+            'appbundle_profile[user][timezone]'          => $timezone,
         ]);
-        $this->assertFalse(isset($form['appbundle_profile[roles]']));
+        $this->assertFalse(isset($form['appbundle_profile[user][roles]']));
 
         $this->client->submit($form);
 
-        $this->assertTrue($this->client->getResponse()->isRedirect());
-        $this->assertEquals(
-            1,
-            preg_match('/^\/profile\/[0-9]+/', $this->client->getResponse()->headers->get('Location'))
-        );
+        $this->assertTrue($this->client->getResponse()->isRedirect('/profile/' . $operator->getId()));
 
         $container = static::$kernel->getContainer();
 
@@ -131,25 +127,21 @@ class ProfileControllerTest extends TestCase
 
     public function testProfileEditWithoutPassword()
     {
-        $operator = $this->logInManager();
-        $crawler  = $this->client->request('GET', '/profile/' . $operator->getId() . '/edit');
+        $manager = $this->logInManager();
+        $crawler  = $this->client->request('GET', '/profile/' . $manager->getId() . '/edit');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $fullName = 'New Second Full Name';
 
         $form = $crawler->selectButton('Update')->form([
-            'appbundle_profile[fullName]' => $fullName,
+            'appbundle_profile[user][fullName]' => $fullName,
         ]);
 
         $this->client->submit($form);
 
-        $this->assertTrue($this->client->getResponse()->isRedirect());
-        $this->assertEquals(
-            1,
-            preg_match('/^\/profile\/[0-9]+/', $this->client->getResponse()->headers->get('Location'))
-        );
+        $this->assertTrue($this->client->getResponse()->isRedirect('/profile/' . $manager->getId()));
 
-        $this->successLoginCheck('new_second', 'manager');
+        $this->successLoginCheck('manager', 'manager');
     }
 
     public function testAssignedIssues()
