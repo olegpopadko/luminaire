@@ -73,7 +73,7 @@ class User implements UserInterface, \Serializable
     private $timezone;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var \Doctrine\Common\Collections\Collection|\AppBundle\Entity\Role[]
      *
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Role")
      * @ORM\JoinTable(name="user_to_role",
@@ -327,5 +327,38 @@ class User implements UserInterface, \Serializable
     public function hasProject(\AppBundle\Entity\Project $project)
     {
         return $this->projects->contains($project);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->hasRole('ROLE_ADMIN');
+    }
+
+    /**
+     * @return bool
+     */
+    public function isManager()
+    {
+        return $this->hasRole('ROLE_MANAGER');
+    }
+
+    /**
+     * @param $role
+     * @return bool
+     */
+    private function hasRole($role)
+    {
+        if ($role instanceof Role) {
+            $role->getRole();
+        }
+        foreach ($this->roles as $roleEntity) {
+            if ($roleEntity->getRole() === $role) {
+                return true;
+            }
+        }
+        return false;
     }
 }

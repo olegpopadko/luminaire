@@ -24,7 +24,7 @@
         </tbody>
     </table>
 
-    {% if is_granted("create", project) %}
+    {% if is_granted("create_project") %}
         <a href="{{ path('project_new') }}" class="button">
             {{ "Create a new project"|trans({}, "project") }}
         </a>

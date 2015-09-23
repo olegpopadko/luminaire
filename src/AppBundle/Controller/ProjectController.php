@@ -36,8 +36,6 @@ class ProjectController extends Controller
 
         return [
             'entities' => $entities,
-            //TODO: don't use real object for permissions
-            'project'  => new Project(),
         ];
     }
 
