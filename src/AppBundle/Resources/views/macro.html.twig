@@ -1,3 +1,7 @@
 {% macro user_date(date) %}
     {{ date|date('Y-m-d H:i:s', app.user.timezone) }}
 {% endmacro %}
+
+{% macro user(user) %}
+    <a href="{{ path('profile', {'id': user.id}) }}">@{{ user.username }}</a>
+{% endmacro %}

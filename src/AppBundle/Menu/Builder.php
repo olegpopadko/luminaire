@@ -50,7 +50,7 @@ class Builder extends ContainerAware
         ]);
 
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
-        $menu->addChild($this->container->get('translator')->trans('Profile', [], 'profile'), [
+        $menu->addChild('@' . $user->getUserName(), [
             'route'           => 'profile',
             'routeParameters' => [
                 'id' => $user->getId(),
