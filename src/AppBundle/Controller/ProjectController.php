@@ -25,18 +25,37 @@ class ProjectController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $this->getUser()->getProjects();
-        if ($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
-            $entities = $em->getRepository('AppBundle:Project')->findAll();
-        }
+        $findForm = $this->createFindForm();
+        $findForm->handleRequest($request);
+
+        $formData = $findForm->getData();
+
+        $queryBuilder = $em->getRepository('AppBundle:Project')->createQueryBuilder('p')
+            ->where('p.code like :q or p.label like :q or p.summary like :q')
+            ->setParameter('q', '%' . $formData['q'] . '%');
+        $this->get('app.project_filter')->apply($queryBuilder);
 
         return [
-            'entities' => $entities,
+            'find_form' => $findForm->createView(),
+            'entities'  => $queryBuilder->getQuery()->execute(),
         ];
+    }
+
+    /**
+     * @return \Symfony\Component\Form\Form
+     */
+    private function createFindForm()
+    {
+        return $this->get('form.factory')->createNamedBuilder('', 'form', ['q' => null], [
+            'action' => $this->generateUrl('project'),
+            'method' => 'GET',
+        ])->add('q', 'text', ['required' => false])
+            ->add('submit', 'submit')
+            ->getForm();
     }
 
     /**
@@ -48,10 +67,13 @@ class ProjectController extends Controller
      */
     public function createAction(Request $request)
     {
-        $this->denyAccessUnlessGranted('create', $entity = new Project());
+        $this->denyAccessUnlessGranted('create_project');
 
-        $form   = $this->createCreateForm($entity);
+        $entity = new Project();
+        $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
+
+        $entity->setCode($this->get('app.name_converter')->toAcronym($entity->getLabel()));
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -95,8 +117,10 @@ class ProjectController extends Controller
      */
     public function newAction()
     {
-        $this->denyAccessUnlessGranted('create', $entity = new Project());
-        $form   = $this->createCreateForm($entity);
+        $this->denyAccessUnlessGranted('create_project');
+
+        $entity = new Project();
+        $form = $this->createCreateForm($entity);
 
         return [
             'entity' => $entity,

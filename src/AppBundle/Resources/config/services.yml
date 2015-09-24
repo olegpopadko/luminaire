@@ -3,6 +3,8 @@
 parameters:
     user_voter_class: AppBundle\Security\Authorization\Voter\UserVoter
     project_voter_class: AppBundle\Security\Authorization\Voter\ProjectVoter
+    project_filter_class: AppBundle\Security\Filter\ProjectFilter
+    name_converter_class: AppBundle\Utils\NameConverter
 
 services:
     security.access.user_voter:
@@ -18,3 +20,10 @@ services:
         public:     false
         tags:
             - { name: security.voter }
+
+    app.project_filter:
+        arguments: [@security.token_storage]
+        class:      %project_filter_class%
+
+    app.name_converter:
+        class:      %name_converter_class%

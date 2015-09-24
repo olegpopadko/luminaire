@@ -29,20 +29,24 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, D
      */
     public function load(ObjectManager $manager)
     {
-        foreach (['operator', 'manager', 'admin'] as $role) {
-            $entity = new User();
-            $entity->setUsername($role);
-            $entity->setEmail($role . '@test.com');
-            $entity->setFullName(ucfirst($role));
-            $entity->setTimezone('Europe/Kiev');
-            $entity->setPassword($this->container->get('security.password_encoder')->encodePassword($entity, $role));
+        for ($i = 0; $i < 2; $i++) {
+            foreach (['operator', 'manager', 'admin'] as $role) {
+                $username = $i ? $role . $i : $role;
+                $entity = new User();
+                $entity->setUsername($username);
+                $entity->setEmail($username . '@test.com');
+                $entity->setFullName(ucfirst($username));
+                $entity->setTimezone('Europe/Kiev');
+                $password = $this->container->get('security.password_encoder') ->encodePassword($entity, $username);
+                $entity->setPassword($password);
 
-            /** @var \AppBundle\Entity\Role $roleEntity */
-            $roleEntity = $this->getReference($role . '-role');
-            $entity->addRole($roleEntity);
+                /** @var \AppBundle\Entity\Role $roleEntity */
+                $roleEntity = $this->getReference($role . '-role');
+                $entity->addRole($roleEntity);
 
-            $manager->persist($entity);
-            $this->addReference($role . '-user', $entity);
+                $manager->persist($entity);
+                $this->addReference($username . '-user', $entity);
+            }
         }
 
         $manager->flush();
