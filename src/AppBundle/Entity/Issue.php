@@ -81,6 +81,79 @@ class Issue
     private $type;
 
     /**
+     * @var \AppBundle\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @ORM\JoinColumn(name="reporter_id", referencedColumnName="id", nullable = false)
+     **/
+    private $reporter;
+
+    /**
+     * @var \AppBundle\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @ORM\JoinColumn(name="assignee_id", referencedColumnName="id", nullable = false)
+     **/
+    private $assignee;
+
+    /**
+     * @var \AppBundle\Entity\Project
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Project")
+     * @ORM\JoinColumn(name="project_id", referencedColumnName="id", nullable = false)
+     **/
+    private $project;
+
+    /**
+     * @var \AppBundle\Entity\Issue
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Issue", inversedBy="children")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+     **/
+    private $parent;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Issue", mappedBy="parent")
+     **/
+    private $children;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", inversedBy="projects")
+     * @ORM\JoinTable(name="user_to_issue")
+     */
+    private $collaborators;
+
+    /**
+     *
+     */
+    public function __construct()
+    {
+        $this->children = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->collaborators = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function initDateTimeFieldOnPrePersist()
+    {
+        $this->createdAt = new \DateTime();
+        $this->updatedAt = clone $this->createdAt;
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function updateUpdateAtOnPreUpdate()
+    {
+        $this->updatedAt = new \DateTime();
+    }
+
+    /**
      * Get id
      *
      * @return integer
@@ -280,5 +353,169 @@ class Issue
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Set reporter
+     *
+     * @param \AppBundle\Entity\User $reporter
+     *
+     * @return Issue
+     */
+    public function setReporter(\AppBundle\Entity\User $reporter)
+    {
+        $this->reporter = $reporter;
+
+        return $this;
+    }
+
+    /**
+     * Get reporter
+     *
+     * @return \AppBundle\Entity\User
+     */
+    public function getReporter()
+    {
+        return $this->reporter;
+    }
+
+    /**
+     * Set assignee
+     *
+     * @param \AppBundle\Entity\User $assignee
+     *
+     * @return Issue
+     */
+    public function setAssignee(\AppBundle\Entity\User $assignee)
+    {
+        $this->assignee = $assignee;
+
+        return $this;
+    }
+
+    /**
+     * Get assignee
+     *
+     * @return \AppBundle\Entity\User
+     */
+    public function getAssignee()
+    {
+        return $this->assignee;
+    }
+
+    /**
+     * Set project
+     *
+     * @param \AppBundle\Entity\Project $project
+     *
+     * @return Issue
+     */
+    public function setProject(\AppBundle\Entity\Project $project)
+    {
+        $this->project = $project;
+
+        return $this;
+    }
+
+    /**
+     * Get project
+     *
+     * @return \AppBundle\Entity\Project
+     */
+    public function getProject()
+    {
+        return $this->project;
+    }
+
+    /**
+     * Set parent
+     *
+     * @param \AppBundle\Entity\Issue $parent
+     *
+     * @return Issue
+     */
+    public function setParent(\AppBundle\Entity\Issue $parent = null)
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * Get parent
+     *
+     * @return \AppBundle\Entity\Issue
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * Add child
+     *
+     * @param \AppBundle\Entity\Issue $child
+     *
+     * @return Issue
+     */
+    public function addChild(\AppBundle\Entity\Issue $child)
+    {
+        $this->children[] = $child;
+
+        return $this;
+    }
+
+    /**
+     * Remove child
+     *
+     * @param \AppBundle\Entity\Issue $child
+     */
+    public function removeChild(\AppBundle\Entity\Issue $child)
+    {
+        $this->children->removeElement($child);
+    }
+
+    /**
+     * Get children
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    /**
+     * Add collaborator
+     *
+     * @param \AppBundle\Entity\User $collaborator
+     *
+     * @return Issue
+     */
+    public function addCollaborator(\AppBundle\Entity\User $collaborator)
+    {
+        $this->collaborators[] = $collaborator;
+
+        return $this;
+    }
+
+    /**
+     * Remove collaborator
+     *
+     * @param \AppBundle\Entity\User $collaborator
+     */
+    public function removeCollaborator(\AppBundle\Entity\User $collaborator)
+    {
+        $this->collaborators->removeElement($collaborator);
+    }
+
+    /**
+     * Get collaborators
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCollaborators()
+    {
+        return $this->collaborators;
     }
 }

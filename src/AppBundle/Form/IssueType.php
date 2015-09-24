@@ -20,11 +20,15 @@ class IssueType extends AbstractType
             ->add('summary')
             ->add('code')
             ->add('description')
-            ->add('createdAt')
-            ->add('updatedAt')
             ->add('status')
             ->add('resolution')
-            ->add('type');
+            ->add('type')
+            ->add('reporter')
+            ->add('assignee')
+            ->add('project')
+            ->add('parent')
+            ->add('collaborators')
+        ;
     }
 
     /**

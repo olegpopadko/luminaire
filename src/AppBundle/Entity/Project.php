@@ -76,6 +76,14 @@ class Project
     }
 
     /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getLabel();
+    }
+
+    /**
      * @ORM\PrePersist
      */
     public function initCreatedAtOnPrePersist()
