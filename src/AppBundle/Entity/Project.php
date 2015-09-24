@@ -2,6 +2,8 @@
 
 namespace AppBundle\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -10,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="AppBundle\Entity\ProjectRepository")
  * @ORM\HasLifecycleCallbacks
+ * @UniqueEntity("label", message="This label is already used.")
+ * @UniqueEntity("code", message="Please select another label.", errorPath="label")
  */
 class Project
 {
@@ -26,6 +30,8 @@ class Project
      * @var string
      *
      * @ORM\Column(name="`label`", type="string", length=255, unique=true)
+     * @Assert\NotBlank()
+     * @Assert\Length(max=255)
      */
     private $label;
 
@@ -33,6 +39,7 @@ class Project
      * @var string
      *
      * @ORM\Column(name="summary", type="text")
+     * @Assert\NotBlank()
      */
     private $summary;
 
@@ -40,6 +47,8 @@ class Project
      * @var string
      *
      * @ORM\Column(name="code", type="string", length=45, unique=true)
+     * @Assert\NotBlank()
+     * @Assert\Length(max=45, maxMessage="Please select another label.")
      */
     private $code;
 

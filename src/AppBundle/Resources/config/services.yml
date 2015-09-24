@@ -5,6 +5,7 @@ parameters:
     project_voter_class: AppBundle\Security\Authorization\Voter\ProjectVoter
     project_filter_class: AppBundle\Security\Filter\ProjectFilter
     name_converter_class: AppBundle\Utils\NameConverter
+    project_type_class: AppBundle\Form\ProjectType
 
 services:
     security.access.user_voter:
@@ -27,3 +28,9 @@ services:
 
     app.name_converter:
         class:      %name_converter_class%
+
+    app.form.type.project:
+        arguments: [@app.name_converter]
+        class:      %project_type_class%
+        tags:
+            - { name: form.type, alias: appbundle_project }

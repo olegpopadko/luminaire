@@ -8,7 +8,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Entity\Project;
-use AppBundle\Form\ProjectType;
 
 /**
  * Project controller.
@@ -50,12 +49,14 @@ class ProjectController extends Controller
      */
     private function createFindForm()
     {
-        return $this->get('form.factory')->createNamedBuilder('', 'form', ['q' => null], [
+        $form = $this->get('form.factory')->createNamed('', 'form', ['q' => null], [
             'action' => $this->generateUrl('project'),
             'method' => 'GET',
-        ])->add('q', 'text', ['required' => false])
-            ->add('submit', 'submit')
-            ->getForm();
+        ]);
+        $form->add('q', 'text', ['required' => false])
+            ->add('submit', 'submit');
+
+        return $form;
     }
 
     /**
@@ -72,8 +73,6 @@ class ProjectController extends Controller
         $entity = new Project();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
-
-        $entity->setCode($this->get('app.name_converter')->toAcronym($entity->getLabel()));
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -98,7 +97,7 @@ class ProjectController extends Controller
      */
     private function createCreateForm(Project $entity)
     {
-        $form = $this->createForm(new ProjectType(), $entity, [
+        $form = $this->container->get('form.factory')->create('appbundle_project', $entity, [
             'action' => $this->generateUrl('project_create'),
             'method' => 'POST',
         ]);
@@ -188,7 +187,7 @@ class ProjectController extends Controller
      */
     private function createEditForm(Project $entity)
     {
-        $form = $this->createForm(new ProjectType(), $entity, [
+        $form = $this->container->get('form.factory')->create('appbundle_project', $entity, [
             'action' => $this->generateUrl('project_update', ['code' => $entity->getCode()]),
             'method' => 'PUT',
         ]);
