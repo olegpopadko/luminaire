@@ -33,7 +33,7 @@
         </tbody>
     </table>
 
-    {% if is_granted("create", entity) %}
+    {% if is_granted("edit", entity) %}
         <a href="{{ path('project_edit', { 'code': entity.code }) }}" class="button">
             {{ "Edit"|trans }}
         </a>

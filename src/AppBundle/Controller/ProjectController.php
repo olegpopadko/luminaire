@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use AppBundle\Entity\Project;
 
 /**
@@ -65,11 +66,10 @@ class ProjectController extends Controller
      * @Route("/", name="project_create")
      * @Method("POST")
      * @Template("AppBundle:Project:new.html.twig")
+     * @Security("is_granted('create_project')")
      */
     public function createAction(Request $request)
     {
-        $this->denyAccessUnlessGranted('create_project');
-
         $entity = new Project();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
@@ -113,11 +113,10 @@ class ProjectController extends Controller
      * @Route("/new", name="project_new")
      * @Method("GET")
      * @Template()
+     * @Security("is_granted('create_project')")
      */
     public function newAction()
     {
-        $this->denyAccessUnlessGranted('create_project');
-
         $entity = new Project();
         $form = $this->createCreateForm($entity);
 
@@ -133,19 +132,10 @@ class ProjectController extends Controller
      * @Route("/{code}", name="project_show")
      * @Method("GET")
      * @Template()
+     * @Security("is_granted('view', entity)")
      */
-    public function showAction($code)
+    public function showAction(Project $entity)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('AppBundle:Project')->findOneByCode($code);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Project entity.');
-        }
-
-        $this->denyAccessUnlessGranted('view', $entity);
-
         return [
             'entity' => $entity,
         ];
@@ -157,24 +147,13 @@ class ProjectController extends Controller
      * @Route("/{code}/edit", name="project_edit")
      * @Method("GET")
      * @Template()
+     * @Security("is_granted('edit', entity)")
      */
-    public function editAction($code)
+    public function editAction(Project $entity)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('AppBundle:Project')->findOneByCode($code);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Project entity.');
-        }
-
-        $this->denyAccessUnlessGranted('edit', $entity);
-
-        $editForm = $this->createEditForm($entity);
-
         return [
             'entity'    => $entity,
-            'edit_form' => $editForm->createView(),
+            'edit_form' => $this->createEditForm($entity)->createView(),
         ];
     }
 
@@ -203,26 +182,17 @@ class ProjectController extends Controller
      * @Route("/{code}", name="project_update")
      * @Method("PUT")
      * @Template("AppBundle:Project:edit.html.twig")
+     * @Security("is_granted('edit', entity)")
      */
-    public function updateAction(Request $request, $code)
+    public function updateAction(Request $request, Project $entity)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('AppBundle:Project')->findOneByCode($code);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Project entity.');
-        }
-
-        $this->denyAccessUnlessGranted('edit', $entity);
-
         $editForm = $this->createEditForm($entity);
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
-            $em->flush();
+            $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirect($this->generateUrl('project_show', ['code' => $code]));
+            return $this->redirect($this->generateUrl('project_show', ['code' => $entity->getCode()]));
         }
 
         return [
