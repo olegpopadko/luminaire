@@ -22,7 +22,7 @@ services:
         tags:
             - { name: security.voter }
 
-    app.project_filter:
+    app.security.project_filter:
         arguments: [@security.token_storage]
         class:      %project_filter_class%
 

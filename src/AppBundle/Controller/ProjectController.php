@@ -37,7 +37,7 @@ class ProjectController extends Controller
         $queryBuilder = $em->getRepository('AppBundle:Project')->createQueryBuilder('p')
             ->where('p.code like :q or p.label like :q or p.summary like :q')
             ->setParameter('q', '%' . $formData['q'] . '%');
-        $this->get('app.project_filter')->apply($queryBuilder);
+        $this->get('app.security.project_filter')->apply($queryBuilder);
 
         return [
             'find_form' => $findForm->createView(),
