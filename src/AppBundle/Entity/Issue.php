@@ -2,13 +2,19 @@
 
 namespace AppBundle\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Issue
  *
- * @ORM\Table()
+ * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(columns={
+ *      "code", "project_id"
+ *  })})
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
+ * @UniqueEntity({"code", "project"})
  */
 class Issue
 {
@@ -25,13 +31,16 @@ class Issue
      * @var string
      *
      * @ORM\Column(name="summary", type="text")
+     * @Assert\NotBlank()
      */
     private $summary;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="code", type="string", length=45, unique=true)
+     * @ORM\Column(name="code", type="string", length=45)
+     * @Assert\NotBlank()
+     * @Assert\Length(max=255)
      */
     private $code;
 
@@ -39,6 +48,7 @@ class Issue
      * @var string
      *
      * @ORM\Column(name="description", type="text")
+     * @Assert\NotBlank()
      */
     private $description;
 
@@ -61,6 +71,7 @@ class Issue
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\IssueStatus")
      * @ORM\JoinColumn(name="issue_status_id", referencedColumnName="id", nullable = false)
+     * @Assert\NotBlank()
      **/
     private $status;
 
@@ -68,7 +79,7 @@ class Issue
      * @var \AppBundle\Entity\IssueResolution
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\IssueResolution")
-     * @ORM\JoinColumn(name="issue_resolution_id", referencedColumnName="id", nullable = false)
+     * @ORM\JoinColumn(name="issue_resolution_id", referencedColumnName="id")
      **/
     private $resolution;
 
@@ -77,6 +88,7 @@ class Issue
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\IssueType")
      * @ORM\JoinColumn(name="issue_type_id", referencedColumnName="id", nullable = false)
+     * @Assert\NotBlank()
      **/
     private $type;
 
@@ -85,6 +97,7 @@ class Issue
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
      * @ORM\JoinColumn(name="reporter_id", referencedColumnName="id", nullable = false)
+     * @Assert\NotBlank()
      **/
     private $reporter;
 
@@ -92,7 +105,7 @@ class Issue
      * @var \AppBundle\Entity\User
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
-     * @ORM\JoinColumn(name="assignee_id", referencedColumnName="id", nullable = false)
+     * @ORM\JoinColumn(name="assignee_id", referencedColumnName="id")
      **/
     private $assignee;
 
@@ -101,6 +114,7 @@ class Issue
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Project")
      * @ORM\JoinColumn(name="project_id", referencedColumnName="id", nullable = false)
+     * @Assert\NotBlank()
      **/
     private $project;
 
