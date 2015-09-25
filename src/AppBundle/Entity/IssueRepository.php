@@ -36,8 +36,7 @@ class IssueRepository extends \Doctrine\ORM\EntityRepository
     public function findOneByProjectAndOrderByCode(Project $project)
     {
         return $this->createQueryBuilder('i')
-            ->innerJoin('i.project', 'p')
-            ->where('p = :project')
+            ->where('i.project = :project')
             ->orderBy('i.code', 'DESC')
             ->setParameter('project', $project)
             ->getQuery()
