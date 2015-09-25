@@ -2,12 +2,12 @@
 
 namespace AppBundle\Form;
 
-use AppBundle\Utils\ProjectCodeConverter;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use AppBundle\Utils\ProjectCodeConverter;
 
 class ProjectType extends AbstractType
 {
@@ -56,7 +56,7 @@ class ProjectType extends AbstractType
     public function onSubmit(FormEvent $event)
     {
         $entity = $event->getData();
-        $event->getData()->setCode($this->projectCodeConverter->getCode($entity));
+        $entity->setCode($this->projectCodeConverter->getCode($entity));
     }
 
     /**

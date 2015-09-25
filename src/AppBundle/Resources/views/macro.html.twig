@@ -11,5 +11,5 @@
 {% endmacro %}
 
 {% macro issue(issue) %}
-    <a href="{{ path('issue_show', {'id': issue.id}) }}">{{ issue }}</a>
+    <a href="{{ path('issue_show', {'code': issue_code(issue)}) }}">{{ issue }}</a>
 {% endmacro %}

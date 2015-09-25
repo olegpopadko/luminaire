@@ -10,6 +10,12 @@ namespace AppBundle\Entity;
  */
 class IssueRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param $code
+     * @param $projectCode
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function findByCodeAndProjectCode($code, $projectCode)
     {
         return $this->createQueryBuilder('i')
@@ -22,6 +28,11 @@ class IssueRepository extends \Doctrine\ORM\EntityRepository
             ->getOneOrNullResult();
     }
 
+    /**
+     * @param Project $project
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function findOneByProjectAndOrderByCode(Project $project)
     {
         return $this->createQueryBuilder('i')
@@ -30,6 +41,7 @@ class IssueRepository extends \Doctrine\ORM\EntityRepository
             ->orderBy('i.code', 'DESC')
             ->setParameter('project', $project)
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult();
     }
 }

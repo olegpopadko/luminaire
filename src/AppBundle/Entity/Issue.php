@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  *  })})
  * @ORM\Entity(repositoryClass="AppBundle\Entity\IssueRepository")
  * @ORM\HasLifecycleCallbacks
- * @UniqueEntity({"code", "project"})
+ * @UniqueEntity({"code", "project"}, message="Please try again.")
  */
 class Issue
 {

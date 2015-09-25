@@ -9,7 +9,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Entity\Issue;
-use AppBundle\Form\IssueType;
 
 /**
  * Issue controller.
@@ -55,7 +54,7 @@ class IssueController extends Controller
      */
     private function createCreateForm(Issue $entity)
     {
-        $form = $this->createForm(new IssueType(), $entity, [
+        $form = $this->createForm('appbundle_issue', $entity, [
             'action' => $this->generateUrl('issue_create'),
             'method' => 'POST',
         ]);
@@ -124,7 +123,7 @@ class IssueController extends Controller
      */
     private function createEditForm(Issue $entity)
     {
-        $form = $this->createForm(new IssueType(), $entity, [
+        $form = $this->createForm('appbundle_issue', $entity, [
             'action' => $this->generateUrl('issue_update', ['code' => $this->getIssueCode($entity)]),
             'method' => 'PUT',
         ]);

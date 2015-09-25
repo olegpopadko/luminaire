@@ -10,6 +10,8 @@ parameters:
     issue_code_converter_class: AppBundle\Utils\IssueCodeConverter
     app_twig_extension_class: AppBundle\Twig\AppExtension
     issue_voter_class: AppBundle\Security\Authorization\Voter\IssueVoter
+    issue_code_generator_class: AppBundle\Utils\IssueCodeGenerator
+    issue_type_class: AppBundle\Form\IssueType
 
 services:
     security.access.user_voter:
@@ -62,3 +64,13 @@ services:
         public:     false
         tags:
             - { name: security.voter }
+
+    app.project_code_generator:
+        arguments: [@doctrine.orm.entity_manager]
+        class:      %issue_code_generator_class%
+
+    app.form.type.issue:
+        arguments: [@app.project_code_generator]
+        class:      %issue_type_class%
+        tags:
+            - { name: form.type, alias: appbundle_issue }

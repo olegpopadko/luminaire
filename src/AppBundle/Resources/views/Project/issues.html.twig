@@ -8,7 +8,6 @@
     <table class="records_list">
         <thead>
         <tr>
-            <th>{{ "Code"|trans }}</th>
             <th>{{ "Summary"|trans }}</th>
             <th>{{ "Reporter"|trans }}</th>
             <th>{{ "Assignee"|trans }}</th>
@@ -19,8 +18,7 @@
         <tbody>
         {% for entity in entities %}
             <tr>
-                <td><a href="{{ path('issue_show', { 'code': issue_code(entity) }) }}">{{ entity.code }}</a></td>
-                <td>{{ entity.summary }}</td>
+                <td>{{ macro.issue(entity) }}</td>
                 <td>{{ entity.reporter }}</td>
                 <td>{{ entity.assignee }}</td>
                 <td>{% if entity.createdAt %}{{ entity.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>

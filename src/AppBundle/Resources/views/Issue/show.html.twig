@@ -4,13 +4,13 @@
 
 {% block body -%}
     <h3>{{ "Issue"|trans }}</h3>
-    <h1>{{ entity }}</h1>
+    <h1>{{ macro.issue(entity) }}</h1>
 
     <table class="record_properties">
         <tbody>
         <tr>
             <th>{{ "Code"|trans }}</th>
-            <td>{{ entity.code }}</td>
+            <td>{{ issue_code(entity) }}</td>
         </tr>
         <tr>
             <th>{{ "Summary"|trans }}</th>
