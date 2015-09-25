@@ -146,7 +146,7 @@ class Issue
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", inversedBy="projects")
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User")
      * @ORM\JoinTable(name="user_to_issue")
      */
     private $collaborators;
