@@ -5,3 +5,11 @@
 {% macro user(user) %}
     <a href="{{ path('profile', {'id': user.id}) }}">@{{ user.username }}</a>
 {% endmacro %}
+
+{% macro project(project) %}
+    <a href="{{ path('project_show', {'code': project.code}) }}">{{ project }}</a>
+{% endmacro %}
+
+{% macro issue(issue) %}
+    <a href="{{ path('issue_show', {'id': issue.id}) }}">{{ issue }}</a>
+{% endmacro %}

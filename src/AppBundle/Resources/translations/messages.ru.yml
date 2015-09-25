@@ -22,5 +22,18 @@ Sign up: Регистрация
 Join: Присоединиться
 Label: Метка
 Code: Код
-Summary: Описание
+Summary: Изложение
+Description: Описание
+Status: Статус
+Priority: Приоритет
+Resolution: Итог
+Type: Тип
+Reporter: Создатель
+Assignee: Ответственный
+Project: Проект
+Issue: Задача
+Parent: Родитель
+Subtasks: Подзадачи
+Collaborators: Наблюдатели
 Created at: Дата создания
+Updated at: Дата редактирования

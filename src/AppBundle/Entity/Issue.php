@@ -30,8 +30,9 @@ class Issue
     /**
      * @var string
      *
-     * @ORM\Column(name="summary", type="text")
+     * @ORM\Column(name="summary", type="string", length=255)
      * @Assert\NotBlank()
+     * @Assert\Length(max=255)
      */
     private $summary;
 
@@ -155,17 +156,16 @@ class Issue
      */
     public function __construct()
     {
-        $this->children = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->children      = new \Doctrine\Common\Collections\ArrayCollection();
         $this->collaborators = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
 
     /**
      * @return string
      */
     public function __toString()
     {
-        return $this->getProject()->getCode() . '-' . $this->getCode() . ' ' . $this->getSummary();
+        return $this->getHumanCode() . ' ' . $this->getSummary();
     }
 
     /**
@@ -573,5 +573,13 @@ class Issue
     public function getPriority()
     {
         return $this->priority;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHumanCode()
+    {
+        return $this->getProject()->getCode() . '-' . $this->getCode();
     }
 }

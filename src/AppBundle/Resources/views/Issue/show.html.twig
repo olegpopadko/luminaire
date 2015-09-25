@@ -1,48 +1,92 @@
 {% extends '::base.html.twig' %}
 
+{% block title %}{{ "Issue"|trans }}{% endblock %}
+
 {% block body -%}
-    <h1>Issue</h1>
+    <h1>{{ "Issue"|trans }}</h1>
 
     <table class="record_properties">
         <tbody>
+        <tr>
+            <th>{{ "Code"|trans }}</th>
+            <td>{{ entity.humanCode }}</td>
+        </tr>
+        <tr>
+            <th>{{ "Summary"|trans }}</th>
+            <td>{{ entity.summary }}</td>
+        </tr>
+        <tr>
+            <th>{{ "Description"|trans }}</th>
+            <td>{{ entity.description }}</td>
+        </tr>
+        <tr>
+            <th>{{ "Status"|trans }}</th>
+            <td>{{ entity.status }}</td>
+        </tr>
+        <tr>
+            <th>{{ "Priority"|trans }}</th>
+            <td>{{ entity.priority }}</td>
+        </tr>
+        <tr>
+            <th>{{ "Resolution"|trans }}</th>
+            <td>{{ entity.resolution }}</td>
+        </tr>
+        <tr>
+            <th>{{ "Type"|trans }}</th>
+            <td>{{ entity.type }}</td>
+        </tr>
+        <tr>
+            <th>{{ "Reporter"|trans }}</th>
+            <td>{{ macro.user(entity.reporter) }}</td>
+        </tr>
+        <tr>
+            <th>{{ "Assignee"|trans }}</th>
+            <td>{% if entity.assignee %}{{ macro.user(entity.assignee) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <th>{{ "Project"|trans }}</th>
+            <td>{{ macro.project(entity.project) }}</td>
+        </tr>
+        {% if entity.parent %}
             <tr>
-                <th>Id</th>
-                <td>{{ entity.id }}</td>
+                <th>{{ "Parent"|trans }}</th>
+                <td>{{ macro.issue(entity.parent) }}</td>
             </tr>
+        {% endif %}
+        {% if entity.children is not empty %}
             <tr>
-                <th>Summary</th>
-                <td>{{ entity.summary }}</td>
+                <th>{{ "Subtasks"|trans }}</th>
+                <td>
+                    <ul>
+                        {% for child in entity.children %}
+                            <li>{{ macro.issue(child) }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
             </tr>
-            <tr>
-                <th>Code</th>
-                <td>{{ entity.code }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ entity.description }}</td>
-            </tr>
-            <tr>
-                <th>Createdat</th>
-                <td>{{ entity.createdAt|date('Y-m-d H:i:s') }}</td>
-            </tr>
-            <tr>
-                <th>Updatedat</th>
-                <td>{{ entity.updatedAt|date('Y-m-d H:i:s') }}</td>
-            </tr>
+        {% endif %}
+        <tr>
+            <th>{{ "Collaborators"|trans }}</th>
+            <td>
+                <ul>
+                    {% for collaborator in entity.collaborators %}
+                        <li>{{ macro.user(collaborator) }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>{{ "Created at"|trans }}</th>
+            <td>{{ macro.user_date(entity.createdAt) }}</td>
+        </tr>
+        <tr>
+            <th>{{ "Updated at"|trans }}</th>
+            <td>{{ macro.user_date(entity.updatedAt) }}</td>
+        </tr>
         </tbody>
     </table>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('issue') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>
-        <a href="{{ path('issue_edit', { 'id': entity.id }) }}">
-            Edit
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+    <a href="{{ path('issue_edit', { 'id': entity.id }) }}" class="button">
+        Edit
+    </a>
 {% endblock %}

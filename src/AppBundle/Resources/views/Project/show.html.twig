@@ -1,9 +1,9 @@
 {% extends '::base.html.twig' %}
 
-{% block title %}{{ "Project"|trans({}, "project") }}{% endblock %}
+{% block title %}{{ "Project"|trans }}{% endblock %}
 
 {% block body -%}
-    <h3>{{ "Project"|trans({}, "project") }}</h3>
+    <h3>{{ "Project"|trans }}</h3>
     <h1>{{ entity.label }}</h1>
 
     <table class="record_properties">
@@ -24,9 +24,9 @@
             <th>{{ "Users"|trans }}</th>
             <td>
                 <ul>
-                {% for user in entity.users %}
-                    <li>{{ macro.user(user) }}</li>
-                {% endfor %}
+                    {% for user in entity.users %}
+                        <li>{{ macro.user(user) }}</li>
+                    {% endfor %}
                 </ul>
             </td>
         </tr>

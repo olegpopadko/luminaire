@@ -1,15 +1,12 @@
 {% extends '::base.html.twig' %}
 
+{% trans_default_domain "issue" %}
+
+{% block title %}{{ "Issue creation"|trans }}{% endblock %}
+
 {% block body -%}
-    <h1>Issue creation</h1>
+    <h1>{{ "Issue creation"|trans }}</h1>
 
     {{ form(form) }}
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('issue') }}">
-            Back to the list
-        </a>
-    </li>
-</ul>
 {% endblock %}
