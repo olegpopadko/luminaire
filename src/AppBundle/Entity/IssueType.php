@@ -29,6 +29,14 @@ class IssueType
     private $label;
 
     /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getLabel();
+    }
+
+    /**
      * Get id
      *
      * @return integer

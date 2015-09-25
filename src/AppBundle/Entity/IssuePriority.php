@@ -5,12 +5,12 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * IssueStatus
+ * IssuePriority
  *
  * @ORM\Table()
  * @ORM\Entity
  */
-class IssueStatus
+class IssuePriority
 {
     /**
      * @var integer
@@ -24,7 +24,7 @@ class IssueStatus
     /**
      * @var string
      *
-     * @ORM\Column(name="`label`", type="string", length=45)
+     * @ORM\Column(name="label", type="string", length=45)
      */
     private $label;
 
@@ -51,7 +51,7 @@ class IssueStatus
      *
      * @param string $label
      *
-     * @return IssueResolution
+     * @return IssuePriority
      */
     public function setLabel($label)
     {

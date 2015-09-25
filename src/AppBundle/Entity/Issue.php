@@ -76,6 +76,15 @@ class Issue
     private $status;
 
     /**
+     * @var \AppBundle\Entity\IssuePriority
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\IssuePriority")
+     * @ORM\JoinColumn(name="issue_priority_id", referencedColumnName="id", nullable = false)
+     * @Assert\NotBlank()
+     **/
+    private $priority;
+
+    /**
      * @var \AppBundle\Entity\IssueResolution
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\IssueResolution")
@@ -148,6 +157,15 @@ class Issue
     {
         $this->children = new \Doctrine\Common\Collections\ArrayCollection();
         $this->collaborators = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getProject()->getCode() . '-' . $this->getCode() . ' ' . $this->getSummary();
     }
 
     /**
@@ -531,5 +549,29 @@ class Issue
     public function getCollaborators()
     {
         return $this->collaborators;
+    }
+
+    /**
+     * Set priority
+     *
+     * @param \AppBundle\Entity\IssuePriority $priority
+     *
+     * @return Issue
+     */
+    public function setPriority(\AppBundle\Entity\IssuePriority $priority = null)
+    {
+        $this->priority = $priority;
+
+        return $this;
+    }
+
+    /**
+     * Get priority
+     *
+     * @return \AppBundle\Entity\IssuePriority
+     */
+    public function getPriority()
+    {
+        return $this->priority;
     }
 }

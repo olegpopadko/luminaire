@@ -21,6 +21,7 @@ class IssueType extends AbstractType
             ->add('code')
             ->add('description')
             ->add('status')
+            ->add('priority')
             ->add('resolution')
             ->add('type')
             ->add('reporter')
