@@ -17,12 +17,12 @@
         <tbody>
         {% for entity in entities %}
             <tr>
-                <td><a href="{{ path('issue_show', { 'id': entity.id }) }}">{{ entity.humanCode }}</a>
+                <td><a href="{{ path('issue_show', { 'code': issue_code(entity) }) }}">{{ entity }}</a>
                 </td>
                 <td>{{ entity.summary }}</td>
                 <td>{% if entity.createdAt %}{{ entity.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>
-                    <a href="{{ path('issue_edit', { 'id': entity.id }) }}" class="button">{{ "Edit"|trans }}</a>
+                    <a href="{{ path('issue_edit', { 'code': issue_code(entity) }) }}" class="button">{{ "Edit"|trans }}</a>
                 </td>
             </tr>
         {% endfor %}

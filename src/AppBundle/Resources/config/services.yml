@@ -6,6 +6,9 @@ parameters:
     project_filter_class: AppBundle\Security\Filter\ProjectFilter
     name_converter_class: AppBundle\Utils\NameConverter
     project_type_class: AppBundle\Form\ProjectType
+    issue_param_converter_class: AppBundle\Request\ParamConverter\IssueConverter
+    issue_code_converter_class: AppBundle\Utils\IssueCodeConverter
+    app_twig_extension_class: AppBundle\Twig\AppExtension
 
 services:
     security.access.user_voter:
@@ -34,3 +37,20 @@ services:
         class:      %project_type_class%
         tags:
             - { name: form.type, alias: appbundle_project }
+
+    app.request.params.issue_converter:
+        arguments: [@app.issue_code_converter, @doctrine]
+        class:      %issue_param_converter_class%
+        tags:
+            - { name: request.param_converter }
+
+    app.issue_code_converter:
+        arguments: [@doctrine.orm.entity_manager]
+        class:      %issue_code_converter_class%
+
+    app.twig_extension:
+        arguments: [@app.issue_code_converter]
+        class:      %app_twig_extension_class%
+        public:     false
+        tags:
+            - { name: twig.extension }

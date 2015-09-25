@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(columns={
  *      "code", "project_id"
  *  })})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\IssueRepository")
  * @ORM\HasLifecycleCallbacks
  * @UniqueEntity({"code", "project"})
  */
@@ -165,7 +165,7 @@ class Issue
      */
     public function __toString()
     {
-        return $this->getHumanCode() . ' ' . $this->getSummary();
+        return $this->getProject()->getCode() . '-' . $this->getCode(). ' ' . $this->getSummary();
     }
 
     /**
@@ -573,13 +573,5 @@ class Issue
     public function getPriority()
     {
         return $this->priority;
-    }
-
-    /**
-     * @return string
-     */
-    public function getHumanCode()
-    {
-        return $this->getProject()->getCode() . '-' . $this->getCode();
     }
 }

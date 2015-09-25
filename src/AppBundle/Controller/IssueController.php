@@ -54,7 +54,7 @@ class IssueController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('issue_show', ['id' => $entity->getId()]));
+            return $this->redirect($this->generateUrl('issue_show', ['code' => $this->getIssueCode($entity)]));
         }
 
         return [
@@ -103,20 +103,12 @@ class IssueController extends Controller
     /**
      * Finds and displays a Issue entity.
      *
-     * @Route("/{id}", name="issue_show")
+     * @Route("/{code}", name="issue_show")
      * @Method("GET")
      * @Template()
      */
-    public function showAction($id)
+    public function showAction(Issue $entity)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('AppBundle:Issue')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Issue entity.');
-        }
-
         return [
             'entity' => $entity,
         ];
@@ -125,25 +117,15 @@ class IssueController extends Controller
     /**
      * Displays a form to edit an existing Issue entity.
      *
-     * @Route("/{id}/edit", name="issue_edit")
+     * @Route("/{code}/edit", name="issue_edit")
      * @Method("GET")
      * @Template()
      */
-    public function editAction($id)
+    public function editAction(Issue $entity)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('AppBundle:Issue')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Issue entity.');
-        }
-
-        $editForm = $this->createEditForm($entity);
-
         return [
             'entity'    => $entity,
-            'edit_form' => $editForm->createView(),
+            'edit_form' => $this->createEditForm($entity)->createView(),
         ];
     }
 
@@ -157,7 +139,7 @@ class IssueController extends Controller
     private function createEditForm(Issue $entity)
     {
         $form = $this->createForm(new IssueType(), $entity, [
-            'action' => $this->generateUrl('issue_update', ['id' => $entity->getId()]),
+            'action' => $this->generateUrl('issue_update', ['code' => $this->getIssueCode($entity)]),
             'method' => 'PUT',
         ]);
 
@@ -169,32 +151,33 @@ class IssueController extends Controller
     /**
      * Edits an existing Issue entity.
      *
-     * @Route("/{id}", name="issue_update")
+     * @Route("/{code}", name="issue_update")
      * @Method("PUT")
      * @Template("AppBundle:Issue:edit.html.twig")
      */
-    public function updateAction(Request $request, $id)
+    public function updateAction(Request $request, Issue $entity)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('AppBundle:Issue')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Issue entity.');
-        }
-
         $editForm = $this->createEditForm($entity);
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
-            $em->flush();
+            $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirect($this->generateUrl('issue_show', ['id' => $id]));
+            return $this->redirect($this->generateUrl('issue_show', ['code' => $this->getIssueCode($entity)]));
         }
 
         return [
             'entity'    => $entity,
             'edit_form' => $editForm->createView(),
         ];
+    }
+
+    /**
+     * @param Issue $entity
+     * @return string
+     */
+    private function getIssueCode(Issue $entity)
+    {
+        return $this->get('app.issue_code_converter')->getCode($entity);
     }
 }

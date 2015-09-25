@@ -3,13 +3,14 @@
 {% block title %}{{ "Issue"|trans }}{% endblock %}
 
 {% block body -%}
-    <h1>{{ "Issue"|trans }}</h1>
+    <h3>{{ "Issue"|trans }}</h3>
+    <h1>{{ entity }}</h1>
 
     <table class="record_properties">
         <tbody>
         <tr>
             <th>{{ "Code"|trans }}</th>
-            <td>{{ entity.humanCode }}</td>
+            <td>{{ entity.code }}</td>
         </tr>
         <tr>
             <th>{{ "Summary"|trans }}</th>
@@ -86,7 +87,7 @@
         </tbody>
     </table>
 
-    <a href="{{ path('issue_edit', { 'id': entity.id }) }}" class="button">
+    <a href="{{ path('issue_edit', { 'code': issue_code(entity) }) }}" class="button">
         Edit
     </a>
 {% endblock %}
