@@ -21,4 +21,15 @@ class IssueRepository extends \Doctrine\ORM\EntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findOneByProjectAndOrderByCode(Project $project)
+    {
+        return $this->createQueryBuilder('i')
+            ->innerJoin('i.project', 'p')
+            ->where('p = :project')
+            ->orderBy('i.code', 'DESC')
+            ->setParameter('project', $project)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
