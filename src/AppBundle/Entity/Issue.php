@@ -122,7 +122,7 @@ class Issue
     /**
      * @var \AppBundle\Entity\Project
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Project")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Project", inversedBy="issues")
      * @ORM\JoinColumn(name="project_id", referencedColumnName="id", nullable = false)
      * @Assert\NotBlank()
      **/
@@ -165,7 +165,7 @@ class Issue
      */
     public function __toString()
     {
-        return $this->getProject()->getCode() . '-' . $this->getCode(). ' ' . $this->getSummary();
+        return $this->getProject()->getCode() . '-' . $this->getCode() . ' ' . $this->getSummary();
     }
 
     /**

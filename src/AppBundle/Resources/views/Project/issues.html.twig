@@ -10,6 +10,8 @@
         <tr>
             <th>{{ "Code"|trans }}</th>
             <th>{{ "Summary"|trans }}</th>
+            <th>{{ "Reporter"|trans }}</th>
+            <th>{{ "Assignee"|trans }}</th>
             <th>{{ "Created at"|trans }}</th>
             <th>{{ "Actions"|trans }}</th>
         </tr>
@@ -17,9 +19,10 @@
         <tbody>
         {% for entity in entities %}
             <tr>
-                <td><a href="{{ path('issue_show', { 'code': issue_code(entity) }) }}">{{ entity }}</a>
-                </td>
+                <td><a href="{{ path('issue_show', { 'code': issue_code(entity) }) }}">{{ entity.code }}</a></td>
                 <td>{{ entity.summary }}</td>
+                <td>{{ entity.reporter }}</td>
+                <td>{{ entity.assignee }}</td>
                 <td>{% if entity.createdAt %}{{ entity.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>
                     <a href="{{ path('issue_edit', { 'code': issue_code(entity) }) }}" class="button">{{ "Edit"|trans }}</a>

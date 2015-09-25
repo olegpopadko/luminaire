@@ -9,6 +9,7 @@ parameters:
     issue_param_converter_class: AppBundle\Request\ParamConverter\IssueConverter
     issue_code_converter_class: AppBundle\Utils\IssueCodeConverter
     app_twig_extension_class: AppBundle\Twig\AppExtension
+    issue_voter_class: AppBundle\Security\Authorization\Voter\IssueVoter
 
 services:
     security.access.user_voter:
@@ -54,3 +55,10 @@ services:
         public:     false
         tags:
             - { name: twig.extension }
+
+    security.access.issue_voter:
+        arguments: [@security.token_storage, @security.access.role_hierarchy_voter]
+        class:      %issue_voter_class%
+        public:     false
+        tags:
+            - { name: security.voter }

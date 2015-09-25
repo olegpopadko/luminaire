@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Entity\Issue;
 use AppBundle\Form\IssueType;
@@ -17,31 +18,13 @@ use AppBundle\Form\IssueType;
  */
 class IssueController extends Controller
 {
-
-    /**
-     * Lists all Issue entities.
-     *
-     * @Route("/", name="issue")
-     * @Method("GET")
-     * @Template()
-     */
-    public function indexAction()
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entities = $em->getRepository('AppBundle:Issue')->findAll();
-
-        return [
-            'entities' => $entities,
-        ];
-    }
-
     /**
      * Creates a new Issue entity.
      *
      * @Route("/", name="issue_create")
      * @Method("POST")
      * @Template("AppBundle:Issue:new.html.twig")
+     * @Security("is_granted('create_issue')")
      */
     public function createAction(Request $request)
     {
@@ -88,6 +71,7 @@ class IssueController extends Controller
      * @Route("/new", name="issue_new")
      * @Method("GET")
      * @Template()
+     * @Security("is_granted('create_issue')")
      */
     public function newAction()
     {
@@ -106,6 +90,7 @@ class IssueController extends Controller
      * @Route("/{code}", name="issue_show")
      * @Method("GET")
      * @Template()
+     * @Security("is_granted('view', entity)")
      */
     public function showAction(Issue $entity)
     {
@@ -120,6 +105,7 @@ class IssueController extends Controller
      * @Route("/{code}/edit", name="issue_edit")
      * @Method("GET")
      * @Template()
+     * @Security("is_granted('edit', entity)")
      */
     public function editAction(Issue $entity)
     {
@@ -154,6 +140,7 @@ class IssueController extends Controller
      * @Route("/{code}", name="issue_update")
      * @Method("PUT")
      * @Template("AppBundle:Issue:edit.html.twig")
+     * @Security("is_granted('edit', entity)")
      */
     public function updateAction(Request $request, Issue $entity)
     {

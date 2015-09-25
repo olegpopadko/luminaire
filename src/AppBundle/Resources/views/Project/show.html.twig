@@ -38,4 +38,8 @@
             {{ "Edit"|trans }}
         </a>
     {% endif %}
+
+    <a href="{{ path('project_issues', { 'code': entity.code }) }}" class="button">
+        {{ "Issue list"|trans({}, "issue") }}
+    </a>
 {% endblock %}

@@ -61,6 +61,21 @@ class ProjectController extends Controller
     }
 
     /**
+     * Lists project Issue entities.
+     *
+     * @Route("/{code}/issues", name="project_issues")
+     * @Method("GET")
+     * @Template()
+     * @Security("is_granted('view', project)")
+     */
+    public function issuesAction(Project $project)
+    {
+        return [
+            'entities' => $project->getIssues(),
+        ];
+    }
+
+    /**
      * Creates a new Project entity.
      *
      * @Route("/", name="project_create")
