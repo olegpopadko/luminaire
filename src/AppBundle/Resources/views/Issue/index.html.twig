@@ -5,7 +5,7 @@
 {% block body -%}
     <h1>{{ "Issue list"|trans({}, "issue") }}</h1>
 
-    {% include "AppBundle:Project:find.html.twig" with {find_form: find_form} %}
+    {% include "AppBundle::find.html.twig" with {find_form: find_form} %}
 
     <table class="records_list">
         <thead>
@@ -18,6 +18,11 @@
         </tr>
         </thead>
         <tbody>
+        {% if entities is empty %}
+            <tr>
+                <td colspan="5">{{ "There is no available issues"|trans({}, "issue") }}</td>
+            </tr>
+        {% endif %}
         {% for entity in entities %}
             <tr>
                 <td>{{ macro.issue(entity) }}</td>

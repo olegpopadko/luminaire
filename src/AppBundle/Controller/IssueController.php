@@ -2,20 +2,49 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Project;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use AppBundle\Controller\Traits\FindTrait;
 use AppBundle\Entity\Issue;
+use AppBundle\Entity\Project;
 
 /**
  * Issue controller.
  */
 class IssueController extends Controller
 {
+    use FindTrait;
+
+    /**
+     * Lists project Issue entities.
+     *
+     * @Route("/project/{code}/issues", name="project_issues")
+     * @Method("GET")
+     * @Template()
+     * @Security("is_granted('view', project)")
+     */
+    public function indexAction(Request $request, Project $project)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $findForm = $this->createFindForm($this->generateUrl('project_issues', ['code' => $project->getCode()]));
+        $findForm->handleRequest($request);
+
+        $formData = $findForm->getData();
+
+        $entities = $em->getRepository('AppBundle:Issue')->findByProjectAndAllTextFields($project, $formData['q']);
+
+        return [
+            'project'   => $project,
+            'entities'  => $entities,
+            'find_form' => $findForm->createView(),
+        ];
+    }
+
     /**
      * Creates a new Issue entity.
      *

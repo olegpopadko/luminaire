@@ -5,7 +5,7 @@
 {% block body -%}
     <h1>{{ "Project list"|trans({}, "project") }}</h1>
 
-    {% include "AppBundle:Project:find.html.twig" with {find_form: find_form} %}
+    {% include "AppBundle::find.html.twig" with {find_form: find_form} %}
 
     <table class="records_list">
         <thead>
@@ -18,7 +18,7 @@
         <tbody>
         {% if entities is empty %}
             <tr>
-                <td colspan="3">{{ "There is no available projects"|trans({}, 'project') }}</td>
+                <td colspan="3">{{ "There is no available projects"|trans({}, "project") }}</td>
             </tr>
         {% endif %}
         {% for entity in entities %}

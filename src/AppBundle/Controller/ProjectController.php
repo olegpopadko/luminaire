@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use AppBundle\Controller\Traits\FindTrait;
 use AppBundle\Entity\Project;
 
 /**
@@ -17,6 +18,7 @@ use AppBundle\Entity\Project;
  */
 class ProjectController extends Controller
 {
+    use FindTrait;
 
     /**
      * Lists all Project entities.
@@ -42,47 +44,6 @@ class ProjectController extends Controller
         return [
             'find_form' => $findForm->createView(),
             'entities'  => $queryBuilder->getQuery()->execute(),
-        ];
-    }
-
-    /**
-     * @return \Symfony\Component\Form\Form
-     */
-    private function createFindForm($action)
-    {
-        $form = $this->get('form.factory')->createNamed('', 'form', ['q' => null], [
-            'action' => $action,
-            'method' => 'GET',
-        ]);
-        $form->add('q', 'text', ['required' => false])
-            ->add('submit', 'submit');
-
-        return $form;
-    }
-
-    /**
-     * Lists project Issue entities.
-     *
-     * @Route("/{code}/issues", name="project_issues")
-     * @Method("GET")
-     * @Template()
-     * @Security("is_granted('view', project)")
-     */
-    public function issuesAction(Request $request, Project $project)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $findForm = $this->createFindForm($this->generateUrl('project_issues', ['code' => $project->getCode()]));
-        $findForm->handleRequest($request);
-
-        $formData = $findForm->getData();
-
-        $entities = $em->getRepository('AppBundle:Issue')->findByProjectAndAllTextFields($project, $formData['q']);
-
-        return [
-            'project'   => $project,
-            'entities'  => $entities,
-            'find_form' => $findForm->createView(),
         ];
     }
 
@@ -123,7 +84,7 @@ class ProjectController extends Controller
      */
     private function createCreateForm(Project $entity)
     {
-        $form = $this->container->get('form.factory')->create('appbundle_project', $entity, [
+        $form = $this->createForm('appbundle_project', $entity, [
             'action' => $this->generateUrl('project_create'),
             'method' => 'POST',
         ]);
