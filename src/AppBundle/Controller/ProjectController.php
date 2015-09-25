@@ -29,7 +29,7 @@ class ProjectController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $findForm = $this->createFindForm();
+        $findForm = $this->createFindForm($this->generateUrl('project'));
         $findForm->handleRequest($request);
 
         $formData = $findForm->getData();
@@ -48,10 +48,10 @@ class ProjectController extends Controller
     /**
      * @return \Symfony\Component\Form\Form
      */
-    private function createFindForm()
+    private function createFindForm($action)
     {
         $form = $this->get('form.factory')->createNamed('', 'form', ['q' => null], [
-            'action' => $this->generateUrl('project'),
+            'action' => $action,
             'method' => 'GET',
         ]);
         $form->add('q', 'text', ['required' => false])
@@ -68,10 +68,20 @@ class ProjectController extends Controller
      * @Template()
      * @Security("is_granted('view', project)")
      */
-    public function issuesAction(Project $project)
+    public function issuesAction(Request $request, Project $project)
     {
+        $em = $this->getDoctrine()->getManager();
+
+        $findForm = $this->createFindForm($this->generateUrl('project_issues', ['code' => $project->getCode()]));
+        $findForm->handleRequest($request);
+
+        $formData = $findForm->getData();
+
+        $entities = $em->getRepository('AppBundle:Issue')->findByProjectAndAllTextFields($project, $formData['q']);
+
         return [
-            'entities' => $project->getIssues(),
+            'entities'  => $entities,
+            'find_form' => $findForm->createView(),
         ];
     }
 
@@ -86,7 +96,7 @@ class ProjectController extends Controller
     public function createAction(Request $request)
     {
         $entity = new Project();
-        $form = $this->createCreateForm($entity);
+        $form   = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -133,7 +143,7 @@ class ProjectController extends Controller
     public function newAction()
     {
         $entity = new Project();
-        $form = $this->createCreateForm($entity);
+        $form   = $this->createCreateForm($entity);
 
         return [
             'entity' => $entity,

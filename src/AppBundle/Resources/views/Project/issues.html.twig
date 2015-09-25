@@ -5,6 +5,8 @@
 {% block body -%}
     <h1>{{ "Issue list"|trans({}, "issue") }}</h1>
 
+    {% include "AppBundle:Project:find.html.twig" with {find_form: find_form} %}
+
     <table class="records_list">
         <thead>
         <tr>

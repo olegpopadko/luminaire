@@ -44,4 +44,23 @@ class IssueRepository extends \Doctrine\ORM\EntityRepository
             ->setMaxResults(1)
             ->getOneOrNullResult();
     }
+
+    /**
+     * @param Project $project
+     * @param $q
+     */
+    public function findByProjectAndAllTextFields(Project $project, $q)
+    {
+        $queryBuilder = $this->createQueryBuilder('i')
+            ->where('i.project = :project')
+            ->setParameter('project', $project);
+
+        if (!empty($q)) {
+            $queryBuilder->andWhere('i.summary like :q or i.description like :q')
+                ->setParameter('q', '%' . $q . '%');
+        }
+
+        return $queryBuilder->getQuery()
+            ->execute();
+    }
 }
