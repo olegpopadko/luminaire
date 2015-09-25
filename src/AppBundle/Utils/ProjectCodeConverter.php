@@ -2,10 +2,23 @@
 
 namespace AppBundle\Utils;
 
-class NameConverter
+use AppBundle\Entity\Project;
+
+/**
+ * Class ProjectCodeConverter
+ */
+class ProjectCodeConverter
 {
-    public function toAcronym($string)
+    /**
+     * Converts label of Project entity to acronym
+     *
+     * @param Project $entity
+     * @return string
+     */
+    public function getCode(Project $entity)
     {
+        $string = $entity->getLabel();
+
         $patterns = [
             '/\p{Lu}/u',
             '/(?<!\p{L})\p{L}/u',
@@ -20,6 +33,6 @@ class NameConverter
             }
         }
 
-        return '';
+        return null;
     }
 }

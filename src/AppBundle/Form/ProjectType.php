@@ -2,7 +2,7 @@
 
 namespace AppBundle\Form;
 
-use AppBundle\Utils\NameConverter;
+use AppBundle\Utils\ProjectCodeConverter;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -12,16 +12,16 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class ProjectType extends AbstractType
 {
     /**
-     * @var NameConverter
+     * @var ProjectCodeConverter
      */
-    private $nameConverter;
+    private $projectCodeConverter;
 
     /**
-     * @param NameConverter $nameConverter
+     * @param ProjectCodeConverter $nameConverter
      */
-    public function __construct(NameConverter $nameConverter)
+    public function __construct(ProjectCodeConverter $projectCodeConverter)
     {
-        $this->nameConverter = $nameConverter;
+        $this->projectCodeConverter = $projectCodeConverter;
     }
 
     /**
@@ -56,7 +56,7 @@ class ProjectType extends AbstractType
     public function onSubmit(FormEvent $event)
     {
         $entity = $event->getData();
-        $event->getData()->setCode($this->nameConverter->toAcronym($entity->getLabel()));
+        $event->getData()->setCode($this->projectCodeConverter->getCode($entity));
     }
 
     /**

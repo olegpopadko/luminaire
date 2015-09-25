@@ -4,7 +4,7 @@ parameters:
     user_voter_class: AppBundle\Security\Authorization\Voter\UserVoter
     project_voter_class: AppBundle\Security\Authorization\Voter\ProjectVoter
     project_filter_class: AppBundle\Security\Filter\ProjectFilter
-    name_converter_class: AppBundle\Utils\NameConverter
+    project_code_converter_class: AppBundle\Utils\ProjectCodeConverter
     project_type_class: AppBundle\Form\ProjectType
     issue_param_converter_class: AppBundle\Request\ParamConverter\IssueConverter
     issue_code_converter_class: AppBundle\Utils\IssueCodeConverter
@@ -30,11 +30,11 @@ services:
         arguments: [@security.token_storage]
         class:      %project_filter_class%
 
-    app.name_converter:
-        class:      %name_converter_class%
+    app.project_code_converter:
+        class:      %project_code_converter_class%
 
     app.form.type.project:
-        arguments: [@app.name_converter]
+        arguments: [@app.project_code_converter]
         class:      %project_type_class%
         tags:
             - { name: form.type, alias: appbundle_project }
