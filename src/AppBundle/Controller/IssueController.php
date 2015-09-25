@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Project;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -12,23 +13,22 @@ use AppBundle\Entity\Issue;
 
 /**
  * Issue controller.
- *
- * @Route("/issue")
  */
 class IssueController extends Controller
 {
     /**
      * Creates a new Issue entity.
      *
-     * @Route("/", name="issue_create")
+     * @Route("/project/{code}/issue", name="issue_create")
      * @Method("POST")
      * @Template("AppBundle:Issue:new.html.twig")
-     * @Security("is_granted('create_issue')")
+     * @Security("is_granted('create_issue') and is_granted('view', project)")
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request, Project $project)
     {
         $entity = new Issue();
-        $form   = $this->createCreateForm($entity);
+        $entity->setProject($project);
+        $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -55,7 +55,7 @@ class IssueController extends Controller
     private function createCreateForm(Issue $entity)
     {
         $form = $this->createForm('appbundle_issue', $entity, [
-            'action' => $this->generateUrl('issue_create'),
+            'action' => $this->generateUrl('issue_create', ['code' => $entity->getProject()->getCode()]),
             'method' => 'POST',
         ]);
 
@@ -67,15 +67,16 @@ class IssueController extends Controller
     /**
      * Displays a form to create a new Issue entity.
      *
-     * @Route("/new", name="issue_new")
+     * @Route("/project/{code}/issue/new", name="issue_new")
      * @Method("GET")
      * @Template()
-     * @Security("is_granted('create_issue')")
+     * @Security("is_granted('create_issue') and is_granted('view', project)")
      */
-    public function newAction()
+    public function newAction(Project $project)
     {
         $entity = new Issue();
-        $form   = $this->createCreateForm($entity);
+        $entity->setProject($project);
+        $form = $this->createCreateForm($entity);
 
         return [
             'entity' => $entity,
@@ -86,7 +87,7 @@ class IssueController extends Controller
     /**
      * Finds and displays a Issue entity.
      *
-     * @Route("/{code}", name="issue_show")
+     * @Route("/issue/{code}", name="issue_show")
      * @Method("GET")
      * @Template()
      * @Security("is_granted('view', entity)")
@@ -101,7 +102,7 @@ class IssueController extends Controller
     /**
      * Displays a form to edit an existing Issue entity.
      *
-     * @Route("/{code}/edit", name="issue_edit")
+     * @Route("/issue/{code}/edit", name="issue_edit")
      * @Method("GET")
      * @Template()
      * @Security("is_granted('edit', entity)")
@@ -136,7 +137,7 @@ class IssueController extends Controller
     /**
      * Edits an existing Issue entity.
      *
-     * @Route("/{code}", name="issue_update")
+     * @Route("/issue/{code}", name="issue_update")
      * @Method("PUT")
      * @Template("AppBundle:Issue:edit.html.twig")
      * @Security("is_granted('edit', entity)")

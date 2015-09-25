@@ -32,7 +32,7 @@
         </tbody>
     </table>
 
-    <a href="{{ path('issue_new') }}" class="button">
+    <a href="{{ path('issue_new', {'code': project.code}) }}" class="button">
         {{ "Create a new issue"|trans({}, "issue") }}
     </a>
 {% endblock %}

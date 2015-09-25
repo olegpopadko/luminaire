@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * IssueType
  *
  * @ORM\Table()
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\IssueTypeRepository")
  */
 class IssueType
 {

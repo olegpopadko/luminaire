@@ -80,6 +80,7 @@ class ProjectController extends Controller
         $entities = $em->getRepository('AppBundle:Issue')->findByProjectAndAllTextFields($project, $formData['q']);
 
         return [
+            'project'   => $project,
             'entities'  => $entities,
             'find_form' => $findForm->createView(),
         ];

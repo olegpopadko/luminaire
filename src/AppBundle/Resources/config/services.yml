@@ -70,7 +70,7 @@ services:
         class:      %issue_code_generator_class%
 
     app.form.type.issue:
-        arguments: [@app.project_code_generator]
+        arguments: [@app.project_code_generator, @doctrine.orm.entity_manager]
         class:      %issue_type_class%
         tags:
             - { name: form.type, alias: appbundle_issue }

@@ -7,7 +7,10 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Doctrine\Common\Persistence\ObjectManager;
 use AppBundle\Utils\IssueCodeGenerator;
+use AppBundle\Entity\IssueRepository;
+use AppBundle\Entity\Issue;
 
 /**
  * Class IssueType
@@ -20,11 +23,17 @@ class IssueType extends AbstractType
     private $issueCodeGenerator;
 
     /**
+     * @var ObjectManager
+     */
+    private $manager;
+
+    /**
      * @param IssueCodeGenerator $issueCodeGenerator
      */
-    public function __construct(IssueCodeGenerator $issueCodeGenerator)
+    public function __construct(IssueCodeGenerator $issueCodeGenerator, ObjectManager $manager)
     {
         $this->issueCodeGenerator = $issueCodeGenerator;
+        $this->manager            = $manager;
     }
 
     /**
@@ -32,6 +41,10 @@ class IssueType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        /** @var Issue $entity */
+        $entity  = $builder->getData();
+        $project = $entity->getProject();
+
         $builder
             ->add('summary')
             ->add('description')
@@ -39,11 +52,25 @@ class IssueType extends AbstractType
             ->add('priority')
             ->add('resolution')
             ->add('type')
-            ->add('reporter')
-            ->add('assignee')
-            ->add('project')
-            ->add('parent')
-            ->add('collaborators');
+            ->add('reporter', null, [
+                'choices' => $project->getUsers(),
+            ])
+            ->add('assignee', null, [
+                'choices' => $project->getUsers(),
+            ])
+            ->add('parent', null, [
+                'query_builder' => function (IssueRepository $issueRepository) use ($entity) {
+                    $type = $this->manager->getRepository('AppBundle:IssueType')->findStory();
+                    return $issueRepository->createQueryBuilder('i')
+                        ->where('i.project = :project')
+                        ->andWhere('i.type = :type')
+                        ->setParameter('project', $entity->getProject())
+                        ->setParameter('type', $type);
+                },
+            ])
+            ->add('collaborators', null, [
+                'choices' => $project->getUsers(),
+            ]);
 
         $builder->addEventListener(FormEvents::SUBMIT, [$this, 'onSubmit']);
     }
