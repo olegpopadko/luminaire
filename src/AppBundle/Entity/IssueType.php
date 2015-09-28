@@ -69,4 +69,12 @@ class IssueType
     {
         return $this->label;
     }
+
+    /**
+     * @return bool
+     */
+    public function isSubtask()
+    {
+        return $this->getLabel() === 'Subtask';
+    }
 }

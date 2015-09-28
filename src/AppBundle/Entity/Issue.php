@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Validator\Constraints as AppAssert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -15,6 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="AppBundle\Entity\IssueRepository")
  * @ORM\HasLifecycleCallbacks
  * @UniqueEntity({"code", "project"}, message="Please try again.")
+ * @AppAssert\IssueSubtaskParent
  */
 class Issue
 {
