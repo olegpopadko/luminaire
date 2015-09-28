@@ -352,7 +352,7 @@ class User implements UserInterface, \Serializable
     private function hasRole($role)
     {
         if ($role instanceof Role) {
-            $role->getRole();
+            $role = $role->getRole();
         }
         foreach ($this->roles as $roleEntity) {
             if ($roleEntity->getRole() === $role) {

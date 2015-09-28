@@ -1,0 +1,9 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}{{ "Home"|trans }}{% endblock %}
+
+{% block body -%}
+
+    {% include "AppBundle::issues.html.twig" with {entities: collaborators_issues} %}
+
+{% endblock %}

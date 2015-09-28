@@ -1,0 +1,27 @@
+<div>
+    <table class="records_list">
+        <thead>
+        <tr>
+            <th>{{ "Summary"|trans }}</th>
+            <th>{{ "Reporter"|trans }}</th>
+            <th>{{ "Assignee"|trans }}</th>
+            <th>{{ "Created at"|trans }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if entities is empty %}
+            <tr>
+                <td colspan="4">{{ "There is no available issues"|trans({}, "issue") }}</td>
+            </tr>
+        {% endif %}
+        {% for entity in entities %}
+            <tr>
+                <td>{{ macro.issue(entity) }}</td>
+                <td>{{ entity.reporter }}</td>
+                <td>{{ entity.assignee }}</td>
+                <td>{% if entity.createdAt %}{{ entity.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

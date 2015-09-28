@@ -12,6 +12,7 @@ parameters:
     issue_voter_class: AppBundle\Security\Authorization\Voter\IssueVoter
     issue_code_generator_class: AppBundle\Utils\IssueCodeGenerator
     issue_type_class: AppBundle\Form\IssueType
+    issue_filter_class: AppBundle\Security\Filter\IssueFilter
 
 services:
     security.access.user_voter:
@@ -74,3 +75,7 @@ services:
         class:      %issue_type_class%
         tags:
             - { name: form.type, alias: appbundle_issue }
+
+    app.security.issue_filter:
+        arguments: [@security.token_storage]
+        class:      %issue_filter_class%
