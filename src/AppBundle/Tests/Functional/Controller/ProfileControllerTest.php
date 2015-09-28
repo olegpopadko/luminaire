@@ -82,7 +82,7 @@ class ProfileControllerTest extends TestCase
 
     public function testProfileEdit()
     {
-        $operator = $this->logInOperator();
+        $operator = $this->logIn('operator1');
         $crawler  = $this->client->request('GET', '/profile/' . $operator->getId() . '/edit');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
@@ -125,5 +125,28 @@ class ProfileControllerTest extends TestCase
         $this->assertEquals($fullName, $user->getFullName());
         $this->assertEquals($timezone, $user->getTimezone());
         $this->assertEquals([$em->getRepository('AppBundle:Role')->findOperatorRole()], $user->getRoles());
+    }
+
+    public function testAssignedIssues()
+    {
+        $operator = $this->logInOperator();
+        /** @var \Doctrine\Common\Persistence\ObjectManager $em */
+        $em = $this->get('doctrine')->getManager();
+
+        /** @var \AppBundle\Entity\Project $project */
+        $project = $em->getRepository('AppBundle:Project')->findOneByCode('TP');
+        $project->addUser($operator);
+        $em->persist($project);
+        $em->flush();
+
+        $crawler  = $this->client->request('GET', '/profile/' . $operator->getId());
+
+        $this->assertEquals('TP-1 Test issue summary', $crawler->filter('.assigned_issues a')->first()->text());
+
+        $this->logInManager();
+
+        $crawler  = $this->client->request('GET', '/profile/' . $operator->getId());
+
+        $this->assertEquals('There is no available issues', $crawler->filter('.assigned_issues td')->first()->text());
     }
 }

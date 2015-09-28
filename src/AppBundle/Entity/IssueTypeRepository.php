@@ -5,7 +5,7 @@ namespace AppBundle\Entity;
 /**
  * Class IssueTypeRepository
  *
- * @method Issue|null findByLabel() findByLabel(string $label)
+ * @method Issue|null findOneByLabel() findOneByLabel(string $label)
  */
 class IssueTypeRepository extends \Doctrine\ORM\EntityRepository
 {
@@ -14,6 +14,6 @@ class IssueTypeRepository extends \Doctrine\ORM\EntityRepository
      */
     public function findStory()
     {
-        return $this->findByLabel('Story');
+        return $this->findOneByLabel('Story');
     }
 }

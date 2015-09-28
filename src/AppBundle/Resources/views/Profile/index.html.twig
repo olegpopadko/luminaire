@@ -31,4 +31,10 @@
             {{ "Edit"|trans }}
         </a>
     {% endif %}
+
+    <div class="assigned_issues">
+        <h3>{{ "Assigned issues"|trans({}, "issue") }}</h3>
+        {% include "AppBundle::issues.html.twig" with {entities: assigned_issues} %}
+    </div>
+
 {% endblock %}

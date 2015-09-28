@@ -35,7 +35,8 @@ class ProfileController extends Controller
         }
 
         return [
-            'entity' => $entity,
+            'entity'          => $entity,
+            'assigned_issues' => $this->getAssignedIssues($entity),
         ];
     }
 
@@ -118,5 +119,20 @@ class ProfileController extends Controller
             'entity'    => $entity,
             'edit_form' => $editForm->createView(),
         ];
+    }
+
+    /**
+     * Get issues where user is assignee
+     */
+    private function getAssignedIssues(User $entity)
+    {
+        $em           = $this->getDoctrine()->getManager();
+        $queryBuilder = $em->getRepository('AppBundle:Issue')->createQueryBuilder('i')
+            ->where('i.assignee = :user')
+            ->setParameter('user', $entity)
+            ->orderBy('i.updatedAt', 'DESC');
+        $this->get('app.security.issue_filter')->apply($queryBuilder);
+
+        return $queryBuilder->getQuery()->execute();
     }
 }

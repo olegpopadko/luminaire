@@ -2,6 +2,12 @@
 
 namespace AppBundle\Tests\Functional;
 
+use AppBundle\Tests\Functional\Controller\DataFixtures\LoadIssueData;
+use AppBundle\Tests\Functional\Controller\DataFixtures\LoadIssuePriorityData;
+use AppBundle\Tests\Functional\Controller\DataFixtures\LoadIssueResolutionData;
+use AppBundle\Tests\Functional\Controller\DataFixtures\LoadIssueStatusData;
+use AppBundle\Tests\Functional\Controller\DataFixtures\LoadIssueTypeData;
+use AppBundle\Tests\Functional\Controller\DataFixtures\LoadProjectData;
 use AppBundle\Tests\Functional\Controller\DataFixtures\LoadRoleData;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -14,6 +20,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
  * Class TestCase
+ * @SuppressWarnings(PHPMD)
  */
 class TestCase extends WebTestCase
 {
@@ -36,17 +43,35 @@ class TestCase extends WebTestCase
     public static function setUpBeforeClass()
     {
         static::bootKernel();
-        $container = static::$kernel->getContainer();
-        $loader    = new Loader();
-        $loader->addFixture(new LoadRoleData());
-        $fixture = (new LoadUserData());
-        $fixture->setContainer($container);
-        $loader->addFixture($fixture);
+        $loader = new Loader();
+        foreach (self::getFixtures() as $fixture) {
+            $loader->addFixture($fixture);
+        }
         $purger = new ORMPurger();
         /** @var \Doctrine\ORM\EntityManagerInterface $em */
-        $em       = $container->get('doctrine')->getManager();
-        $executor = new ORMExecutor($em, $purger);
+        $container = static::$kernel->getContainer();
+        $em        = $container->get('doctrine')->getManager();
+        $executor  = new ORMExecutor($em, $purger);
         $executor->execute($loader->getFixtures());
+    }
+
+    /**
+     * @return array
+     */
+    private static function getFixtures()
+    {
+        $userFixture = (new LoadUserData());
+        $userFixture->setContainer(static::$kernel->getContainer());
+        return [
+            new LoadRoleData(),
+            $userFixture,
+            new LoadProjectData(),
+            new LoadIssuePriorityData(),
+            new LoadIssueResolutionData(),
+            new LoadIssueStatusData(),
+            new LoadIssueTypeData(),
+            new LoadIssueData(),
+        ];
     }
 
     /**
@@ -54,11 +79,11 @@ class TestCase extends WebTestCase
      * @param array $roles
      * @return \AppBundle\Entity\User
      */
-    private function logIn($username, $roles = ['ROLE_OPERATOR'])
+    protected function logIn($username, $roles = ['ROLE_OPERATOR'])
     {
         $session = $this->client->getContainer()->get('session');
 
-        $em = $this->client->getContainer()->get('doctrine')->getManager();
+        $em   = $this->client->getContainer()->get('doctrine')->getManager();
         $user = $em->getRepository('AppBundle:User')->findOneBy(['username' => $username]);
 
         $firewall = 'main';
@@ -93,5 +118,14 @@ class TestCase extends WebTestCase
     protected function logInManager()
     {
         return $this->logIn('manager', ['ROLE_MANAGER']);
+    }
+
+    /**
+     * @param $id
+     * @return object
+     */
+    protected function get($id)
+    {
+        return static::$kernel->getContainer()->get($id);
     }
 }
