@@ -69,4 +69,12 @@ class IssueStatus
     {
         return $this->label;
     }
+
+    /**
+     * @return bool
+     */
+    public function isResolved()
+    {
+        return $this->getLabel() === 'Resolved';
+    }
 }

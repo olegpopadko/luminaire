@@ -17,6 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks
  * @UniqueEntity({"code", "project"}, message="Please try again.")
  * @AppAssert\IssueSubtaskParent
+ * @AppAssert\IssueResolvedResolution
  */
 class Issue
 {
@@ -348,7 +349,7 @@ class Issue
      *
      * @return Issue
      */
-    public function setResolution(\AppBundle\Entity\IssueResolution $resolution)
+    public function setResolution(\AppBundle\Entity\IssueResolution $resolution = null)
     {
         $this->resolution = $resolution;
 
