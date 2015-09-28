@@ -21,5 +21,11 @@ class IssueSubtaskParentValidator extends ConstraintValidator
                 ->atPath('parent')
                 ->addViolation();
         }
+
+        if (empty($entity->getParent()) && $entity->getType()->isSubtask()) {
+            $this->context->buildViolation($constraint->messageEmptyParent)
+                ->atPath('parent')
+                ->addViolation();
+        }
     }
 }
