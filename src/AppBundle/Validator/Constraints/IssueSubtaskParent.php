@@ -14,12 +14,12 @@ class IssueSubtaskParent extends Constraint
     /**
      * @var string
      */
-    public $message = 'Parent issue can be set only for Subtask.';
+    public $message = 'Parent issue can be set only for Subtask issue.';
 
     /**
      * @var string
      */
-    public $messageEmptyParent = 'Parent issue must be set for Subtask.';
+    public $messageEmptyParent = 'Parent issue must be set for Subtask issue.';
 
     /**
      * @return string

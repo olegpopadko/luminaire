@@ -18,5 +18,11 @@ class IssueResolvedResolutionValidator extends ConstraintValidator
                 ->atPath('resolution')
                 ->addViolation();
         }
+
+        if (empty($entity->getResolution()) && $entity->getStatus()->isResolved()) {
+            $this->context->buildViolation($constraint->messageEmptyResolution)
+                ->atPath('resolution')
+                ->addViolation();
+        }
     }
 }
