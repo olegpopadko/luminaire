@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use AppBundle\Entity\User;
 use AppBundle\Form\ProfileType;
 
@@ -23,17 +24,10 @@ class ProfileController extends Controller
      * @Route("/{id}", name="profile")
      * @Method("GET")
      * @Template()
+     * @Security("is_granted('view', entity)")
      */
-    public function indexAction($id)
+    public function indexAction(User $entity)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('AppBundle:User')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find User entity.');
-        }
-
         return [
             'entity'          => $entity,
             'assigned_issues' => $this->getAssignedIssues($entity),
@@ -46,24 +40,13 @@ class ProfileController extends Controller
      * @Route("/{id}/edit", name="profile_edit")
      * @Method("GET")
      * @Template()
+     * @Security("is_granted('edit', entity)")
      */
-    public function editAction($id)
+    public function editAction(User $entity)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('AppBundle:User')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find User entity.');
-        }
-
-        $this->denyAccessUnlessGranted('edit', $entity);
-
-        $editForm = $this->createEditForm($entity);
-
         return [
             'entity'    => $entity,
-            'edit_form' => $editForm->createView(),
+            'edit_form' => $this->createEditForm($entity)->createView(),
         ];
     }
 
@@ -92,17 +75,10 @@ class ProfileController extends Controller
      * @Route("/{id}", name="profile_update")
      * @Method("PUT")
      * @Template("AppBundle:Profile:edit.html.twig")
+     * @Security("is_granted('edit', entity)")
      */
-    public function updateAction(Request $request, $id)
+    public function updateAction(Request $request, User $entity)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('AppBundle:User')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find User entity.');
-        }
-
         $editForm = $this->createEditForm($entity);
         $editForm->handleRequest($request);
 
@@ -110,9 +86,9 @@ class ProfileController extends Controller
             $entity->setPassword(
                 $this->container->get('security.password_encoder')->encodePassword($entity, $entity->getPassword())
             );
-            $em->flush();
+            $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirect($this->generateUrl('profile', ['id' => $id]));
+            return $this->redirect($this->generateUrl('profile', ['id' => $entity->getId()]));
         }
 
         return [
