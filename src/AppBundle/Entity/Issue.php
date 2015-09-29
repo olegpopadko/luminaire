@@ -16,6 +16,7 @@ use AppBundle\Validator\Constraints as AppAssert;
  * @ORM\Entity(repositoryClass="AppBundle\Entity\IssueRepository")
  * @ORM\HasLifecycleCallbacks
  * @ORM\EntityListeners({"\AppBundle\EventListener\ActivityCollector"})
+ * @ORM\EntityListeners({"\AppBundle\EventListener\IssueCollaborator"})
  * @UniqueEntity({"code", "project"}, message="Please try again.")
  * @AppAssert\IssueSubtaskParent
  * @AppAssert\IssueResolvedResolution
@@ -430,7 +431,7 @@ class Issue
      *
      * @return Issue
      */
-    public function setAssignee(\AppBundle\Entity\User $assignee)
+    public function setAssignee(\AppBundle\Entity\User $assignee = null)
     {
         $this->assignee = $assignee;
 
@@ -538,7 +539,9 @@ class Issue
      */
     public function addCollaborator(\AppBundle\Entity\User $collaborator)
     {
-        $this->collaborators[] = $collaborator;
+        if (!$this->collaborators->contains($collaborator)) {
+            $this->collaborators[] = $collaborator;
+        }
 
         return $this;
     }

@@ -36,7 +36,7 @@ class ActivityCollector
      */
     public function postPersist($entity, LifecycleEventArgs $args)
     {
-        if (!$this->supportedEnvironmentOnPrePersist($entity)) {
+        if (!$this->supportedEnvironmentOnPostPersist($entity)) {
             return null;
         }
 
@@ -115,7 +115,7 @@ class ActivityCollector
     /**
      * @param $entity
      */
-    private function supportedEnvironmentOnPrePersist($entity)
+    private function supportedEnvironmentOnPostPersist($entity)
     {
         return ($entity instanceof Issue || $entity instanceof IssueComment) && $this->getCurrentUser();
     }
