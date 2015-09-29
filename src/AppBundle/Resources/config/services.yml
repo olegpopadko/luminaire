@@ -13,6 +13,8 @@ parameters:
     issue_code_generator_class: AppBundle\Utils\IssueCodeGenerator
     issue_type_class: AppBundle\Form\IssueType
     issue_filter_class: AppBundle\Security\Filter\IssueFilter
+    entity_hidden_type_class: AppBundle\Form\EntityHiddenType
+    comment_tree_class: AppBundle\Templating\Comment\CommentTree
 
 services:
     security.access.user_voter:
@@ -53,7 +55,7 @@ services:
         class:      %issue_code_converter_class%
 
     app.twig_extension:
-        arguments: [@app.issue_code_converter]
+        arguments: [@app.issue_code_converter, @app.templating.comment_tree]
         class:      %app_twig_extension_class%
         public:     false
         tags:
@@ -79,3 +81,14 @@ services:
     app.security.issue_filter:
         arguments: [@security.token_storage]
         class:      %issue_filter_class%
+
+    app.form.type.entity_hidden:
+        arguments: [@doctrine.orm.entity_manager]
+        class:      %entity_hidden_type_class%
+        tags:
+            - { name: form.type, alias: app_entity_hidden }
+
+    app.templating.comment_tree:
+        class:      %comment_tree_class%
+        tags:
+            - { name: form.type, alias: app_entity_hidden }

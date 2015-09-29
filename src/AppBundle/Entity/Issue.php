@@ -2,10 +2,10 @@
 
 namespace AppBundle\Entity;
 
-use Symfony\Component\Validator\Constraints as Assert;
-use AppBundle\Validator\Constraints as AppAssert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use AppBundle\Validator\Constraints as AppAssert;
 
 /**
  * Issue
@@ -155,12 +155,20 @@ class Issue
     private $collaborators;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\IssueComment", mappedBy="issue")
+     **/
+    private $comments;
+
+    /**
      *
      */
     public function __construct()
     {
         $this->children      = new \Doctrine\Common\Collections\ArrayCollection();
         $this->collaborators = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->comments      = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -576,5 +584,15 @@ class Issue
     public function getPriority()
     {
         return $this->priority;
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }

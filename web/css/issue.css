@@ -1,0 +1,26 @@
+h6.byline {
+    position: relative;
+    margin-bottom: 15px;
+    margin-top: 10px;
+}
+
+h6.byline .data {
+    font-weight: 400;
+}
+
+h6.byline .label {
+    font-size: 60%;
+}
+
+.indented.comment {
+    padding-left: 15px;
+    border-left: 1px solid #ebebeb;
+}
+
+.push {
+    margin-bottom: 40px;
+}
+
+.bullets {
+    margin-left: 30px;
+}

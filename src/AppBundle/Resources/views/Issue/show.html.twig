@@ -6,6 +6,10 @@
     <h3>{{ "Issue"|trans }}</h3>
     <h1>{{ macro.issue(entity) }}</h1>
 
+    <a href="{{ path('issue_edit', { 'code': issue_code(entity) }) }}" class="button">
+        Edit
+    </a>
+
     <table class="record_properties">
         <tbody>
         <tr>
@@ -87,7 +91,6 @@
         </tbody>
     </table>
 
-    <a href="{{ path('issue_edit', { 'code': issue_code(entity) }) }}" class="button">
-        Edit
-    </a>
+    {{ comments(entity.comments) }}
+
 {% endblock %}

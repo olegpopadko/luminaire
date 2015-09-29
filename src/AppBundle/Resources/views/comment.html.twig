@@ -1,0 +1,23 @@
+{% import 'AppBundle::macro.html.twig' as macro %}
+
+<div class="{% if entity.parent %}indented{% endif %} comment push">
+    <section class="top">
+        <h6 class="byline">
+            <a href="#">{{ macro.user(entity.user) }}{#<span class="label">Post Author</span>#}</a>
+            <small>
+                <span class="data">
+                    {{ macro.user_date(entity.createdAt) }}
+                </span>
+            </small>
+        </h6>
+    </section>
+
+    <section class="content">
+        <p>{{ entity.body }}</p>
+    </section>
+
+    <section class="actions">
+        <a href="#">Reply</a>
+    </section>
+
+</div>
