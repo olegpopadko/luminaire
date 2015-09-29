@@ -1,0 +1,10 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}{{ "Issue comment creation"|trans({}, "issue_comment") }}{% endblock %}
+
+{% block body -%}
+    <h1>{{ "Issue comment creation"|trans({}, "issue_comment") }}</h1>
+
+    {{ form(form) }}
+
+{% endblock %}

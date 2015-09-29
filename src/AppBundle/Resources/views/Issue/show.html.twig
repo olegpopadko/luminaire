@@ -93,4 +93,6 @@
 
     {{ comments(entity.comments) }}
 
+    <a href="{{ path('issue_comment_new', {'code': issue_code(entity)}) }}" class="button tiny">{{ "New Comment"|trans({}, "issue_comment") }}</a>
+
 {% endblock %}

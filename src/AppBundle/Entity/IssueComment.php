@@ -175,6 +175,7 @@ class IssueComment
     {
         return $this->updatedAt;
     }
+
     /**
      * Constructor
      */
@@ -242,6 +243,19 @@ class IssueComment
     }
 
     /**
+     * Set issue
+     *
+     * @param Issue $issue
+     * @return $this
+     */
+    public function setIssue(Issue $issue)
+    {
+        $this->issue = $issue;
+
+        return $this;
+    }
+
+    /**
      * Get issue
      *
      * @return \AppBundle\Entity\Issue
@@ -273,5 +287,18 @@ class IssueComment
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Return all parents
+     */
+    public function getParents()
+    {
+        $parents = [];
+        if (!is_null($this->getParent())) {
+            $parents = array_merge([$this->getParent()], $this->getParent()->getParents());
+        }
+
+        return $parents;
     }
 }

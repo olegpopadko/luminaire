@@ -90,5 +90,3 @@ services:
 
     app.templating.comment_tree:
         class:      %comment_tree_class%
-        tags:
-            - { name: form.type, alias: app_entity_hidden }

@@ -54,6 +54,10 @@ class EntityToIdTransformer implements DataTransformerInterface
      */
     public function reverseTransform($id)
     {
+        if (is_null($id)) {
+            return null;
+        }
+
         $entity = $this->manager->getRepository($this->class)->find($id);
 
         if (is_null($entity)) {

@@ -34,7 +34,7 @@ class CommentTreeRenderer implements TreeNodeVisitorInterface
      */
     public function visit($entity)
     {
-        $this->string .= $this->templating->render('AppBundle::comment.html.twig', ['entity' => $entity]);
+        $this->string .= $this->templating->render('AppBundle:IssueComment:show.html.twig', ['entity' => $entity]);
     }
 
     /**

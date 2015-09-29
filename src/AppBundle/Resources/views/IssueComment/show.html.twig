@@ -1,6 +1,9 @@
 {% import 'AppBundle::macro.html.twig' as macro %}
 
-<div class="{% if entity.parent %}indented{% endif %} comment push">
+<div class="comment push">
+{% for parent in entity.parents %}
+<div class="{% if entity.parent %}indented{% endif %} comment">
+    {% endfor %}
     <section class="top">
         <h6 class="byline">
             <a href="#">{{ macro.user(entity.user) }}{#<span class="label">Post Author</span>#}</a>
@@ -17,7 +20,10 @@
     </section>
 
     <section class="actions">
-        <a href="#">Reply</a>
+        <a href="{{ path('issue_comment_new', {'code': issue_code(entity.issue), 'parent_id': entity.id}) }}" class="button tiny">{{ "Reply"|trans }}</a>
     </section>
 
+    {% for parent in entity.parents %}
+</div>
+{% endfor %}
 </div>
