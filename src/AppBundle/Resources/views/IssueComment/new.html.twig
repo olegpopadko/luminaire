@@ -5,6 +5,10 @@
 {% block body -%}
     <h1>{{ "Issue comment creation"|trans({}, "issue_comment") }}</h1>
 
-    {{ form(form) }}
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+    {{ form_errors(form.body) }}
+    {{ form_widget(form.body) }}
+    {{ form_end(form) }}
 
 {% endblock %}

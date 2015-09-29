@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table()
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @ORM\EntityListeners({"\AppBundle\EventListener\ActivityCollector"})
  */
 class IssueComment
 {

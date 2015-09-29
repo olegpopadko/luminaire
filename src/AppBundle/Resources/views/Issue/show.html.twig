@@ -95,7 +95,7 @@
 
     {{ comments(entity.comments) }}
 
-    {% if is_granted("create_comment") %}
+    {% if is_granted("create_issuecomment") %}
         <a href="{{ path('issue_comment_new', {'code': issue_code(entity)}) }}"
            class="button tiny">{{ "New Comment"|trans({}, "issue_comment") }}</a>
     {% endif %}
