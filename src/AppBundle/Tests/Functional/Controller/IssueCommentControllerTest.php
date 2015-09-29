@@ -22,7 +22,31 @@ class IssueCommentControllerTest extends TestCase
         $em->persist($project);
         $em->flush();
 
-        $this->client->request('GET', '/issue/TP-1/comment/new');
+        $crawler = $this->client->request('GET', '/issue/TP-1/comment/new');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $body = 'Content message';
+
+        $form = $crawler->selectButton('Create')->form([
+            'appbundle_issue_comment[body]' => $body,
+        ]);
+
+        $this->client->submit($form);
+
+        $this->assertTrue($this->client->getResponse()->isRedirect());
+        $this->assertEquals('/issue/TP-1', $this->client->getResponse()->headers->get('Location'));
+
+        $comments = $em->getRepository('AppBundle:IssueComment')->findBy(['body' => $body]);
+
+        $this->assertCount(1, $comments);
+        $comment = $comments[0];
+        $this->assertEquals($operator->getId(), $comment->getUser()->getId());
+        $issue = $em->getRepository('AppBundle:Issue')->findOneBy(['code' => 1, 'project' => $project]);
+        $this->assertNotNull($issue);
+        $this->assertEquals($issue, $comment->getIssue());
+        $this->assertNull($comment->getParent());
+
+        $this->client->request('GET', '/comment/' . $comment->getId() . '/edit');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 }

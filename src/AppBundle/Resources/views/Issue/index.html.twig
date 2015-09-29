@@ -30,14 +30,19 @@
                 <td>{{ entity.assignee }}</td>
                 <td>{% if entity.createdAt %}{{ entity.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>
-                    <a href="{{ path('issue_edit', { 'code': issue_code(entity) }) }}" class="button">{{ "Edit"|trans }}</a>
+                    {% if is_granted("edit", entity) %}
+                        <a href="{{ path('issue_edit', { 'code': issue_code(entity) }) }}"
+                           class="button">{{ "Edit"|trans }}</a>
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('issue_new', {'code': project.code}) }}" class="button">
-        {{ "Create a new issue"|trans({}, "issue") }}
-    </a>
+    {% if is_granted("create_issue") %}
+        <a href="{{ path('issue_new', {'code': project.code}) }}" class="button">
+            {{ "Create a new issue"|trans({}, "issue") }}
+        </a>
+    {% endif %}
 {% endblock %}

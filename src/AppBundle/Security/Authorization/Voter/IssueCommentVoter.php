@@ -2,20 +2,20 @@
 
 namespace AppBundle\Security\Authorization\Voter;
 
-use AppBundle\Entity\Issue;
+use AppBundle\Entity\IssueComment;
 use AppBundle\Entity\User;
 
 /**
- * Class IssueVoter
+ * Class IssueCommentVoter
  */
-class IssueVoter extends EntityVoter
+class IssueCommentVoter extends EntityVoter
 {
     /**
      * {@inheritdoc}
      */
     protected function getSupportedClass()
     {
-        return 'AppBundle\Entity\Issue';
+        return 'AppBundle\Entity\IssueComment';
     }
 
     /**
@@ -27,22 +27,22 @@ class IssueVoter extends EntityVoter
     }
 
     /**
-     * @param Issue $object
+     * @param IssueComment $object
      * @param User $user
      * @return bool
      */
     protected function isViewGranted($object, User $user)
     {
-        return $user->isAdmin() || $user->hasProject($object->getProject());
+        return $user->isAdmin() || $user->hasProject($object->getIssue()->getProject());
     }
 
     /**
-     * @param Issue $object
+     * @param IssueComment $object
      * @param User $user
      * @return bool
      */
     protected function isEditGranted($object, User $user)
     {
-        return $user->isAdmin() || $user->hasProject($object->getProject());
+        return $user->isAdmin() || $object->getUser() === $user;
     }
 }

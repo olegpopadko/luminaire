@@ -15,6 +15,7 @@ parameters:
     issue_filter_class: AppBundle\Security\Filter\IssueFilter
     entity_hidden_type_class: AppBundle\Form\EntityHiddenType
     comment_tree_class: AppBundle\Templating\Comment\CommentTree
+    issue_comment_voter_class: AppBundle\Security\Authorization\Voter\IssueCommentVoter
 
 services:
     security.access.user_voter:
@@ -90,3 +91,10 @@ services:
 
     app.templating.comment_tree:
         class:      %comment_tree_class%
+
+    security.access.issue_comment_voter:
+        arguments: [@security.token_storage, @security.access.role_hierarchy_voter]
+        class:      %issue_comment_voter_class%
+        public:     false
+        tags:
+            - { name: security.voter }

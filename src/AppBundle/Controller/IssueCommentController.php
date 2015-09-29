@@ -145,7 +145,8 @@ class IssueCommentController extends Controller
         if ($editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirect($this->generateUrl('issue_show', ['id' => $entity->getId()]));
+            $url = $this->generateUrl('issue_show', ['code' => $this->getIssueCode($entity->getIssue())]);
+            return $this->redirect($url);
         }
 
         return [

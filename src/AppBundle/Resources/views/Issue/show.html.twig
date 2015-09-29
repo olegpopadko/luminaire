@@ -6,9 +6,11 @@
     <h3>{{ "Issue"|trans }}</h3>
     <h1>{{ macro.issue(entity) }}</h1>
 
-    <a href="{{ path('issue_edit', { 'code': issue_code(entity) }) }}" class="button">
-        Edit
-    </a>
+    {% if is_granted("edit", entity) %}
+        <a href="{{ path('issue_edit', { 'code': issue_code(entity) }) }}" class="button">
+            Edit
+        </a>
+    {% endif %}
 
     <table class="record_properties">
         <tbody>
@@ -93,6 +95,9 @@
 
     {{ comments(entity.comments) }}
 
-    <a href="{{ path('issue_comment_new', {'code': issue_code(entity)}) }}" class="button tiny">{{ "New Comment"|trans({}, "issue_comment") }}</a>
+    {% if is_granted("create_comment") %}
+        <a href="{{ path('issue_comment_new', {'code': issue_code(entity)}) }}"
+           class="button tiny">{{ "New Comment"|trans({}, "issue_comment") }}</a>
+    {% endif %}
 
 {% endblock %}
