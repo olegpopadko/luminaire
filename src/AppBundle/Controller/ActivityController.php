@@ -7,7 +7,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use AppBundle\Entity\Activity;
 
 /**
  * Class ActivityController
@@ -48,17 +47,6 @@ class ActivityController extends Controller
 
         return [
             'entities' => $filter->getResults(),
-        ];
-    }
-
-    /**
-     * @Route("/{id}", name="activity_show")
-     * @Template()
-     */
-    public function showAction(Activity $entity)
-    {
-        return [
-            'entity' => $entity,
         ];
     }
 }
