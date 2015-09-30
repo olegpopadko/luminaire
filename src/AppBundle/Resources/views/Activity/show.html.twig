@@ -10,7 +10,7 @@
                         {{ "Issue created"|trans({}, 'issue') }}
                     {% endif %}
                     {% if entity.changes.type == 'issue_comment_created' %}
-                        {{ "Comment created"|trans({}, 'issue_comment') }}
+                        {{ "Comment created"|trans({}, 'issue_comment') }}{{ macro.issue_comment(entity.issue, entity.changes.entity_id) }}
                     {% endif %}
                     {% if entity.changes.type == 'issue_status_changed' %}
                         {% trans with {'%old_status%': entity.changes.old_status, '%new_status%': entity.changes.new_status} from "issue" %}

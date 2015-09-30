@@ -13,3 +13,7 @@
 {% macro issue(issue) %}
     <a href="{{ path('issue_show', {'code': issue_code(issue)}) }}">{{ issue }}</a>
 {% endmacro %}
+
+{% macro issue_comment(issue, comment_id) %}
+    <a href="{{ path('issue_show', {'code': issue_code(issue)}) }}#comment-{{ comment_id }}">{{ issue_code(issue) }}#comment-{{ comment_id }}</a>
+{% endmacro %}
