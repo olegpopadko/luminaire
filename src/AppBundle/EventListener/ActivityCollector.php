@@ -93,7 +93,6 @@ class ActivityCollector
         if ($activity) {
             $em = $args->getEntityManager();
             $em->persist($activity);
-            $em->flush();
             $this->dispatchEvent($activity);
         }
     }
