@@ -1,12 +1,12 @@
 {% import 'AppBundle::macro.html.twig' as macro %}
 
-<div class="comment push">
+<div class="comment">
     {% for parent in entity.parents %}
     <div class="{% if entity.parent %}indented{% endif %} comment">
         {% endfor %}
         <section class="top">
-            <h6 class="byline">
-                <a href="#">{{ macro.user(entity.user) }}{#<span class="label">Post Author</span>#}</a>
+            <h6>
+                {{ macro.user(entity.user) }}
                 <small>
                 <span class="data">
                     {{ macro.user_date(entity.createdAt) }}
@@ -31,4 +31,5 @@
         {% for parent in entity.parents %}
     </div>
     {% endfor %}
+    <hr>
 </div>

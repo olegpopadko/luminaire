@@ -19,6 +19,7 @@ parameters:
     entity_hidden_type_class: AppBundle\Form\EntityHiddenType
     comment_tree_class: AppBundle\Templating\Comment\CommentTree
     issue_comment_voter_class: AppBundle\Security\Authorization\Voter\IssueCommentVoter
+    activity_changes_class: AppBundle\Utils\ActivityChanges
 
 services:
     security.access.user_voter:
@@ -101,3 +102,9 @@ services:
         public:     false
         tags:
             - { name: security.voter }
+
+    app.activity_changes:
+        arguments: [@security.token_storage]
+        class: %activity_changes_class%
+        tags:
+            - { name: doctrine.orm.entity_listener }

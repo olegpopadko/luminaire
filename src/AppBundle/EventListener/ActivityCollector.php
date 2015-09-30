@@ -2,14 +2,12 @@
 
 namespace AppBundle\EventListener;
 
+use AppBundle\Utils\ActivityChanges;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
-use AppBundle\Entity\Activity;
 use AppBundle\Entity\Issue;
 use AppBundle\Entity\IssueComment;
-use AppBundle\Entity\User;
 
 /**
  * Class ActivityCollector
@@ -17,16 +15,16 @@ use AppBundle\Entity\User;
 class ActivityCollector
 {
     /**
-     * @var TokenStorage
+     * @var ActivityChanges
      */
-    private $tokenStorage;
+    private $activityChanges;
 
     /**
-     * @param TokenStorage $tokenStorage
+     * @param ActivityChanges $activityChanges
      */
-    public function __construct(TokenStorage $tokenStorage)
+    public function __construct(ActivityChanges $activityChanges)
     {
-        $this->tokenStorage = $tokenStorage;
+        $this->activityChanges = $activityChanges;
     }
 
     /**
@@ -40,26 +38,21 @@ class ActivityCollector
             return null;
         }
 
-        $em = $args->getEntityManager();
+        $activity = null;
 
-        $issue = $entity;
-        $type  = 'issue_created';
-        if ($entity instanceof IssueComment) {
-            $issue = $entity->getIssue();
-            $type  = 'comment_created';
+        if ($entity instanceof Issue) {
+            $activity = $this->activityChanges->getIssueCreatedActivity($entity);
         }
 
-        $activity = new Activity();
-        $activity->setIssue($issue);
-        $activity->setUser($this->getCurrentUser());
-        $activity->setChanges([
-            'type'         => $type,
-            'entity_id'    => $entity->getId(),
-            'entity_class' => get_class($entity),
-        ]);
+        if ($entity instanceof IssueComment) {
+            $activity = $this->activityChanges->getIssueCommentCreatedActivity($entity);
+        }
 
-        $em->persist($activity);
-        $em->flush();
+        if ($activity) {
+            $em = $args->getEntityManager();
+            $em->persist($activity);
+            $em->flush();
+        }
     }
 
     /**
@@ -73,43 +66,17 @@ class ActivityCollector
             return null;
         }
 
-        $em       = $args->getEntityManager();
-        $activity = new Activity();
-        $activity->setIssue($entity);
-        $activity->setUser($this->getCurrentUser());
-        $activity->setChanges([
-            'type'         => 'issue_status_changed',
-            'old_status'   => $args->getOldValue('status')->getLabel(),
-            'new_status'   => $args->getNewValue('status')->getLabel(),
-            'entity_id'    => $entity->getId(),
-            'entity_class' => get_class($entity),
-        ]);
+        $activity = $this->activityChanges->getIssueStatusChangedActivity(
+            $entity,
+            $args->getOldValue('status'),
+            $args->getNewValue('status')
+        );
 
-        $em->persist($activity);
-        $em->flush();
-    }
-
-    /**
-     * @return mixed
-     */
-    private function getCurrentUser()
-    {
-        $token = $this->tokenStorage->getToken();
-        if (is_null($token)) {
-            return null;
+        if ($activity) {
+            $em = $args->getEntityManager();
+            $em->persist($activity);
+            $em->flush();
         }
-
-        $user = $token->getUser();
-
-        if (!$user instanceof UserInterface) {
-            throw new \LogicException('The current user not implements UserInterface');
-        }
-
-        if (!$user instanceof User) {
-            throw new \LogicException('The user is somehow not our User class!');
-        }
-
-        return $user;
     }
 
     /**
@@ -117,7 +84,7 @@ class ActivityCollector
      */
     private function supportedEnvironmentOnPostPersist($entity)
     {
-        return ($entity instanceof Issue || $entity instanceof IssueComment) && $this->getCurrentUser();
+        return $entity instanceof Issue || $entity instanceof IssueComment;
     }
 
     /**
@@ -125,6 +92,6 @@ class ActivityCollector
      */
     private function supportedEnvironmentOnPreUpdate(PreUpdateEventArgs $args)
     {
-        return $args->getEntity() instanceof Issue && $this->getCurrentUser() && $args->hasChangedField('status');
+        return $args->getEntity() instanceof Issue && $args->hasChangedField('status');
     }
 }

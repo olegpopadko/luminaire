@@ -3,7 +3,7 @@ parameters:
 
 services:
     activity_collector:
-        arguments: [@security.token_storage]
+        arguments: [@app.activity_changes]
         class: %activity_collector_class%
         tags:
             - { name: doctrine.orm.entity_listener }

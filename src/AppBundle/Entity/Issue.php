@@ -15,8 +15,7 @@ use AppBundle\Validator\Constraints as AppAssert;
  *  })})
  * @ORM\Entity(repositoryClass="AppBundle\Entity\IssueRepository")
  * @ORM\HasLifecycleCallbacks
- * @ORM\EntityListeners({"\AppBundle\EventListener\ActivityCollector"})
- * @ORM\EntityListeners({"\AppBundle\EventListener\IssueCollaborator"})
+ * @ORM\EntityListeners({"\AppBundle\EventListener\ActivityCollector", "\AppBundle\EventListener\IssueCollaborator"})
  * @UniqueEntity({"code", "project"}, message="Please try again.")
  * @AppAssert\IssueSubtaskParent
  * @AppAssert\IssueResolvedResolution

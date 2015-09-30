@@ -1,0 +1,9 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    <div class="activity-list">
+        {% for entity in entities %}
+            {{ render(path('activity_show', {'id': entity.id})) }}
+        {% endfor %}
+    </div>
+{% endblock %}
