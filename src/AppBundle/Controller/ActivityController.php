@@ -26,8 +26,8 @@ class ActivityController extends Controller
 
         $filter = $this->get('app.activity_extractor_factory')->create();
 
-        if ($request->get('project_code')) {
-            $project = $em->getRepository('AppBundle:Project')->findOneByCode($request->get('project_code'));
+        if ($request->get('project_id')) {
+            $project = $em->getReference('AppBundle:Project', $request->get('project_id'));
             $filter->whereProject($project);
         }
 

@@ -37,7 +37,7 @@ class ActivityExtractor
     public function whereProject(Project $project)
     {
         if (!is_null($project)) {
-            $this->builder->where('p = :project')->setParameter('project', $project);
+            $this->builder->andWhere('p = :project')->setParameter('project', $project);
         }
     }
 

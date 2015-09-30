@@ -42,4 +42,6 @@
     <a href="{{ path('project_issues', { 'code': entity.code }) }}" class="button">
         {{ "Issue list"|trans({}, "issue") }}
     </a>
+
+    {{ render(path('activity', {'project_id': entity.id})) }}
 {% endblock %}
