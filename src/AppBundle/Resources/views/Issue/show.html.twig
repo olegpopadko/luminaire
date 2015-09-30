@@ -95,6 +95,8 @@
 
     {{ comments(entity.comments) }}
 
+    {{ render(path('activity', {'issue_id': entity.id})) }}
+
     {% if is_granted("create_issuecomment") %}
         <a href="{{ path('issue_comment_new', {'code': issue_code(entity)}) }}"
            class="button tiny">{{ "New Comment"|trans({}, "issue_comment") }}</a>

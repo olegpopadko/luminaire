@@ -41,6 +41,11 @@ class ActivityController extends Controller
             $filter->whereUserIsMember($user);
         }
 
+        if ($request->get('issue_id')) {
+            $issue = $em->getReference('AppBundle:Issue', $request->get('issue_id'));
+            $filter->whereIssue($issue);
+        }
+
         return [
             'entities' => $filter->getResults(),
         ];

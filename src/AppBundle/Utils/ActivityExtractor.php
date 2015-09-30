@@ -2,6 +2,7 @@
 
 namespace AppBundle\Utils;
 
+use AppBundle\Entity\Issue;
 use AppBundle\Entity\Project;
 use AppBundle\Entity\User;
 use AppBundle\Security\Filter\ActivityFilter;
@@ -27,9 +28,20 @@ class ActivityExtractor
         $this->builder
             ->select('a', 'i', 'p')
             ->innerJoin('a.issue', 'i')
-            ->innerJoin('i.project', 'p');
+            ->innerJoin('i.project', 'p')
+            ->orderBy('a.createdAt', 'DESC');
 
         $activityFilter->apply($this->builder);
+    }
+
+    /**
+     * @param Issue $issue
+     */
+    public function whereIssue(Issue $issue)
+    {
+        if (!is_null($issue)) {
+            $this->builder->andWhere('i = :issue')->setParameter('issue', $issue);
+        }
     }
 
     /**
