@@ -4,7 +4,6 @@ namespace AppBundle\Utils;
 
 use AppBundle\Security\Filter\ActivityFilter;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\Common\Persistence\ObjectManager;
 
 /**
  * Class ActivityExtractorFactory
