@@ -37,4 +37,6 @@
         {% include "AppBundle::issues.html.twig" with {entities: assigned_issues} %}
     </div>
 
+    {{ render(path('activity', {'assignee_id': entity.id})) }}
+
 {% endblock %}

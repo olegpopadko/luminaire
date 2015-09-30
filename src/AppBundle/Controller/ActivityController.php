@@ -31,6 +31,11 @@ class ActivityController extends Controller
             $filter->whereProject($project);
         }
 
+        if ($request->get('assignee_id')) {
+            $user = $em->getReference('AppBundle:User', $request->get('assignee_id'));
+            $filter->whereUserIsAssigned($user);
+        }
+
         return [
             'entities' => $filter->getResults(),
         ];

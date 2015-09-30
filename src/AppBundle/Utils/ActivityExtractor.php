@@ -3,6 +3,7 @@
 namespace AppBundle\Utils;
 
 use AppBundle\Entity\Project;
+use AppBundle\Entity\User;
 use AppBundle\Security\Filter\ActivityFilter;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\QueryBuilder;
@@ -38,6 +39,16 @@ class ActivityExtractor
     {
         if (!is_null($project)) {
             $this->builder->andWhere('p = :project')->setParameter('project', $project);
+        }
+    }
+
+    /**
+     * @param User $user
+     */
+    public function whereUserIsAssigned(User $user)
+    {
+        if (!is_null($user)) {
+            $this->builder->andWhere('i.assignee = :user')->setParameter('user', $user);
         }
     }
 
