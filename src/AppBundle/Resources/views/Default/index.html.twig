@@ -6,4 +6,6 @@
 
     {% include "AppBundle::issues.html.twig" with {entities: collaborators_issues} %}
 
+    {{ render(path('activity', {'member_id': app.user.id})) }}
+
 {% endblock %}

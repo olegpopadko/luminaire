@@ -53,6 +53,16 @@ class ActivityExtractor
     }
 
     /**
+     * @param User $user
+     */
+    public function whereUserIsMember(User $user)
+    {
+        if (!is_null($user)) {
+            $this->builder->innerJoin('p.users', 'u')->andWhere('u = :member')->setParameter('member', $user);
+        }
+    }
+
+    /**
      * @param $maxResults
      */
     public function setMaxResults($maxResults)
