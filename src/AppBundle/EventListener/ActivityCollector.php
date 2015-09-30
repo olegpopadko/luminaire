@@ -2,10 +2,12 @@
 
 namespace AppBundle\EventListener;
 
-use AppBundle\Utils\ActivityChanges;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
+use AppBundle\Event\ActivityEvent;
+use AppBundle\Utils\ActivityChanges;
 use AppBundle\Entity\Issue;
 use AppBundle\Entity\IssueComment;
 
@@ -20,11 +22,18 @@ class ActivityCollector
     private $activityChanges;
 
     /**
-     * @param ActivityChanges $activityChanges
+     * @var EventDispatcherInterface
      */
-    public function __construct(ActivityChanges $activityChanges)
+    private $eventDispatcherInterface;
+
+    /**
+     * @param ActivityChanges $activityChanges
+     * @param EventDispatcherInterface $eventDispatcherInterface
+     */
+    public function __construct(ActivityChanges $activityChanges, EventDispatcherInterface $eventDispatcherInterface)
     {
         $this->activityChanges = $activityChanges;
+        $this->eventDispatcherInterface = $eventDispatcherInterface;
     }
 
     /**
@@ -52,7 +61,16 @@ class ActivityCollector
             $em = $args->getEntityManager();
             $em->persist($activity);
             $em->flush();
+            $this->dispatchEvent($activity);
         }
+    }
+
+    /**
+     * @param $activity
+     */
+    private function dispatchEvent($activity)
+    {
+        $this->eventDispatcherInterface->dispatch('app.events.activity_created', new ActivityEvent($activity));
     }
 
     /**
@@ -76,6 +94,7 @@ class ActivityCollector
             $em = $args->getEntityManager();
             $em->persist($activity);
             $em->flush();
+            $this->dispatchEvent($activity);
         }
     }
 

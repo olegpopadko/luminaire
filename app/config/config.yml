@@ -73,11 +73,15 @@ doctrine:
 
 # Swiftmailer Configuration
 swiftmailer:
-    transport: "%mailer_transport%"
-    host:      "%mailer_host%"
-    username:  "%mailer_user%"
-    password:  "%mailer_password%"
-    spool:     { type: memory }
+    transport:  "%mailer_transport%"
+    host:       "%mailer_host%"
+    port:       "%mailer_port%"
+    encryption: "%mailer_encryption%"
+    username:   "%mailer_user%"
+    password:   "%mailer_password%"
+    spool:
+        type: file
+        path: "%kernel.root_dir%/mail"
 
 flob_foundation:
     theme: { form: true, knp_menu: true, knp_paginator: true }

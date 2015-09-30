@@ -33,7 +33,7 @@ class AppExtension extends \Twig_Extension
     public function __construct(IssueCodeConverter $issueCodeConverter, CommentTree $commentTree)
     {
         $this->issueCodeConverter = $issueCodeConverter;
-        $this->commentTree = $commentTree;
+        $this->commentTree        = $commentTree;
     }
 
     /**

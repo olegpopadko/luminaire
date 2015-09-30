@@ -12,3 +12,5 @@
 .idea/
 /app/data/*
 !app/data/.gitkeep
+/app/mail/*
+!app/mail/.gitkeep

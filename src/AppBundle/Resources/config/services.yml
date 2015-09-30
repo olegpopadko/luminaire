@@ -22,6 +22,7 @@ parameters:
     activity_changes_class: AppBundle\Utils\ActivityChanges
     activity_filter_class: AppBundle\Security\Filter\ActivityFilter
     activity_extractor_factory_class: AppBundle\Utils\ActivityExtractorFactory
+    activity_motification_class: AppBundle\Utils\ActivityNotification
 
 services:
     security.access.user_voter:
@@ -118,3 +119,9 @@ services:
     app.activity_extractor_factory:
         arguments: [@doctrine, @app.security.activity_filter]
         class:      %activity_extractor_factory_class%
+
+    app.activity_motification:
+        arguments: [@templating, @mailer, %email_from%]
+        class:      %activity_motification_class%
+        tags:
+            - { name: kernel.event_listener, event: app.events.activity_created, method: onActivityCreated }
