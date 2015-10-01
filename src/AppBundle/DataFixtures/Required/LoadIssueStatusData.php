@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\DataFixtures;
+namespace AppBundle\DataFixtures\Required;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -20,7 +20,7 @@ class LoadIssueStatusData extends AbstractFixture
             $entity = new IssueStatus();
             $entity->setLabel($label);
             $manager->persist($entity);
-            $this->addReference(strtolower($label) . '-issue-status', $entity);
+            $this->addReference(strtolower(str_replace(' ', '-', $label)) . '-issue-status', $entity);
         }
         $manager->flush();
     }

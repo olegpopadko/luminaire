@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\DataFixtures;
+namespace AppBundle\DataFixtures\Required;
 
 use AppBundle\Entity\Role;
 use Doctrine\Common\DataFixtures\AbstractFixture;
