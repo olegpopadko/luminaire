@@ -103,6 +103,7 @@ class ActivityExtractor
                     $this->manager->getRepository('AppBundle:IssueStatus')->findResolved(),
                 ]
             );
+        return $this;
     }
 
     /**

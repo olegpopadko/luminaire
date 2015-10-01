@@ -10,13 +10,9 @@ class IssueCommentControllerTest extends TestCase
     {
         $operator = $this->logInOperator();
 
-        /** @var \Doctrine\Common\Persistence\ObjectManager $em */
-        $em = $this->get('doctrine')->getManager();
+        $em = $this->getManager();
 
-        /** @var \AppBundle\Entity\Project $project */
-        $project = $em->getRepository('AppBundle:Project')->findOneByCode('TP');
-
-        $crawler = $this->client->request('GET', '/issue/TP-1/comment/new');
+        $crawler = $this->client->request('GET', '/issue/TP-2/comment/new');
         $this->assertTrue($this->client->getResponse()->isSuccessful());
 
         $body = 'Content message';
@@ -28,17 +24,32 @@ class IssueCommentControllerTest extends TestCase
         $this->client->submit($form);
 
         $this->assertTrue($this->client->getResponse()->isRedirect());
-        $this->assertEquals('/issue/TP-1', $this->client->getResponse()->headers->get('Location'));
+        $this->assertEquals('/issue/TP-2', $this->client->getResponse()->headers->get('Location'));
 
         $comments = $em->getRepository('AppBundle:IssueComment')->findBy(['body' => $body]);
 
         $this->assertCount(1, $comments);
         $comment = $comments[0];
         $this->assertEquals($operator->getId(), $comment->getUser()->getId());
-        $issue = $em->getRepository('AppBundle:Issue')->findOneBy(['code' => 1, 'project' => $project]);
+        $issue = $issue = $this->get('app.issue_code_converter')->find('TP-2');
         $this->assertNotNull($issue);
-        $this->assertEquals($issue, $comment->getIssue());
+        $this->assertEquals($issue->getId(), $comment->getIssue()->getId());
         $this->assertNull($comment->getParent());
+
+        $activity = $this->getManager()->getRepository('AppBundle:Activity')->createQueryBuilder('a')
+            ->orderBy('a.id', 'DESC')->getQuery()->setMaxResults(1)->getOneOrNullResult();
+        $this->assertEquals('operator', $activity->getUser()->getUsername());
+        $this->assertEquals([
+            'type'         => 'issue_comment_created',
+            'entity_id'    => $comment->getId(),
+            'entity_class' => get_class($comment),
+        ], $activity->getChanges());
+
+        $this->assertCount(2, $issue->getCollaborators());
+        $operator  = $this->getReference('operator-user');
+        $operator1 = $this->getReference('operator1-user');
+        $this->assertEquals($operator->getId(), $issue->getCollaborators()->last()->getId());
+        $this->assertEquals($operator1->getId(), $issue->getCollaborators()->first()->getId());
 
         $this->client->request('GET', '/comment/' . $comment->getId() . '/edit');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());

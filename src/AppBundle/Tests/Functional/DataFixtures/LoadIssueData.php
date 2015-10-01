@@ -31,7 +31,7 @@ class LoadIssueData extends AbstractFixture implements DependentFixtureInterface
                 'project'        => 'test-operator-project',
                 'assignee'       => 'operator1-user',
                 'reporter'       => 'operator1-user',
-                'status'         => 'open-issue-status',
+                'status'         => 'closed-issue-status',
                 'priority'       => 'major-issue-priority',
                 'type'           => 'task-issue-type',
                 'reference_name' => 'operator1',

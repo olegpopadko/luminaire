@@ -16,9 +16,7 @@ class IssueControllerTest extends TestCase
     {
         $crawler = $this->client->request('GET', '/project/TP/issue/new');
 
-        $container = static::$kernel->getContainer();
-
-        $em = $container->get('doctrine')->getManager();
+        $em = $this->getManager();
 
         $summary     = 'Test manager issue summary';
         $description = 'Test manager issue description';
@@ -55,6 +53,15 @@ class IssueControllerTest extends TestCase
         $this->assertEquals($status, $issue->getStatus());
         $this->assertEquals($priority, $issue->getPriority());
         $this->assertEquals($type, $issue->getType());
+
+        $activity = $this->getManager()->getRepository('AppBundle:Activity')->createQueryBuilder('a')
+            ->orderBy('a.id', 'DESC')->getQuery()->setMaxResults(1)->getOneOrNullResult();
+        $this->assertEquals('operator', $activity->getUser()->getUsername());
+        $this->assertEquals([
+            'type'         => 'issue_created',
+            'entity_id'    => $issue->getId(),
+            'entity_class' => get_class($issue),
+        ], $activity->getChanges());
     }
 
     public function testIssueCreateSubtask()
@@ -136,17 +143,13 @@ class IssueControllerTest extends TestCase
     {
         $crawler = $this->client->request('GET', '/issue/TP-1/edit');
 
-        $container = static::$kernel->getContainer();
-
-        $em = $container->get('doctrine')->getManager();
-
         $summary     = 'Test manager issue summary';
         $description = 'Test manager issue description';
-        $assignee    = $this->getReference('operator-user');
-        $reporter    = $this->getReference('operator-user');
-        $status      = $this->getReference('open-issue-status');
-        $priority    = $this->getReference('major-issue-priority');
-        $type        = $this->getReference('task-issue-type');
+        $assignee    = $this->getReference('operator1-user');
+        $reporter    = $this->getReference('operator1-user');
+        $status      = $this->getReference('closed-issue-status');
+        $priority    = $this->getReference('critical-issue-priority');
+        $type        = $this->getReference('story-issue-type');
 
         $form = $crawler->selectButton('Update')->form([
             'appbundle_issue[summary]'     => $summary,
@@ -163,18 +166,33 @@ class IssueControllerTest extends TestCase
         $this->assertTrue($this->client->getResponse()->isRedirect());
         $this->assertEquals('/issue/TP-1', $this->client->getResponse()->headers->get('Location'));
 
-        $issues = $em->getRepository('AppBundle:Issue')->findByCode(3);
+        $issue = $this->get('app.issue_code_converter')->find('TP-1');
 
-        $this->assertCount(1, $issues);
-        $issue = $issues[0];
         $this->assertEquals($summary, $issue->getSummary());
         $this->assertEquals($description, $issue->getDescription());
         $this->assertEquals('TP', $issue->getProject()->getCode());
-        $this->assertEquals($assignee, $issue->getAssignee());
-        $this->assertEquals($reporter, $issue->getReporter());
-        $this->assertEquals($status, $issue->getStatus());
-        $this->assertEquals($priority, $issue->getPriority());
-        $this->assertEquals($type, $issue->getType());
+        $this->assertEquals($assignee->getId(), $issue->getAssignee()->getId());
+        $this->assertEquals($reporter->getId(), $issue->getReporter()->getId());
+        $this->assertEquals($status->getId(), $issue->getStatus()->getId());
+        $this->assertEquals($priority->getId(), $issue->getPriority()->getId());
+        $this->assertEquals($type->getId(), $issue->getType()->getId());
+        $this->assertCount(2, $issue->getCollaborators());
+        $operator  = $this->getReference('operator-user');
+        $operator1 = $this->getReference('operator1-user');
+        $this->assertEquals($operator->getId(), $issue->getCollaborators()->first()->getId());
+        $this->assertEquals($operator1->getId(), $issue->getCollaborators()->last()->getId());
+
+        $activity = $this->getManager()->getRepository('AppBundle:Activity')->createQueryBuilder('a')
+            ->orderBy('a.id', 'DESC')->getQuery()->setMaxResults(1)->getOneOrNullResult();
+
+        $this->assertEquals('operator', $activity->getUser()->getUsername());
+        $this->assertEquals([
+            'type'         => 'issue_status_changed',
+            'old_status'   => 'Open',
+            'new_status'   => 'Closed',
+            'entity_id'    => $issue->getId(),
+            'entity_class' => get_class($issue),
+        ], $activity->getChanges());
     }
 
     public function testIssueUpdateSubtask()
