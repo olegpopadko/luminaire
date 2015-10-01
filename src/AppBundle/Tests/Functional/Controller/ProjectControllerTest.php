@@ -1,146 +1,182 @@
 <?php
 
-namespace AppBundle\Tests\Functional\Controller;
+namespace AppBundle\Tests\Functional\Controller\Admin;
 
+use AppBundle\Entity\User;
 use AppBundle\Tests\Functional\TestCase;
 
-/**
- * Class ProjectControllerTest
- */
 class ProjectControllerTest extends TestCase
 {
-    /**
-     * @dataProvider urlProvider
-     */
-    public function testPageSuccessful($method, $url)
+    public function setUp()
     {
-        $this->logInAdmin();
-        $this->client->request($method, $url);
-
-        $this->assertTrue($this->client->getResponse()->isSuccessful());
-    }
-
-    /**
-     * @return array
-     */
-    public function urlProvider()
-    {
-        return [
-            ['GET', '/project/'],
-            ['GET', '/project/TP'],
-            ['POST', '/project/'],
-            ['PUT', '/project/TP'],
-            ['GET', '/project/TP/edit'],
-            ['GET', '/project/new'],
-            ['GET', '/project/TPM'],
-            ['PUT', '/project/TPM'],
-            ['GET', '/project/TPM/edit'],
-            ['GET', '/project/TPA'],
-            ['PUT', '/project/TPA'],
-            ['GET', '/project/TPA/edit'],
-        ];
-    }
-
-    /**
-     * @dataProvider urlProviderOperatorRestricted
-     */
-    public function testPageOperatorRestricted($method, $url)
-    {
-        $this->logInOperator();
-        $this->client->request($method, $url);
-
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
-    /**
-     * @return array
-     */
-    public function urlProviderOperatorRestricted()
-    {
-        return [
-            ['POST', '/project/'],
-            ['PUT', '/project/TP'],
-            ['GET', '/project/TP/edit'],
-            ['GET', '/project/new'],
-            ['GET', '/project/TPM'],
-            ['PUT', '/project/TPM'],
-            ['GET', '/project/TPM/edit'],
-            ['GET', '/project/TPA'],
-            ['PUT', '/project/TPA'],
-            ['GET', '/project/TPA/edit'],
-        ];
-    }
-
-    /**
-     * @dataProvider urlProviderOperatorAllowed
-     */
-    public function testPageOperatorAllowed($url)
-    {
-        $this->logInOperator();
-        $this->client->request('GET', $url);
-
-        $this->assertTrue($this->client->getResponse()->isSuccessful());
-    }
-
-    /**
-     * @return array
-     */
-    public function urlProviderOperatorAllowed()
-    {
-        return [
-            ['/project/'],
-            ['/project/TP'],
-        ];
-    }
-
-    /**
-     * @dataProvider urlProviderManagerRestricted
-     */
-    public function testPageManagerRestricted($method, $url)
-    {
+        parent::setUp();
         $this->logInManager();
-        $this->client->request($method, $url);
-
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
-    /**
-     * @return array
-     */
-    public function urlProviderManagerRestricted()
+    public function testProjectCreate()
     {
-        return [
-            ['PUT', '/project/TP'],
-            ['GET', '/project/TP/edit'],
-            ['GET', '/project/TPA'],
-            ['PUT', '/project/TPA'],
-            ['GET', '/project/TPA/edit'],
-        ];
+        $crawler = $this->client->request('GET', '/project/new');
+
+        $container = static::$kernel->getContainer();
+
+        $em = $container->get('doctrine')->getManager();
+
+        $label    = 'New Project';
+        $summary  = 'New Project Summury';
+        $users    = $em->getRepository('AppBundle:User')->findAll();
+        $userIds = array_map(function (User $user) {
+            return $user->getId();
+        }, $users);
+
+        $form = $crawler->selectButton('Create')->form([
+            'appbundle_project[label]'   => $label,
+            'appbundle_project[summary]' => $summary,
+            'appbundle_project[users]'   => $userIds,
+        ]);
+
+        $this->client->submit($form);
+
+        $this->assertTrue($this->client->getResponse()->isRedirect());
+        $this->assertEquals('/project/NP', $this->client->getResponse()->headers->get('Location'));
+
+        $projects = $em->getRepository('AppBundle:Project')->findByCode('NP');
+
+        $this->assertCount(1, $projects);
+        $project = $projects[0];
+        $this->assertEquals($label, $project->getLabel());
+        $this->assertEquals($summary, $project->getSummary());
+        $this->assertEquals($userIds, array_map(function (User $user) {
+            return $user->getId();
+        }, $project->getUsers()->toArray()));
     }
 
-    /**
-     * @dataProvider urlProviderManagerAllowed
-     */
-    public function testPageManagerAllowed($method, $url)
+    public function testProjectCreateLabelIsAlreadyUsed()
     {
-        $this->logInManager();
-        $this->client->request($method, $url);
+        $crawler = $this->client->request('GET', '/project/new');
 
-        $this->assertTrue($this->client->getResponse()->isSuccessful());
+        $form = $crawler->selectButton('Create')->form([
+            'appbundle_project[label]' => 'Test Project Operator',
+        ]);
+
+        $crawler = $this->client->submit($form);
+
+        $this->assertEquals(
+            'This label is already used.',
+            $crawler->filter('small.error')->first()->text()
+        );
     }
 
-    /**
-     * @return array
-     */
-    public function urlProviderManagerAllowed()
+    public function testProjectCreateCodeIsAlreadyUsed()
     {
-        return [
-            ['GET', '/project/'],
-            ['POST', '/project/'],
-            ['GET', '/project/new'],
-            ['GET', '/project/TPM'],
-            ['PUT', '/project/TPM'],
-            ['GET', '/project/TPM/edit'],
-        ];
+        $crawler = $this->client->request('GET', '/project/new');
+
+        $form = $crawler->selectButton('Create')->form([
+            'appbundle_project[label]' => 'Test1 Project1',
+        ]);
+
+        $crawler = $this->client->submit($form);
+
+        $this->assertEquals(
+            'Please select another label.',
+            $crawler->filter('small.error')->first()->text()
+        );
+    }
+
+    public function testProjectCreateErrorField()
+    {
+        $crawler = $this->client->request('GET', '/project/new');
+
+        $form = $crawler->selectButton('Create')->form([
+        ]);
+
+        $crawler = $this->client->submit($form);
+
+        foreach ($crawler->filter('small.error') as $error) {
+            $this->assertEquals('This value should not be blank.', $error->nodeValue);
+        }
+    }
+
+    public function testProjectUpdate()
+    {
+        $crawler = $this->client->request('GET', '/project/TPM/edit');
+
+        $container = static::$kernel->getContainer();
+
+        $em = $container->get('doctrine')->getManager();
+
+        $label    = 'Trusted Platform Module';
+        $summary  = 'New Project Summury Label';
+        $users    = $em->getRepository('AppBundle:User')->findAll();
+        $userIds = array_map(function (User $user) {
+            return $user->getId();
+        }, $users);
+
+        $form = $crawler->selectButton('Update')->form([
+            'appbundle_project[label]'   => $label,
+            'appbundle_project[summary]' => $summary,
+            'appbundle_project[users]'   => $userIds,
+        ]);
+
+        $this->client->submit($form);
+
+        $this->assertTrue($this->client->getResponse()->isRedirect());
+        $this->assertEquals('/project/TPM', $this->client->getResponse()->headers->get('Location'));
+
+        $projects = $em->getRepository('AppBundle:Project')->findByCode('TPM');
+
+        $this->assertCount(1, $projects);
+        $project = $projects[0];
+        $this->assertEquals($label, $project->getLabel());
+        $this->assertEquals($summary, $project->getSummary());
+        $this->assertEquals($userIds, array_map(function (User $user) {
+            return $user->getId();
+        }, $project->getUsers()->toArray()));
+    }
+
+    public function testProjectUpdateLabelIsAlreadyUsed()
+    {
+        $crawler = $this->client->request('GET', '/project/TPM/edit');
+
+        $form = $crawler->selectButton('Update')->form([
+            'appbundle_project[label]' => 'Test Project Operator',
+        ]);
+
+        $crawler = $this->client->submit($form);
+
+        $this->assertEquals(
+            'This label is already used.',
+            $crawler->filter('small.error')->first()->text()
+        );
+    }
+
+    public function testProjectUpdateCodeIsAlreadyUsed()
+    {
+        $crawler = $this->client->request('GET', '/project/TPM/edit');
+
+        $form = $crawler->selectButton('Update')->form([
+            'appbundle_project[label]' => 'Test1 Project1',
+        ]);
+
+        $crawler = $this->client->submit($form);
+
+        $this->assertEquals(
+            'Please select another label.',
+            $crawler->filter('small.error')->first()->text()
+        );
+    }
+
+
+    public function testProjectUpdateErrorField()
+    {
+        $crawler = $this->client->request('GET', '/project/TPM/edit');
+
+        $form = $crawler->selectButton('Update')->form([
+        ]);
+
+        $crawler = $this->client->submit($form);
+
+        foreach ($crawler->filter('small.error') as $error) {
+            $this->assertEquals('This value should not be blank.', $error->nodeValue);
+        }
     }
 }

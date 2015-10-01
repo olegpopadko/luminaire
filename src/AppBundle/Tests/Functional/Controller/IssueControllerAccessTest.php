@@ -5,9 +5,9 @@ namespace AppBundle\Tests\Functional\Controller;
 use AppBundle\Tests\Functional\TestCase;
 
 /**
- * Class IssueControllerTest
+ * Class IssueControllerAccessTest
  */
-class IssueControllerTest extends TestCase
+class IssueControllerAccessTest extends TestCase
 {
     /**
      * @dataProvider urlProvider
