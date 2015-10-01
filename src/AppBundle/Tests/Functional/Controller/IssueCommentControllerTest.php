@@ -10,20 +10,14 @@ class IssueCommentControllerTest extends TestCase
     {
         $operator = $this->logInOperator();
 
-        $this->client->request('GET', '/issue/TP-1/comment/new');
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-
         /** @var \Doctrine\Common\Persistence\ObjectManager $em */
         $em = $this->get('doctrine')->getManager();
 
         /** @var \AppBundle\Entity\Project $project */
         $project = $em->getRepository('AppBundle:Project')->findOneByCode('TP');
-        $project->addUser($operator);
-        $em->persist($project);
-        $em->flush();
 
         $crawler = $this->client->request('GET', '/issue/TP-1/comment/new');
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertTrue($this->client->getResponse()->isSuccessful());
 
         $body = 'Content message';
 

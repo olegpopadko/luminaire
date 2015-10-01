@@ -2,19 +2,21 @@
 
 namespace AppBundle\Tests\Functional;
 
-use AppBundle\Tests\Functional\Controller\DataFixtures\LoadIssueData;
-use AppBundle\Tests\Functional\Controller\DataFixtures\LoadIssuePriorityData;
-use AppBundle\Tests\Functional\Controller\DataFixtures\LoadIssueResolutionData;
-use AppBundle\Tests\Functional\Controller\DataFixtures\LoadIssueStatusData;
-use AppBundle\Tests\Functional\Controller\DataFixtures\LoadIssueTypeData;
-use AppBundle\Tests\Functional\Controller\DataFixtures\LoadProjectData;
-use AppBundle\Tests\Functional\Controller\DataFixtures\LoadRoleData;
+use AppBundle\Tests\Functional\DataFixtures\LoadActivityData;
+use AppBundle\Tests\Functional\DataFixtures\LoadIssueData;
+use AppBundle\Tests\Functional\DataFixtures\LoadIssuePriorityData;
+use AppBundle\Tests\Functional\DataFixtures\LoadIssueResolutionData;
+use AppBundle\Tests\Functional\DataFixtures\LoadIssueStatusData;
+use AppBundle\Tests\Functional\DataFixtures\LoadIssueTypeData;
+use AppBundle\Tests\Functional\DataFixtures\LoadProjectData;
+use AppBundle\Tests\Functional\DataFixtures\LoadRoleData;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Common\DataFixtures\Loader;
-use AppBundle\Tests\Functional\Controller\DataFixtures\LoadUserData;
+use AppBundle\Tests\Functional\DataFixtures\LoadUserData;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
@@ -71,6 +73,7 @@ class TestCase extends WebTestCase
             new LoadIssueStatusData(),
             new LoadIssueTypeData(),
             new LoadIssueData(),
+            new LoadActivityData(),
         ];
     }
 
@@ -157,5 +160,13 @@ class TestCase extends WebTestCase
     protected function get($id)
     {
         return static::$kernel->getContainer()->get($id);
+    }
+
+    /**
+     * @return ObjectManager
+     */
+    protected function getManager()
+    {
+        return $this->get('doctrine')->getManager();
     }
 }

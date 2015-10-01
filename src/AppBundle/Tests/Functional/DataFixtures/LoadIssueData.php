@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Tests\Functional\Controller\DataFixtures;
+namespace AppBundle\Tests\Functional\DataFixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -18,7 +18,7 @@ class LoadIssueData extends AbstractFixture implements DependentFixtureInterface
         $entity->setCode(1);
         $entity->setSummary('Test issue summary');
         $entity->setDescription('Test issue description');
-        $entity->setProject($this->getReference('test-project'));
+        $entity->setProject($this->getReference('test-operator-project'));
         $entity->setAssignee($this->getReference('operator-user'));
         $entity->setReporter($this->getReference('operator-user'));
         $entity->setStatus($this->getReference('open-issue-status'));
@@ -32,8 +32,8 @@ class LoadIssueData extends AbstractFixture implements DependentFixtureInterface
     public function getDependencies()
     {
         return [
-            'AppBundle\Tests\Functional\Controller\DataFixtures\LoadProjectData',
-            'AppBundle\Tests\Functional\Controller\DataFixtures\LoadUserData',
+            'AppBundle\Tests\Functional\DataFixtures\LoadProjectData',
+            'AppBundle\Tests\Functional\DataFixtures\LoadUserData',
         ];
     }
 }

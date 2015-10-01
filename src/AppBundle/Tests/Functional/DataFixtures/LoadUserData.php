@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Tests\Functional\Controller\DataFixtures;
+namespace AppBundle\Tests\Functional\DataFixtures;
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -54,6 +54,6 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, D
 
     public function getDependencies()
     {
-        return ['AppBundle\Tests\Functional\Controller\DataFixtures\LoadRoleData'];
+        return ['AppBundle\Tests\Functional\DataFixtures\LoadRoleData'];
     }
 }
