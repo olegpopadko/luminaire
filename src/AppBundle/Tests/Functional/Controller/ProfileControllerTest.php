@@ -150,7 +150,8 @@ class ProfileControllerTest extends TestCase
 
         $crawler  = $this->client->request('GET', '/profile/' . $operator->getId());
 
-        $this->assertEquals('TP-1 Test issue summary', $crawler->filter('.assigned_issues a')->first()->text());
+        $issueTitle = $crawler->filter('.assigned_issues a')->first()->text();
+        $this->assertEquals('TP-1 Test operator issue summary', $issueTitle);
 
         $this->logInManager();
 

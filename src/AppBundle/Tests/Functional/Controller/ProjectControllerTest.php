@@ -12,10 +12,10 @@ class ProjectControllerTest extends TestCase
     /**
      * @dataProvider urlProvider
      */
-    public function testPageIsSuccessful($url)
+    public function testPageSuccessful($method, $url)
     {
         $this->logInAdmin();
-        $this->client->request('GET', $url);
+        $this->client->request($method, $url);
 
         $this->assertTrue($this->client->getResponse()->isSuccessful());
     }
@@ -26,20 +26,28 @@ class ProjectControllerTest extends TestCase
     public function urlProvider()
     {
         return [
-            ['/project/'],
-            ['/project/TP'],
-            ['/project/TP/edit'],
-            ['/project/new'],
+            ['GET', '/project/'],
+            ['GET', '/project/TP'],
+            ['POST', '/project/'],
+            ['PUT', '/project/TP'],
+            ['GET', '/project/TP/edit'],
+            ['GET', '/project/new'],
+            ['GET', '/project/TPM'],
+            ['PUT', '/project/TPM'],
+            ['GET', '/project/TPM/edit'],
+            ['GET', '/project/TPA'],
+            ['PUT', '/project/TPA'],
+            ['GET', '/project/TPA/edit'],
         ];
     }
 
     /**
      * @dataProvider urlProviderOperatorRestricted
      */
-    public function testPageIsOperatorRestricted($url)
+    public function testPageOperatorRestricted($method, $url)
     {
         $this->logInOperator();
-        $this->client->request('GET', $url);
+        $this->client->request($method, $url);
 
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
@@ -50,21 +58,25 @@ class ProjectControllerTest extends TestCase
     public function urlProviderOperatorRestricted()
     {
         return [
-            ['/project/TP/edit'],
-            ['/project/TPM'],
-            ['/project/TPA'],
-            ['/project/TPM/edit'],
-            ['/project/TPA/edit'],
-            ['/project/new'],
+            ['POST', '/project/'],
+            ['PUT', '/project/TP'],
+            ['GET', '/project/TP/edit'],
+            ['GET', '/project/new'],
+            ['GET', '/project/TPM'],
+            ['PUT', '/project/TPM'],
+            ['GET', '/project/TPM/edit'],
+            ['GET', '/project/TPA'],
+            ['PUT', '/project/TPA'],
+            ['GET', '/project/TPA/edit'],
         ];
     }
 
     /**
      * @dataProvider urlProviderOperatorAllowed
      */
-    public function testPageIsOperatorAllowed($url)
+    public function testPageOperatorAllowed($url)
     {
-        $this->logInAdmin();
+        $this->logInOperator();
         $this->client->request('GET', $url);
 
         $this->assertTrue($this->client->getResponse()->isSuccessful());
@@ -84,10 +96,10 @@ class ProjectControllerTest extends TestCase
     /**
      * @dataProvider urlProviderManagerRestricted
      */
-    public function testPageIsManagerRestricted($url)
+    public function testPageManagerRestricted($method, $url)
     {
-        $this->logInOperator();
-        $this->client->request('GET', $url);
+        $this->logInManager();
+        $this->client->request($method, $url);
 
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
@@ -98,19 +110,21 @@ class ProjectControllerTest extends TestCase
     public function urlProviderManagerRestricted()
     {
         return [
-            ['/project/TP/edit'],
-            ['/project/TPA'],
-            ['/project/TPA/edit'],
+            ['PUT', '/project/TP'],
+            ['GET', '/project/TP/edit'],
+            ['GET', '/project/TPA'],
+            ['PUT', '/project/TPA'],
+            ['GET', '/project/TPA/edit'],
         ];
     }
 
     /**
      * @dataProvider urlProviderManagerAllowed
      */
-    public function testPageIsManagerAllowed($url)
+    public function testPageManagerAllowed($method, $url)
     {
-        $this->logInAdmin();
-        $this->client->request('GET', $url);
+        $this->logInManager();
+        $this->client->request($method, $url);
 
         $this->assertTrue($this->client->getResponse()->isSuccessful());
     }
@@ -121,9 +135,12 @@ class ProjectControllerTest extends TestCase
     public function urlProviderManagerAllowed()
     {
         return [
-            ['/project/TPM'],
-            ['/project/TPM/edit'],
-            ['/project/new'],
+            ['GET', '/project/'],
+            ['POST', '/project/'],
+            ['GET', '/project/new'],
+            ['GET', '/project/TPM'],
+            ['PUT', '/project/TPM'],
+            ['GET', '/project/TPM/edit'],
         ];
     }
 }

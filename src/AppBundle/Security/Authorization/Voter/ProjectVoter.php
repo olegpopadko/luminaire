@@ -38,6 +38,6 @@ class ProjectVoter extends EntityVoter
      */
     protected function isEditGranted($object, User $user)
     {
-        return $user->isAdmin() || $user->isManager();
+        return $user->isAdmin() || ($user->isManager() && $user->hasProject($object));
     }
 }

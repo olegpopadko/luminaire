@@ -14,13 +14,14 @@ class LoadActivityData extends AbstractFixture implements DependentFixtureInterf
      */
     public function load(ObjectManager $manager)
     {
+        $issue = $this->getReference('operator-issue');
         $entity = new Activity();
         $entity->setUser($this->getReference('operator-user'));
-        $entity->setIssue($this->getReference('test-issue'));
+        $entity->setIssue($issue);
         $entity->setChanges([
             'type' => 'issue_created',
-            'entity_id' => $this->getReference('test-issue')->getId(),
-            'entity_class' => get_class($this->getReference('test-issue')),
+            'entity_id' => $issue->getId(),
+            'entity_class' => get_class($issue),
         ]);
         $manager->persist($entity);
         $this->addReference('test-activity', $entity);

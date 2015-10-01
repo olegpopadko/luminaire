@@ -17,7 +17,8 @@ class LoadProjectData extends AbstractFixture implements DependentFixtureInterfa
                 'code'           => 'TP',
                 'summary'        => 'Test Project Operator Summary',
                 'users'          => [
-                    'operator-user'
+                    'operator-user',
+                    'operator1-user',
                 ],
                 'reference_name' => 'test-operator',
             ],
@@ -56,7 +57,7 @@ class LoadProjectData extends AbstractFixture implements DependentFixtureInterfa
                 $entity->addUser($this->getReference($user));
             }
             $manager->persist($entity);
-            $this->addReference($data['reference_name']. '-project', $entity);
+            $this->addReference($data['reference_name'] . '-project', $entity);
         }
         $manager->flush();
     }
