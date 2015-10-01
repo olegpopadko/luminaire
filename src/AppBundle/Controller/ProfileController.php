@@ -106,6 +106,14 @@ class ProfileController extends Controller
         $queryBuilder = $em->getRepository('AppBundle:Issue')->createQueryBuilder('i')
             ->where('i.assignee = :user')
             ->setParameter('user', $entity)
+            ->andWhere('i.status not in  (:statuses)')
+            ->setParameter(
+                'statuses',
+                [
+                    $em->getRepository('AppBundle:IssueStatus')->findClosed(),
+                    $em->getRepository('AppBundle:IssueStatus')->findResolved(),
+                ]
+            )
             ->orderBy('i.updatedAt', 'DESC');
         $this->get('app.security.issue_filter')->apply($queryBuilder);
 

@@ -24,11 +24,19 @@ class DefaultController extends Controller
      */
     private function getCollaboratorsIssues()
     {
-        $em  = $this->getDoctrine()->getManager();
+        $em           = $this->getDoctrine()->getManager();
         $queryBuilder = $em->getRepository('AppBundle:Issue')->createQueryBuilder('i')
             ->innerJoin('i.collaborators', 'c')
             ->where('c = :user')
             ->setParameter('user', $this->getUser())
+            ->andWhere('i.status not in  (:statuses)')
+            ->setParameter(
+                'statuses',
+                [
+                    $em->getRepository('AppBundle:IssueStatus')->findClosed(),
+                    $em->getRepository('AppBundle:IssueStatus')->findResolved(),
+                ]
+            )
             ->orderBy('i.updatedAt', 'DESC');
         $this->get('app.security.issue_filter')->apply($queryBuilder);
 

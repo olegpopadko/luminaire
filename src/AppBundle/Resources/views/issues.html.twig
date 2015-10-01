@@ -3,7 +3,7 @@
         <thead>
         <tr>
             <th>{{ "Summary"|trans }}</th>
-            <th>{{ "Reporter"|trans }}</th>
+            <th>{{ "Status"|trans }}</th>
             <th>{{ "Assignee"|trans }}</th>
             <th>{{ "Created at"|trans }}</th>
         </tr>
@@ -17,7 +17,7 @@
         {% for entity in entities %}
             <tr>
                 <td>{{ macro.issue(entity) }}</td>
-                <td>{{ entity.reporter }}</td>
+                <td>{{ entity.status }}</td>
                 <td>{{ entity.assignee }}</td>
                 <td>{% if entity.createdAt %}{{ entity.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
             </tr>
