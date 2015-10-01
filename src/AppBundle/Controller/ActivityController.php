@@ -45,6 +45,10 @@ class ActivityController extends Controller
             $filter->whereIssue($issue);
         }
 
+        if ($request->get('limit')) {
+            $filter->setMaxResults($request->get('limit'));
+        }
+
         return [
             'entities' => $filter->getResults(),
         ];
