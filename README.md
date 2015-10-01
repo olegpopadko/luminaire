@@ -26,6 +26,24 @@ composer install
 php app/console cache:clear --env prod
 ```
 
+- Update database schema:
+
+```bash  
+php app/console doctrine:schema:update --force
+```
+
+- Load required data:
+
+```bash  
+php app/console doctrine:fixtures:load --fixtures=src/AppBundle/DataFixtures/Required
+```
+
+- *Load sample data (optional):*
+
+```bash  
+php app/console doctrine:fixtures:load --fixtures=src/AppBundle/DataFixtures/Sample
+```
+
 - Dump assets:
 
 ```bash  
@@ -37,6 +55,8 @@ php app/console assetic:dump --env=prod --no-debug
 ```bash
 php app/console swiftmailer:spool:send --env=prod
 ```
+
+Now you can login with admin credentials (Username: **admin**, password: **admin**) 
 
 [1]:  http://symfony.com/doc/current/cookbook/email/spool.html
 [2]:  http://getcomposer.org/
