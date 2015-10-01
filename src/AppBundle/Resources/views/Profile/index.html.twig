@@ -41,7 +41,7 @@
 
         </div>
         <div class="large-6 columns">
-            {{ render(path('activity', {'assignee_id': entity.id})) }}
+            {{ render(path('activity', {'assignee_id': entity.id, 'only_opened': true})) }}
         </div>
     </div>
 {% endblock %}

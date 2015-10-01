@@ -25,17 +25,20 @@ class ActivityExtractor
     private $builder;
 
     /**
-     * @var bool
-     */
-    private $isIssue = false;
-
-    /**
      * @param QueryBuilder $builder
      */
     public function __construct(ObjectManager $manager, ActivityFilter $activityFilter)
     {
         $this->manager = $manager;
-        $this->builder = $manager->getRepository('AppBundle:Activity')->createQueryBuilder('a');
+        $this->init($activityFilter);
+    }
+
+    /**
+     * @param ActivityFilter $activityFilter
+     */
+    private function init(ActivityFilter $activityFilter)
+    {
+        $this->builder = $this->manager->getRepository('AppBundle:Activity')->createQueryBuilder('a');
         $this->builder
             ->select('a', 'i', 'p')
             ->innerJoin('a.issue', 'i')
@@ -90,6 +93,18 @@ class ActivityExtractor
         return $this;
     }
 
+    public function onlyOpenedIssue()
+    {
+        $this->builder->andWhere('i.status not in  (:statuses)')
+            ->setParameter(
+                'statuses',
+                [
+                    $this->manager->getRepository('AppBundle:IssueStatus')->findClosed(),
+                    $this->manager->getRepository('AppBundle:IssueStatus')->findResolved(),
+                ]
+            );
+    }
+
     /**
      * @param $maxResults
      */
@@ -105,16 +120,6 @@ class ActivityExtractor
      */
     public function getResults()
     {
-        if (!$this->isIssue) {
-            $this->builder->andWhere('i.status not in  (:statuses)')
-                ->setParameter(
-                    'statuses',
-                    [
-                        $this->manager->getRepository('AppBundle:IssueStatus')->findClosed(),
-                        $this->manager->getRepository('AppBundle:IssueStatus')->findResolved(),
-                    ]
-                );
-        }
         return $this->builder->getQuery()->execute();
     }
 }

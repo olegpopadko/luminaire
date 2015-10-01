@@ -14,7 +14,9 @@
             <h3>{{ "Collaborator in issues"|trans({}, "issue") }}</h3>
             {% include "AppBundle::issues.html.twig" with {entities: collaborators_issues} %}
         </div>
-        <div class="large-6 columns">{{ render(path('activity', {'member_id': app.user.id, limit: 10})) }}</div>
+        <div class="large-6 columns">
+            {{ render(path('activity', {'member_id': app.user.id, 'only_opened': true, 'limit': 10})) }}
+        </div>
     </div>
 
 {% endblock %}

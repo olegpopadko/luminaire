@@ -45,6 +45,10 @@ class ActivityController extends Controller
             $filter->whereIssue($issue);
         }
 
+        if ($request->get('only_opened')) {
+            $filter->onlyOpenedIssue();
+        }
+
         if ($request->get('limit')) {
             $filter->setMaxResults($request->get('limit'));
         }
