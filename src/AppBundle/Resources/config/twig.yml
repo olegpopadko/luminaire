@@ -1,0 +1,10 @@
+parameters:
+    app_twig_extension_class: AppBundle\Twig\AppExtension
+
+services:
+    app.twig_extension:
+        arguments: [@app.issue_code_converter, @app.templating.comment_tree]
+        class:      %app_twig_extension_class%
+        public:     false
+        tags:
+            - { name: twig.extension }

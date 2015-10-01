@@ -1,0 +1,34 @@
+parameters:
+    user_voter_class: AppBundle\Security\Authorization\Voter\UserVoter
+    project_voter_class: AppBundle\Security\Authorization\Voter\ProjectVoter
+    issue_voter_class: AppBundle\Security\Authorization\Voter\IssueVoter
+    issue_comment_voter_class: AppBundle\Security\Authorization\Voter\IssueCommentVoter
+
+services:
+    security.access.user_voter:
+        arguments: [@security.token_storage, @security.access.role_hierarchy_voter]
+        class:      %user_voter_class%
+        public:     false
+        tags:
+            - { name: security.voter }
+
+    security.access.project_voter:
+        arguments: [@security.token_storage, @security.access.role_hierarchy_voter]
+        class:      %project_voter_class%
+        public:     false
+        tags:
+            - { name: security.voter }
+
+    security.access.issue_voter:
+        arguments: [@security.token_storage, @security.access.role_hierarchy_voter]
+        class:      %issue_voter_class%
+        public:     false
+        tags:
+            - { name: security.voter }
+
+    security.access.issue_comment_voter:
+        arguments: [@security.token_storage, @security.access.role_hierarchy_voter]
+        class:      %issue_comment_voter_class%
+        public:     false
+        tags:
+            - { name: security.voter }

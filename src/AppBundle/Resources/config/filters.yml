@@ -1,0 +1,17 @@
+parameters:
+    project_filter_class: AppBundle\Security\Filter\ProjectFilter
+    issue_filter_class: AppBundle\Security\Filter\IssueFilter
+    activity_filter_class: AppBundle\Security\Filter\ActivityFilter
+
+services:
+    app.security.project_filter:
+        arguments: [@security.token_storage]
+        class:      %project_filter_class%
+
+    app.security.issue_filter:
+        arguments: [@security.token_storage]
+        class:      %issue_filter_class%
+
+    app.security.activity_filter:
+        arguments: [@security.token_storage]
+        class:      %activity_filter_class%
