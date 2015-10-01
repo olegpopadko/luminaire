@@ -3,40 +3,45 @@
 {% block title %}{{ "Profile"|trans({}, "profile") }}{% endblock %}
 
 {% block body -%}
-    <h1>{{ "Profile"|trans({}, "profile") }}</h1>
+    <div class="row">
+        <div class="large-6 columns">
+            <h1>{{ "Profile"|trans({}, "profile") }}</h1>
 
-    <table class="record_properties">
-        <tbody>
-        <tr>
-            <th>{{ "Email"|trans }}</th>
-            <td>{{ entity.email }}</td>
-        </tr>
-        <tr>
-            <th>{{ "Username"|trans }}</th>
-            <td>{{ entity.username }}</td>
-        </tr>
-        <tr>
-            <th>{{ "Full name"|trans }}</th>
-            <td>{{ entity.fullName }}</td>
-        </tr>
-        <tr>
-            <th>{{ "Timezone"|trans }}</th>
-            <td>{{ entity.timezone }}</td>
-        </tr>
-        </tbody>
-    </table>
+            <table class="record_properties">
+                <tbody>
+                <tr>
+                    <th>{{ "Email"|trans }}</th>
+                    <td>{{ entity.email }}</td>
+                </tr>
+                <tr>
+                    <th>{{ "Username"|trans }}</th>
+                    <td>{{ entity.username }}</td>
+                </tr>
+                <tr>
+                    <th>{{ "Full name"|trans }}</th>
+                    <td>{{ entity.fullName }}</td>
+                </tr>
+                <tr>
+                    <th>{{ "Timezone"|trans }}</th>
+                    <td>{{ entity.timezone }}</td>
+                </tr>
+                </tbody>
+            </table>
 
-    {% if is_granted("edit", entity) %}
-        <a href="{{ path('profile_edit', { 'id': entity.id }) }}" class="button">
-            {{ "Edit"|trans }}
-        </a>
-    {% endif %}
+            {% if is_granted("edit", entity) %}
+                <a href="{{ path('profile_edit', { 'id': entity.id }) }}" class="button">
+                    {{ "Edit"|trans }}
+                </a>
+            {% endif %}
 
-    <div class="assigned_issues">
-        <h3>{{ "Assigned issues"|trans({}, "issue") }}</h3>
-        {% include "AppBundle::issues.html.twig" with {entities: assigned_issues} %}
+            <div class="assigned_issues">
+                <h3>{{ "Assigned issues"|trans({}, "issue") }}</h3>
+                {% include "AppBundle::issues.html.twig" with {entities: assigned_issues} %}
+            </div>
+
+        </div>
+        <div class="large-6 columns">
+            {{ render(path('activity', {'assignee_id': entity.id})) }}
+        </div>
     </div>
-
-    {{ render(path('activity', {'assignee_id': entity.id})) }}
-
 {% endblock %}

@@ -3,45 +3,58 @@
 {% block title %}{{ "Project"|trans }}{% endblock %}
 
 {% block body -%}
-    <h3>{{ "Project"|trans }}</h3>
-    <h1>{{ entity }}</h1>
+    <div class="row">
+        <div class="large-12 columns">
+            <h3>{{ "Project"|trans }}</h3>
 
-    <table class="record_properties">
-        <tbody>
-        <tr>
-            <th>{{ "Code"|trans }}</th>
-            <td>{{ entity.code }}</td>
-        </tr>
-        <tr>
-            <th>{{ "Summary"|trans }}</th>
-            <td>{{ entity.summary }}</td>
-        </tr>
-        <tr>
-            <th>{{ "Created at"|trans }}</th>
-            <td>{{ macro.user_date(entity.createdAt) }}</td>
-        </tr>
-        <tr>
-            <th>{{ "Users"|trans }}</th>
-            <td>
-                <ul>
-                    {% for user in entity.users %}
-                        <li>{{ macro.user(user) }}</li>
-                    {% endfor %}
-                </ul>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+            <h1>{{ macro.project(entity) }}</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="large-3 columns">
+            <table class="record_properties">
+                <tbody>
+                <tr>
+                    <th>{{ "Code"|trans }}</th>
+                    <td>{{ entity.code }}</td>
+                </tr>
+                <tr>
+                    <th colspan="2">{{ "Summary"|trans }}</th>
+                </tr>
+                <tr>
+                    <td colspan="2">{{ entity.summary }}</td>
+                </tr>
+                <tr>
+                    <th>{{ "Created at"|trans }}</th>
+                    <td>{{ macro.user_date(entity.createdAt) }}</td>
+                </tr>
+                <tr>
+                    <th>{{ "Users"|trans }}</th>
+                    <td>
+                        <ul>
+                            {% for user in entity.users %}
+                                <li>{{ macro.user(user) }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
 
-    {% if is_granted("edit", entity) %}
-        <a href="{{ path('project_edit', { 'code': entity.code }) }}" class="button">
-            {{ "Edit"|trans }}
-        </a>
-    {% endif %}
+            {% if is_granted("edit", entity) %}
+                <a href="{{ path('project_edit', { 'code': entity.code }) }}" class="button">
+                    {{ "Edit"|trans }}
+                </a>
+            {% endif %}
 
-    <a href="{{ path('project_issues', { 'code': entity.code }) }}" class="button">
-        {{ "Issue list"|trans({}, "issue") }}
-    </a>
+            <a href="{{ path('project_issues', { 'code': entity.code }) }}" class="button">
+                {{ "Issue list"|trans({}, "issue") }}
+            </a>
 
-    {{ render(path('activity', {'project_id': entity.id})) }}
+        </div>
+
+        <div class="large-9 columns">
+            {{ render(path('activity', {'project_id': entity.id})) }}
+        </div>
+    </div>
 {% endblock %}

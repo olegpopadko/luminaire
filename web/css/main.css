@@ -7,3 +7,7 @@
 .records_list {
     width: 100%;
 }
+
+.row {
+    max-width: 100%;
+}

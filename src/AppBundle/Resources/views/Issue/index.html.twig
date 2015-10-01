@@ -3,46 +3,51 @@
 {% block title %}{{ "Issue list"|trans({}, "issue") }}{% endblock %}
 
 {% block body -%}
-    <h1>{{ "Issue list"|trans({}, "issue") }}</h1>
+    <div class="row">
+        <div class="large-3 columns"></div>
+        <div class="large-9 columns">
+            <h1>{{ "Issue list"|trans({}, "issue") }}</h1>
 
-    {% include "AppBundle::find.html.twig" with {find_form: find_form} %}
+            {% include "AppBundle::find.html.twig" with {find_form: find_form} %}
 
-    <table class="records_list">
-        <thead>
-        <tr>
-            <th>{{ "Summary"|trans }}</th>
-            <th>{{ "Reporter"|trans }}</th>
-            <th>{{ "Assignee"|trans }}</th>
-            <th>{{ "Created at"|trans }}</th>
-            <th>{{ "Actions"|trans }}</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% if entities is empty %}
-            <tr>
-                <td colspan="5">{{ "There is no available issues"|trans({}, "issue") }}</td>
-            </tr>
-        {% endif %}
-        {% for entity in entities %}
-            <tr>
-                <td>{{ macro.issue(entity) }}</td>
-                <td>{{ entity.reporter }}</td>
-                <td>{{ entity.assignee }}</td>
-                <td>{% if entity.createdAt %}{{ entity.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>
-                    {% if is_granted("edit", entity) %}
-                        <a href="{{ path('issue_edit', { 'code': issue_code(entity) }) }}"
-                           class="button">{{ "Edit"|trans }}</a>
-                    {% endif %}
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            <table class="records_list">
+                <thead>
+                <tr>
+                    <th>{{ "Summary"|trans }}</th>
+                    <th>{{ "Reporter"|trans }}</th>
+                    <th>{{ "Assignee"|trans }}</th>
+                    <th>{{ "Created at"|trans }}</th>
+                    <th>{{ "Actions"|trans }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if entities is empty %}
+                    <tr>
+                        <td colspan="5">{{ "There is no available issues"|trans({}, "issue") }}</td>
+                    </tr>
+                {% endif %}
+                {% for entity in entities %}
+                    <tr>
+                        <td>{{ macro.issue(entity) }}</td>
+                        <td>{{ entity.reporter }}</td>
+                        <td>{{ entity.assignee }}</td>
+                        <td>{% if entity.createdAt %}{{ entity.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                        <td>
+                            {% if is_granted("edit", entity) %}
+                                <a href="{{ path('issue_edit', { 'code': issue_code(entity) }) }}"
+                                   class="button">{{ "Edit"|trans }}</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
 
-    {% if is_granted("create_issue") %}
-        <a href="{{ path('issue_new', {'code': project.code}) }}" class="button">
-            {{ "Create a new issue"|trans({}, "issue") }}
-        </a>
-    {% endif %}
+            {% if is_granted("create_issue") %}
+                <a href="{{ path('issue_new', {'code': project.code}) }}" class="button">
+                    {{ "Create a new issue"|trans({}, "issue") }}
+                </a>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}

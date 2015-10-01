@@ -3,103 +3,112 @@
 {% block title %}{{ "Issue"|trans }}{% endblock %}
 
 {% block body -%}
-    <h3>{{ "Issue"|trans }}</h3>
-    <h1>{{ macro.issue(entity) }}</h1>
+    <div class="row">
+        <div class="large-6 columns">
+            <h3>{{ "Issue"|trans }}</h3>
 
-    {% if is_granted("edit", entity) %}
-        <a href="{{ path('issue_edit', { 'code': issue_code(entity) }) }}" class="button">
-            {{ "Edit"|trans }}
-        </a>
-    {% endif %}
+            <h1>{{ macro.issue(entity) }}</h1>
 
-    <table class="record_properties">
-        <tbody>
-        <tr>
-            <th>{{ "Code"|trans }}</th>
-            <td>{{ issue_code(entity) }}</td>
-        </tr>
-        <tr>
-            <th>{{ "Summary"|trans }}</th>
-            <td>{{ entity.summary }}</td>
-        </tr>
-        <tr>
-            <th>{{ "Description"|trans }}</th>
-            <td>{{ entity.description }}</td>
-        </tr>
-        <tr>
-            <th>{{ "Status"|trans }}</th>
-            <td>{{ entity.status }}</td>
-        </tr>
-        <tr>
-            <th>{{ "Priority"|trans }}</th>
-            <td>{{ entity.priority }}</td>
-        </tr>
-        <tr>
-            <th>{{ "Resolution"|trans }}</th>
-            <td>{{ entity.resolution }}</td>
-        </tr>
-        <tr>
-            <th>{{ "Type"|trans }}</th>
-            <td>{{ entity.type }}</td>
-        </tr>
-        <tr>
-            <th>{{ "Reporter"|trans }}</th>
-            <td>{{ macro.user(entity.reporter) }}</td>
-        </tr>
-        <tr>
-            <th>{{ "Assignee"|trans }}</th>
-            <td>{% if entity.assignee %}{{ macro.user(entity.assignee) }}{% endif %}</td>
-        </tr>
-        <tr>
-            <th>{{ "Project"|trans }}</th>
-            <td>{{ macro.project(entity.project) }}</td>
-        </tr>
-        {% if entity.parent %}
-            <tr>
-                <th>{{ "Parent"|trans }}</th>
-                <td>{{ macro.issue(entity.parent) }}</td>
-            </tr>
-        {% endif %}
-        {% if entity.children is not empty %}
-            <tr>
-                <th>{{ "Subtasks"|trans }}</th>
-                <td>
-                    <ul>
-                        {% for child in entity.children %}
-                            <li>{{ macro.issue(child) }}</li>
-                        {% endfor %}
-                    </ul>
-                </td>
-            </tr>
-        {% endif %}
-        <tr>
-            <th>{{ "Collaborators"|trans }}</th>
-            <td>
-                <ul>
-                    {% for collaborator in entity.collaborators %}
-                        <li>{{ macro.user(collaborator) }}</li>
-                    {% endfor %}
-                </ul>
-            </td>
-        </tr>
-        <tr>
-            <th>{{ "Created at"|trans }}</th>
-            <td>{{ macro.user_date(entity.createdAt) }}</td>
-        </tr>
-        <tr>
-            <th>{{ "Updated at"|trans }}</th>
-            <td>{{ macro.user_date(entity.updatedAt) }}</td>
-        </tr>
-        </tbody>
-    </table>
+            {% if is_granted("edit", entity) %}
+                <a href="{{ path('issue_edit', { 'code': issue_code(entity) }) }}" class="button">
+                    {{ "Edit"|trans }}
+                </a>
+            {% endif %}
 
-    {{ comments(entity.comments) }}
+            <table class="record_properties issue_properties">
+                <tbody>
+                <tr>
+                    <th>{{ "Code"|trans }}</th>
+                    <td>{{ issue_code(entity) }}</td>
+                </tr>
+                <tr>
+                    <th>{{ "Summary"|trans }}</th>
+                    <td>{{ entity.summary }}</td>
+                </tr>
+                <tr>
+                    <th>{{ "Status"|trans }}</th>
+                    <td>{{ entity.status }}</td>
+                </tr>
+                <tr>
+                    <th colspan="2">{{ "Description"|trans }}</th>
+                </tr>
+                <tr>
+                    <td colspan="2">{{ entity.description }}</td>
+                </tr>
+                <tr>
+                    <th>{{ "Priority"|trans }}</th>
+                    <td>{{ entity.priority }}</td>
+                </tr>
+                <tr>
+                    <th>{{ "Resolution"|trans }}</th>
+                    <td>{{ entity.resolution }}</td>
+                </tr>
+                <tr>
+                    <th>{{ "Type"|trans }}</th>
+                    <td>{{ entity.type }}</td>
+                </tr>
+                <tr>
+                    <th>{{ "Reporter"|trans }}</th>
+                    <td>{{ macro.user(entity.reporter) }}</td>
+                </tr>
+                <tr>
+                    <th>{{ "Assignee"|trans }}</th>
+                    <td>{% if entity.assignee %}{{ macro.user(entity.assignee) }}{% endif %}</td>
+                </tr>
+                <tr>
+                    <th>{{ "Project"|trans }}</th>
+                    <td>{{ macro.project(entity.project) }}</td>
+                </tr>
+                {% if entity.parent %}
+                    <tr>
+                        <th>{{ "Parent"|trans }}</th>
+                        <td>{{ macro.issue(entity.parent) }}</td>
+                    </tr>
+                {% endif %}
+                {% if entity.children is not empty %}
+                    <tr>
+                        <th>{{ "Subtasks"|trans }}</th>
+                        <td>
+                            <ul>
+                                {% for child in entity.children %}
+                                    <li>{{ macro.issue(child) }}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <th>{{ "Collaborators"|trans }}</th>
+                    <td>
+                        <ul>
+                            {% for collaborator in entity.collaborators %}
+                                <li>{{ macro.user(collaborator) }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <th>{{ "Created at"|trans }}</th>
+                    <td>{{ macro.user_date(entity.createdAt) }}</td>
+                </tr>
+                <tr>
+                    <th>{{ "Updated at"|trans }}</th>
+                    <td>{{ macro.user_date(entity.updatedAt) }}</td>
+                </tr>
+                </tbody>
+            </table>
 
-    {{ render(path('activity', {'issue_id': entity.id})) }}
+            <h3>{{ "Comments"|trans }}</h3>
 
-    {% if is_granted("create_issuecomment") %}
-        <a href="{{ path('issue_comment_new', {'code': issue_code(entity)}) }}"
-           class="button tiny">{{ "New Comment"|trans({}, "issue_comment") }}</a>
-    {% endif %}
+            {{ comments(entity.comments) }}
 
+            {% if is_granted("create_issuecomment") %}
+                <a href="{{ path('issue_comment_new', {'code': issue_code(entity)}) }}"
+                   class="button tiny">{{ "New Comment"|trans({}, "issue_comment") }}</a>
+            {% endif %}
+        </div>
+        <div class="large-6 columns">
+            {{ render(path('activity', {'issue_id': entity.id})) }}
+        </div>
+    </div>
 {% endblock %}

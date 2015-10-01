@@ -3,9 +3,18 @@
 {% block title %}{{ "Home"|trans }}{% endblock %}
 
 {% block body -%}
+    <div class="row">
+        <div class="large-12 columns">
+            <h1>{{ "Home"|trans }}</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="large-6 columns">
 
-    {% include "AppBundle::issues.html.twig" with {entities: collaborators_issues} %}
-
-    {{ render(path('activity', {'member_id': app.user.id})) }}
+            <h3>{{ "Collaborator in issues"|trans({}, "issue") }}</h3>
+            {% include "AppBundle::issues.html.twig" with {entities: collaborators_issues} %}
+        </div>
+        <div class="large-6 columns">{{ render(path('activity', {'member_id': app.user.id})) }}</div>
+    </div>
 
 {% endblock %}

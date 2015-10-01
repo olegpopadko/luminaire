@@ -5,7 +5,9 @@
 {% block title %}{{ "Profile edit"|trans }}{% endblock %}
 
 {% block body -%}
-    <h1>{{ "Profile edit"|trans }}</h1>
+    <div class="container">
+        <h1>{{ "Profile edit"|trans }}</h1>
 
-    {{ form(edit_form) }}
+        {{ form(edit_form) }}
+    </div>
 {% endblock %}

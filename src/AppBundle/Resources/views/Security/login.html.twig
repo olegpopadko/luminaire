@@ -3,20 +3,22 @@
 {% block title %}{{ "Login"|trans }}{% endblock %}
 
 {% block body %}
-    <div class="login">
-        {% if error %}
-            <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-        {% endif %}
+    <div class="container">
+        <div class="login">
+            {% if error %}
+                <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
 
-        <form action="{{ path('login_check') }}" method="post">
-            <label for="username">{{ "Username"|trans }}:</label>
-            <input type="text" id="username" name="_username" value="{{ last_username }}"/>
+            <form action="{{ path('login_check') }}" method="post">
+                <label for="username">{{ "Username"|trans }}:</label>
+                <input type="text" id="username" name="_username" value="{{ last_username }}"/>
 
-            <label for="password">{{ "Password"|trans }}:</label>
-            <input type="password" id="password" name="_password"/>
+                <label for="password">{{ "Password"|trans }}:</label>
+                <input type="password" id="password" name="_password"/>
 
-            <button type="submit">{{ "Login"|trans }}</button>
-            <a href="{{ path('sign_up') }}" class="button">{{ "Sign up"|trans() }}</a>
-        </form>
+                <button type="submit">{{ "Login"|trans }}</button>
+                <a href="{{ path('sign_up') }}" class="button">{{ "Sign up"|trans() }}</a>
+            </form>
+        </div>
     </div>
 {% endblock %}

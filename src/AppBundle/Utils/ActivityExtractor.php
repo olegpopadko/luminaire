@@ -42,6 +42,7 @@ class ActivityExtractor
         if (!is_null($issue)) {
             $this->builder->andWhere('i = :issue')->setParameter('issue', $issue);
         }
+        return $this;
     }
 
     /**
@@ -52,6 +53,7 @@ class ActivityExtractor
         if (!is_null($project)) {
             $this->builder->andWhere('p = :project')->setParameter('project', $project);
         }
+        return $this;
     }
 
     /**
@@ -62,6 +64,7 @@ class ActivityExtractor
         if (!is_null($user)) {
             $this->builder->andWhere('i.assignee = :user')->setParameter('user', $user);
         }
+        return $this;
     }
 
     /**
@@ -72,6 +75,7 @@ class ActivityExtractor
         if (!is_null($user)) {
             $this->builder->innerJoin('p.users', 'u')->andWhere('u = :member')->setParameter('member', $user);
         }
+        return $this;
     }
 
     /**
@@ -80,6 +84,8 @@ class ActivityExtractor
     public function setMaxResults($maxResults)
     {
         $this->builder->setMaxResults($maxResults);
+
+        return $this;
     }
 
     /**

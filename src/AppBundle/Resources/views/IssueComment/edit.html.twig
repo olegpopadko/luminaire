@@ -3,11 +3,13 @@
 {% block title %}{{ "Issue comment edit"|trans({}, "issue_comment") }}{% endblock %}
 
 {% block body -%}
-    <h1>{{ "Issue comment edit"|trans({}, "issue_comment") }}</h1>
+    <div class="container">
+        <h1>{{ "Issue comment edit"|trans({}, "issue_comment") }}</h1>
 
-    {{ form_start(edit_form) }}
-    {{ form_errors(edit_form) }}
-    {{ form_errors(edit_form.body) }}
-    {{ form_widget(edit_form.body) }}
-    {{ form_end(edit_form) }}
+        {{ form_start(edit_form) }}
+        {{ form_errors(edit_form) }}
+        {{ form_errors(edit_form.body) }}
+        {{ form_widget(edit_form.body) }}
+        {{ form_end(edit_form) }}
+    </div>
 {% endblock %}
