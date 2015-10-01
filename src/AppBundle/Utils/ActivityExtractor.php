@@ -43,7 +43,8 @@ class ActivityExtractor
             ->select('a', 'i', 'p')
             ->innerJoin('a.issue', 'i')
             ->innerJoin('i.project', 'p')
-            ->orderBy('a.createdAt', 'DESC');
+            ->orderBy('a.createdAt', 'DESC')
+            ->orderBy('a.id', 'DESC');
 
         $activityFilter->apply($this->builder);
     }
