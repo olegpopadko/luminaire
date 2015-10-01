@@ -31,6 +31,8 @@ class TestCase extends WebTestCase
      */
     protected $client;
 
+    private static $referenceRepository;
+
     /**
      *
      */
@@ -55,6 +57,12 @@ class TestCase extends WebTestCase
         $em        = $container->get('doctrine')->getManager();
         $executor  = new ORMExecutor($em, $purger);
         $executor->execute($loader->getFixtures());
+        self::$referenceRepository = $executor->getReferenceRepository();
+    }
+
+    protected function getReference($name)
+    {
+        return self::$referenceRepository->getReference($name);
     }
 
     /**

@@ -91,6 +91,7 @@ class ProjectControllerTest extends TestCase
 
         $crawler = $this->client->submit($form);
 
+        $this->assertCount(2, $crawler->filter('small.error'));
         foreach ($crawler->filter('small.error') as $error) {
             $this->assertEquals('This value should not be blank.', $error->nodeValue);
         }
@@ -171,10 +172,13 @@ class ProjectControllerTest extends TestCase
         $crawler = $this->client->request('GET', '/project/TPM/edit');
 
         $form = $crawler->selectButton('Update')->form([
+            'appbundle_project[label]'   => '',
+            'appbundle_project[summary]' => '',
         ]);
 
         $crawler = $this->client->submit($form);
 
+        $this->assertCount(2, $crawler->filter('small.error'));
         foreach ($crawler->filter('small.error') as $error) {
             $this->assertEquals('This value should not be blank.', $error->nodeValue);
         }
