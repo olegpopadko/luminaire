@@ -15,15 +15,26 @@ use Doctrine\ORM\QueryBuilder;
 class ActivityExtractor
 {
     /**
+     * @var ObjectManager
+     */
+    private $manager;
+
+    /**
      * @var QueryBuilder
      */
     private $builder;
+
+    /**
+     * @var bool
+     */
+    private $isIssue = false;
 
     /**
      * @param QueryBuilder $builder
      */
     public function __construct(ObjectManager $manager, ActivityFilter $activityFilter)
     {
+        $this->manager = $manager;
         $this->builder = $manager->getRepository('AppBundle:Activity')->createQueryBuilder('a');
         $this->builder
             ->select('a', 'i', 'p')
@@ -40,6 +51,7 @@ class ActivityExtractor
     public function whereIssue(Issue $issue)
     {
         if (!is_null($issue)) {
+            $this->isIssue = true;
             $this->builder->andWhere('i = :issue')->setParameter('issue', $issue);
         }
         return $this;
@@ -93,6 +105,16 @@ class ActivityExtractor
      */
     public function getResults()
     {
+        if (!$this->isIssue) {
+            $this->builder->andWhere('i.status not in  (:statuses)')
+                ->setParameter(
+                    'statuses',
+                    [
+                        $this->manager->getRepository('AppBundle:IssueStatus')->findClosed(),
+                        $this->manager->getRepository('AppBundle:IssueStatus')->findResolved(),
+                    ]
+                );
+        }
         return $this->builder->getQuery()->execute();
     }
 }
