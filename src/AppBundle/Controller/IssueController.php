@@ -46,6 +46,48 @@ class IssueController extends Controller
     }
 
     /**
+     * Lists project Issue entities.
+     *
+     * @Route("/issues", name="issue_embedded")
+     * @Method("GET")
+     * @Template()
+     */
+    public function embeddedAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $queryBuilder = $em->getRepository('AppBundle:Issue')->createQueryBuilder('i')
+            ->where('i.status not in  (:statuses)')
+            ->setParameter(
+                'statuses',
+                [
+                    $em->getRepository('AppBundle:IssueStatus')->findClosed(),
+                    $em->getRepository('AppBundle:IssueStatus')->findResolved(),
+                ]
+            )
+            ->orderBy('i.updatedAt', 'DESC');
+
+        if ($request->get('collaborator_id')) {
+            $user = $em->getReference('AppBundle:User', $request->get('collaborator_id'));
+            $queryBuilder->innerJoin('i.collaborators', 'c')
+                ->andWhere('c = :collaborator')
+                ->setParameter('collaborator', $user);
+        }
+
+        if ($request->get('assignee_id')) {
+            $user = $em->getReference('AppBundle:User', $request->get('assignee_id'));
+            $queryBuilder->andWhere('i.assignee = :assignee')
+                ->setParameter('assignee', $user);
+        }
+
+        $this->get('app.security.issue_filter')->apply($queryBuilder);
+
+        return [
+            'entities'  => $queryBuilder->getQuery()->execute(),
+        ];
+    }
+
+    /**
      * Creates a new Issue entity.
      *
      * @Route("/project/{code}/issue", name="issue_create")

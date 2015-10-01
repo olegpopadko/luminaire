@@ -36,7 +36,7 @@
 
             <div class="assigned_issues">
                 <h3>{{ "Assigned issues"|trans({}, "issue") }}</h3>
-                {% include "AppBundle::issues.html.twig" with {entities: assigned_issues} %}
+                {{ render(path('issue_embedded', {'assignee_id': entity.id})) }}
             </div>
 
         </div>
