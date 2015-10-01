@@ -63,7 +63,7 @@ class UserControllerUpdateTest extends TestCase
         $this->client->submit($form);
 
         $this->assertTrue($this->client->getResponse()->isRedirect());
-        $this->assertEquals("/admin/user/{$userId}/edit", $this->client->getResponse()->headers->get('Location'));
+        $this->assertEquals('/admin/user/', $this->client->getResponse()->headers->get('Location'));
 
         $users = $em->getRepository('AppBundle:User')->findBy([
             'email' => $email,
@@ -97,10 +97,7 @@ class UserControllerUpdateTest extends TestCase
         $this->client->submit($form);
 
         $this->assertTrue($this->client->getResponse()->isRedirect());
-        $this->assertEquals(
-            "/admin/user/{$this->getCreatedUser()->getId()}/edit",
-            $this->client->getResponse()->headers->get('Location')
-        );
+        $this->assertEquals('/admin/user/', $this->client->getResponse()->headers->get('Location'));
 
         $this->successLoginCheck('new_second', 'new_second');
     }

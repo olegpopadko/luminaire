@@ -5,6 +5,7 @@ namespace AppBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormTypeInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class UserWithPlainPasswordType extends AbstractType
@@ -40,12 +41,14 @@ class UserWithPlainPasswordType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'AppBundle\Form\Model\UserWithPlainPassword'
+            'data_class'         => 'AppBundle\Form\Model\UserWithPlainPassword',
+            'cascade_validation' => true,
         ]);
     }
+
 
     /**
      * {@inheritdoc}

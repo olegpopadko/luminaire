@@ -79,7 +79,7 @@ class TestCase extends WebTestCase
      * @param array $roles
      * @return \AppBundle\Entity\User
      */
-    private function logIn($username)
+    protected function logIn($username)
     {
         $session = $this->client->getContainer()->get('session');
 

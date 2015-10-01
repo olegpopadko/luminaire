@@ -59,7 +59,7 @@ class UserController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('admin_user_edit', ['id' => $entity->getId()]));
+            return $this->redirect($this->generateUrl('admin_user'));
         }
 
         return [
@@ -83,7 +83,12 @@ class UserController extends Controller
             'validation_groups' => ['User', 'not_blank_password'],
         ]);
 
-        $form->add('submit', 'submit', ['label' => 'Create']);
+        $form->add('password', 'repeated', [
+            'first_name'  => 'password',
+            'second_name' => 'confirm',
+            'type'        => 'password',
+        ])
+            ->add('submit', 'submit', ['label' => 'Create']);
 
         return $form;
     }

@@ -60,23 +60,22 @@ class UserControllerTest extends TestCase
         $fullName = 'New Test User';
         $password = 'new';
         $timezone = 'Asia/Almaty';
+        $role = $em->getRepository('AppBundle:Role')->findManagerRole()->getId();
 
         $form = $crawler->selectButton('Create')->form([
             'appbundle_user[email]'    => $email,
             'appbundle_user[username]' => $username,
             'appbundle_user[fullName]' => $fullName,
-            'appbundle_user[password]' => $password,
+            'appbundle_user[password][password]' => $password,
+            'appbundle_user[password][confirm]' => $password,
             'appbundle_user[timezone]' => $timezone,
-            'appbundle_user[roles][1]' => $em->getRepository('AppBundle:Role')->findManagerRole()->getId(),
+            'appbundle_user[roles][1]' => $role,
         ]);
 
         $this->client->submit($form);
 
         $this->assertTrue($this->client->getResponse()->isRedirect());
-        $this->assertEquals(
-            1,
-            preg_match('/^\/admin\/user\/[0-9]+\/edit/', $this->client->getResponse()->headers->get('Location'))
-        );
+        $this->assertEquals('/admin/user/', $this->client->getResponse()->headers->get('Location'));
 
         $users = $em->getRepository('AppBundle:User')->findBy([
             'email' => $email,

@@ -47,7 +47,7 @@ class ProfileController extends Controller
     {
         return [
             'entity'    => $entity,
-            'edit_form' => $this->createEditForm($entity)->createView(),
+            'edit_form' => $this->createEditForm(new UserWithPlainPassword($entity))->createView(),
         ];
     }
 
