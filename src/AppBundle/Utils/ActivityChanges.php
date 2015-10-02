@@ -79,13 +79,9 @@ class ActivityChanges
      */
     public function getIssueCommentCreatedActivity(IssueComment $issueComment)
     {
-        if (!$user = $this->getCurrentUser()) {
-            return null;
-        }
-
         $entity = new Activity();
         $entity->setIssue($issueComment->getIssue());
-        $entity->setUser($user);
+        $entity->setUser($issueComment->getUser());
         $entity->setChanges([
             'type'         => $this->getIssueCommentCreatedType(),
             'entity_id'    => $issueComment->getId(),

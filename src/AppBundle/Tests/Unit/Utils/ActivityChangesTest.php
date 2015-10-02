@@ -17,7 +17,10 @@ class ActivityChangesTest extends TestCase
 
         $activityChanges = new ActivityChanges($tokenStorage);
 
-        $issue = new Issue();
+        $issue = $this->getMock('AppBundle\Entity\Issue');
+        $issue->expects($this->once())
+            ->method('getId')
+            ->willReturn(1);
 
         $activity = $activityChanges->getIssueCreatedActivity($issue);
 
@@ -26,8 +29,8 @@ class ActivityChangesTest extends TestCase
         $this->assertEquals($user, $activity->getUser());
         $this->assertEquals([
             'type'         => 'issue_created',
-            'entity_id'    => null,
-            'entity_class' => 'AppBundle\Entity\Issue',
+            'entity_id'    => 1,
+            'entity_class' => get_class($issue),
         ], $activity->getChanges());
     }
 
@@ -37,22 +40,31 @@ class ActivityChangesTest extends TestCase
 
         $activityChanges = new ActivityChanges($tokenStorage);
 
-        $issue = new Issue();
-
-        $activity = $activityChanges->getIssueCreatedActivity($issue);
+        $activity = $activityChanges->getIssueCreatedActivity($this->getMock('AppBundle\Entity\Issue'));
 
         $this->assertNull($activity);
     }
 
     public function testGetIssueCommentCreatedActivity()
     {
-        list($tokenStorage, $user) = $this->createTokenStorageMock();
+        $user         = $this->getMock('AppBundle\Entity\User');
+        $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage');
 
         $activityChanges = new ActivityChanges($tokenStorage);
 
-        $issue        = new Issue();
-        $issueComment = new IssueComment();
-        $issueComment->setIssue($issue);
+        $issue        = $this->getMock('AppBundle\Entity\Issue');
+        $issueComment = $this->getMock('AppBundle\Entity\IssueComment');
+        $issueComment->expects($this->once())
+            ->method('getId')
+            ->willReturn(1);
+
+        $issueComment->expects($this->once())
+            ->method('getUser')
+            ->willReturn($user);
+
+        $issueComment->expects($this->once())
+            ->method('getIssue')
+            ->willReturn($issue);
 
         $activity = $activityChanges->getIssueCommentCreatedActivity($issueComment);
 
@@ -61,22 +73,9 @@ class ActivityChangesTest extends TestCase
         $this->assertEquals($user, $activity->getUser());
         $this->assertEquals([
             'type'         => 'issue_comment_created',
-            'entity_id'    => null,
-            'entity_class' => 'AppBundle\Entity\IssueComment',
+            'entity_id'    => 1,
+            'entity_class' => get_class($issueComment),
         ], $activity->getChanges());
-    }
-
-    public function testGetIssueCommentCreatedActivityNull()
-    {
-        $tokenStorage = $this->createNullTokenStorageMock();
-
-        $activityChanges = new ActivityChanges($tokenStorage);
-
-        $issueComment = new IssueComment();
-
-        $activity = $activityChanges->getIssueCommentCreatedActivity($issueComment);
-
-        $this->assertNull($activity);
     }
 
     public function testGetIssueStatusChangedActivity()
@@ -85,11 +84,20 @@ class ActivityChangesTest extends TestCase
 
         $activityChanges = new ActivityChanges($tokenStorage);
 
-        $issue     = new Issue();
-        $oldStatus = new IssueStatus();
-        $oldStatus->setLabel('old');
-        $newStatus = new IssueStatus();
-        $newStatus->setLabel('new');
+        $issue = $this->getMock('AppBundle\Entity\Issue');
+        $issue->expects($this->once())
+            ->method('getId')
+            ->willReturn(10);
+
+        $oldStatus = $this->getMock('AppBundle\Entity\IssueStatus');
+        $oldStatus->expects($this->once())
+            ->method('getLabel')
+            ->willReturn('old');
+
+        $newStatus = $this->getMock('AppBundle\Entity\IssueStatus');
+        $newStatus->expects($this->once())
+            ->method('getLabel')
+            ->willReturn('new');
 
         $activity = $activityChanges->getIssueStatusChangedActivity($issue, $oldStatus, $newStatus);
 
@@ -100,8 +108,8 @@ class ActivityChangesTest extends TestCase
             'type'         => 'issue_status_changed',
             'old_status'   => 'old',
             'new_status'   => 'new',
-            'entity_id'    => null,
-            'entity_class' => 'AppBundle\Entity\Issue',
+            'entity_id'    => 10,
+            'entity_class' => get_class($issue),
         ], $activity->getChanges());
     }
 
@@ -111,9 +119,9 @@ class ActivityChangesTest extends TestCase
 
         $activityChanges = new ActivityChanges($tokenStorage);
 
-        $issue = new Issue();
-        $oldStatus = new IssueStatus();
-        $newStatus = new IssueStatus();
+        $issue     = $this->getMock('AppBundle\Entity\Issue');
+        $oldStatus = $this->getMock('AppBundle\Entity\IssueStatus');
+        $newStatus = $this->getMock('AppBundle\Entity\IssueStatus');
 
         $activity = $activityChanges->getIssueStatusChangedActivity($issue, $oldStatus, $newStatus);
 
@@ -122,7 +130,7 @@ class ActivityChangesTest extends TestCase
 
     private function createTokenStorageMock()
     {
-        $user = new User();
+        $user = $this->getMock('AppBundle\Entity\User');
 
         $token = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $token->expects($this->once())
