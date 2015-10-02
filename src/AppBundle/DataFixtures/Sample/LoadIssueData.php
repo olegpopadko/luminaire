@@ -2,6 +2,7 @@
 
 namespace AppBundle\DataFixtures\Sample;
 
+use AppBundle\Utils\ActivityNotification;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -33,8 +34,11 @@ class LoadIssueData extends AbstractFixture implements DependentFixtureInterface
      */
     public function load(ObjectManager $manager)
     {
+        $this->disableNotificationEvent();
+
         $project = 1;
         $code    = 1;
+        $number  = 1;
         foreach (json_decode(file_get_contents(__DIR__ . '/json/issue.json'), true) as $data) {
             $user  = $this->getReference($data['reporter'] . '-user');
             $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
@@ -57,11 +61,18 @@ class LoadIssueData extends AbstractFixture implements DependentFixtureInterface
             $entity->setType($this->getReference($data['type'] . '-issue-type'));
             $manager->persist($entity);
             $this->generateStatusChanged($data['status'], $entity, $manager);
+            $this->addReference($number . '-issue', $entity);
+            $number++;
             $code++;
         }
         $manager->flush();
     }
 
+    /**
+     * @param $status
+     * @param $entity
+     * @param ObjectManager $manager
+     */
     private function generateStatusChanged($status, $entity, ObjectManager $manager)
     {
         if ($status === 'closed') {
@@ -76,7 +87,30 @@ class LoadIssueData extends AbstractFixture implements DependentFixtureInterface
     }
 
     /**
-     * @return array
+     *
+     */
+    private function disableNotificationEvent()
+    {
+        $eventDispatcher      = $this->container->get('event_dispatcher');
+        $activityNotification = null;
+        $listeners            = $eventDispatcher->getListeners('app.events.activity_created');
+        foreach ($listeners as $wrappedListeners) {
+            foreach ($wrappedListeners as $listener) {
+                if ($listener instanceof ActivityNotification) {
+                    $activityNotification = $listener;
+                    break 2;
+                }
+            }
+        }
+
+        if ($activityNotification) {
+            $callable = [$activityNotification, 'onActivityCreated'];
+            $eventDispatcher->removeListener('app.events.activity_created', $callable);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
      */
     public function getDependencies()
     {

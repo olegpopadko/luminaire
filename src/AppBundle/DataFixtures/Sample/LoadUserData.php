@@ -9,6 +9,9 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use AppBundle\Entity\User;
 
+/**
+ * Class LoadUserData
+ */
 class LoadUserData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
 {
     /**
@@ -51,6 +54,9 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, D
         $manager->flush();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getDependencies()
     {
         return [

@@ -2,26 +2,69 @@
     {
         "label": "sed sapien nunc pulvinar",
         "summary": "Quisque nonummy ipsum non arcu. Vivamus sit amet risus. Donec",
-        "users": "16|6|10|13|4|5"
+        "users": [
+            16,
+            6,
+            10,
+            13,
+            4,
+            5
+        ]
     },
     {
         "label": "est nunc laoreet lectus",
         "summary": "enim nec tempus scelerisque lorem ipsum sodales purus,",
-        "users": "19|5|17|10|20|7|15"
+        "users": [
+            19,
+            5,
+            17,
+            10,
+            20,
+            7,
+            15
+        ]
     },
     {
         "label": "vulputate ullamcorper",
         "summary": "tristique pellentesque tellus sem mollis dui in",
-        "users": "18|3|1|11|9|12|13"
+        "users": [
+            18,
+            3,
+            1,
+            11,
+            9,
+            12,
+            13
+        ]
     },
     {
         "label": "arcu vel quam",
         "summary": "mauris elit dictum eu eleifend nec malesuada ut,",
-        "users": "8|10|17|6|13|14|19|20"
+        "users": [
+            8,
+            10,
+            17,
+            6,
+            13,
+            14,
+            19,
+            20
+        ]
     },
     {
         "label": "odio.",
         "summary": "mauris elit dictum eu|eleifend nec malesuada ut,",
-        "users": "3|2|12|13|1|11|18|9|14|15"
+        "users": [
+            3,
+            2,
+            12,
+            13,
+            1,
+            11,
+            18,
+            9,
+            14,
+            15
+        ]
     }
 ]
