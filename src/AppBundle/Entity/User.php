@@ -10,6 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * User
  *
+ * @SuppressWarnings(PHPMD.TooManyMethods)
+ *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="AppBundle\Entity\UserRepository")
  * @UniqueEntity("email", message="This email is already used.")

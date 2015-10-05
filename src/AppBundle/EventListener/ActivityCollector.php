@@ -24,16 +24,16 @@ class ActivityCollector
     /**
      * @var EventDispatcherInterface
      */
-    private $eventDispatcherInterface;
+    private $eventDispatcher;
 
     /**
      * @param ActivityChanges $activityChanges
-     * @param EventDispatcherInterface $eventDispatcherInterface
+     * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct(ActivityChanges $activityChanges, EventDispatcherInterface $eventDispatcherInterface)
+    public function __construct(ActivityChanges $activityChanges, EventDispatcherInterface $eventDispatcher)
     {
         $this->activityChanges = $activityChanges;
-        $this->eventDispatcherInterface = $eventDispatcherInterface;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -70,7 +70,7 @@ class ActivityCollector
      */
     private function dispatchEvent($activity)
     {
-        $this->eventDispatcherInterface->dispatch('app.events.activity_created', new ActivityEvent($activity));
+        $this->eventDispatcher->dispatch('app.events.activity_created', new ActivityEvent($activity));
     }
 
     /**

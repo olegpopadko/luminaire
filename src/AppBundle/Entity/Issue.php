@@ -10,6 +10,9 @@ use AppBundle\Validator\Constraints as AppAssert;
 /**
  * Issue
  *
+ * @SuppressWarnings(PHPMD.TooManyMethods)
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ *
  * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(columns={
  *      "code", "project_id"
  *  })})

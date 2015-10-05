@@ -19,7 +19,7 @@ class IssueResolvedResolution extends Constraint
     /**
      * @var string
      */
-    public $messageEmptyResolution = 'Resolution must be set for Resolved issue.';
+    public $messageResolution = 'Resolution must be set for Resolved issue.';
 
     /**
      * @return string
