@@ -50,7 +50,7 @@ php app/console doctrine:fixtures:load --fixtures=src/AppBundle/DataFixtures/Sam
 php app/console assetic:dump --env=prod --no-debug
 ```
 
-- Configure crontab by adding next command (istruction for command you can find on [How to Spool Emails][1] page) for sending email:
+- Configure crontab by adding next command (instructions for command you can find on [How to Spool Emails][1] page) for sending email:
 
 ```bash
 php app/console swiftmailer:spool:send --env=prod
