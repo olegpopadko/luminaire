@@ -214,7 +214,9 @@ class Project
      */
     public function addUser(\AppBundle\Entity\User $user)
     {
-        $this->users[] = $user;
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+        }
 
         return $this;
     }

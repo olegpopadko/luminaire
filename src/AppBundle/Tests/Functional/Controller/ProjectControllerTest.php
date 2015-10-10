@@ -22,7 +22,7 @@ class ProjectControllerTest extends TestCase
         $em = $container->get('doctrine')->getManager();
 
         $label    = 'New Project';
-        $summary  = 'New Project Summury';
+        $summary  = 'New Project Summary';
         $users    = $em->getRepository('AppBundle:User')->findAll();
         $userIds = array_map(function (User $user) {
             return $user->getId();
@@ -48,6 +48,39 @@ class ProjectControllerTest extends TestCase
         $this->assertEquals($userIds, array_map(function (User $user) {
             return $user->getId();
         }, $project->getUsers()->toArray()));
+    }
+
+    public function testProjectCreateEmptyUsers()
+    {
+        $manager = $this->logInManager();
+
+        $crawler = $this->client->request('GET', '/project/new');
+
+        $container = static::$kernel->getContainer();
+
+        $em = $container->get('doctrine')->getManager();
+
+        $label    = 'New Project Empty User';
+        $summary  = 'New Project Empty User Summary';
+
+        $form = $crawler->selectButton('Create')->form([
+            'appbundle_project[label]'   => $label,
+            'appbundle_project[summary]' => $summary,
+        ]);
+
+        $this->client->submit($form);
+
+        $this->assertTrue($this->client->getResponse()->isRedirect());
+        $this->assertEquals('/project/NPEU', $this->client->getResponse()->headers->get('Location'));
+
+        $projects = $em->getRepository('AppBundle:Project')->findByCode('NPEU');
+
+        $this->assertCount(1, $projects);
+        $project = $projects[0];
+        $this->assertEquals($label, $project->getLabel());
+        $this->assertEquals($summary, $project->getSummary());
+        $this->assertCount(1, $project->getUsers());
+        $this->assertEquals($manager->getId(), $project->getUsers()->first()->getId());
     }
 
     public function testProjectCreateLabelIsAlreadyUsed()
@@ -106,7 +139,7 @@ class ProjectControllerTest extends TestCase
         $em = $container->get('doctrine')->getManager();
 
         $label    = 'Trusted Platform Module';
-        $summary  = 'New Project Summury Label';
+        $summary  = 'New Project Summary Label';
         $users    = $em->getRepository('AppBundle:User')->findAll();
         $userIds = array_map(function (User $user) {
             return $user->getId();
