@@ -82,6 +82,19 @@ class ActivityExtractorTest extends TestCase
         }
     }
 
+    public function testActivityExtractorWhereUserIsAuthor()
+    {
+        $activityExtractor = $this->get('app.activity_extractor_factory')->create();
+
+        $user    = $this->getReference('operator-user');
+        $results = $activityExtractor->whereUserIsAuthor($user)->getResults();
+        $this->assertNotEmpty($results);
+        $user = $this->getManager()->getRepository('AppBundle:User')->find($user->getId());
+        foreach ($results as $activity) {
+            $this->assertEquals($user->getId(), $activity->getUser()->getId());
+        }
+    }
+
     public function testActivityExtractorOnlyOpenedIssue()
     {
         $activityExtractor = $this->get('app.activity_extractor_factory')->create();

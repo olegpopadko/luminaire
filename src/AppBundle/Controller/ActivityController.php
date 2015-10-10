@@ -45,6 +45,11 @@ class ActivityController extends Controller
             $filter->whereIssue($issue);
         }
 
+        if ($request->get('author_id')) {
+            $user = $em->getReference('AppBundle:User', $request->get('author_id'));
+            $filter->whereUserIsAuthor($user);
+        }
+
         if ($request->get('only_opened')) {
             $filter->onlyOpenedIssue();
         }

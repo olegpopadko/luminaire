@@ -86,6 +86,17 @@ class ActivityExtractor
     /**
      * @param User $user
      */
+    public function whereUserIsAuthor(User $user)
+    {
+        if (!is_null($user)) {
+            $this->builder->andWhere('a.user = :author')->setParameter('author', $user);
+        }
+        return $this;
+    }
+
+    /**
+     * @param User $user
+     */
     public function whereUserIsMember(User $user)
     {
         if (!is_null($user)) {
@@ -94,6 +105,9 @@ class ActivityExtractor
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function onlyOpenedIssue()
     {
         $this->builder->andWhere('i.status not in  (:statuses)')
