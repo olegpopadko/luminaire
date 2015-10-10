@@ -1,0 +1,13 @@
+{% extends '::base.html.twig' %}
+
+{% trans_default_domain "issue" %}
+
+{% block title %}{{ "Issue creation"|trans }}{% endblock %}
+
+{% block body -%}
+    <div class="container">
+        <h1>{{ "Issue creation"|trans }}</h1>
+
+        {{ form(form) }}
+    </div>
+{% endblock %}

@@ -9,7 +9,8 @@
         }
     },
     "require": {
-        "php": ">=5.4",
+        "php": ">=5.5",
+        "ext-mbstring": "*",
         "symfony/symfony": "2.7.*",
         "doctrine/orm": "^2.4.8",
         "doctrine/doctrine-bundle": "~1.4",
@@ -18,23 +19,29 @@
         "symfony/monolog-bundle": "~2.4",
         "sensio/distribution-bundle": "~4.0",
         "sensio/framework-extra-bundle": "^3.0.2",
-        "incenteev/composer-parameter-handler": "~2.0"
-    },
-    "require-dev": {
-        "sensio/generator-bundle": "~2.3"
+        "incenteev/composer-parameter-handler": "~2.0",
+        "florianbelhomme/flob-foundation-bundle": "~2.1.0",
+        "knplabs/knp-menu-bundle": "~2",
+        "knplabs/knp-paginator-bundle": "~2",
+        "phpunit/phpunit": "~4.8",
+        "doctrine/doctrine-fixtures-bundle": "~2.2",
+        "sensio/generator-bundle": "~2.3",
+        "olegpopadko/composer-heroku-database-environment": "dev-master"
     },
     "scripts": {
         "post-root-package-install": [
             "SymfonyStandard\\Composer::hookRootPackageInstall"
         ],
         "post-install-cmd": [
+            "OlegPopadko\\HerokuDatabaseEnvironment\\Composer\\EnvironmentHandler::expand",
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::removeSymfonyStandardFiles",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget",
+            "php app/console assetic:dump --env=prod --no-debug"
         ],
         "post-update-cmd": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
@@ -54,7 +61,14 @@
         "symfony-web-dir": "web",
         "symfony-assets-install": "relative",
         "incenteev-parameters": {
-            "file": "app/config/parameters.yml"
+            "file": "app/config/parameters.yml",
+            "env-map": {
+                "database_host": "DATABASE_HOST",
+                "database_port": "DATABASE_PORT",
+                "database_name": "DATABASE_NAME",
+                "database_user": "DATABASE_USER",
+                "database_password": "DATABASE_PASSWORD"
+            }
         }
     }
 }

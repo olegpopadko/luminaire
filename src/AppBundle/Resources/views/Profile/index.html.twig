@@ -1,0 +1,47 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}{{ "Profile"|trans({}, "profile") }}{% endblock %}
+
+{% block body -%}
+    <div class="row">
+        <div class="large-6 columns">
+            <h1>{{ "Profile"|trans({}, "profile") }}</h1>
+
+            <table class="record_properties">
+                <tbody>
+                <tr>
+                    <th>{{ "Email"|trans }}</th>
+                    <td>{{ entity.email }}</td>
+                </tr>
+                <tr>
+                    <th>{{ "Username"|trans }}</th>
+                    <td>{{ entity.username }}</td>
+                </tr>
+                <tr>
+                    <th>{{ "Full name"|trans }}</th>
+                    <td>{{ entity.fullName }}</td>
+                </tr>
+                <tr>
+                    <th>{{ "Timezone"|trans }}</th>
+                    <td>{{ entity.timezone }}</td>
+                </tr>
+                </tbody>
+            </table>
+
+            {% if is_granted("edit", entity) %}
+                <a href="{{ path('profile_edit', { 'id': entity.id }) }}" class="button">
+                    {{ "Edit"|trans }}
+                </a>
+            {% endif %}
+
+            <div class="assigned_issues">
+                <h3>{{ "Assigned issues"|trans({}, "issue") }}</h3>
+                {{ render(path('issue_embedded', {'assignee_id': entity.id})) }}
+            </div>
+
+        </div>
+        <div class="large-6 columns">
+            {{ render(path('activity', {'author_id': entity.id, 'assignee_id': entity.id, 'only_opened': true})) }}
+        </div>
+    </div>
+{% endblock %}

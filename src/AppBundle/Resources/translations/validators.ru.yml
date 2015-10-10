@@ -1,0 +1,9 @@
+This email is already used.: Этот email уже занят.
+This username is already used.: Этот логин уже занят.
+This label is already used.: Эта метка уже используется.
+Please select another label.: Пожалуйста выберете другую метку.
+Please try again.: Пожалуйста попробуйте еще раз.
+Parent issue can be set only for Subtask issue.: Родительская задача может быть указана только для задачи с типом Subtask.
+Parent issue must be set for Subtask issue.: Для задачи с типом Subtask должна быть указана родительская задача.
+Resolution can be set only for Resolved issue.: Итог может быть установлен только для задачи со статусом Resolved.
+Resolution must be set for Resolved issue.: Для задачи со статусом Resolved должен быть указан Итог.

@@ -1,0 +1,13 @@
+{% extends '::base.html.twig' %}
+
+{% trans_default_domain "project" %}
+
+{% block title %}{{ "Project edit"|trans }}{% endblock %}
+
+{% block body -%}
+    <div class="container">
+        <h1>{{ "Project edit"|trans }}</h1>
+
+        {{ form(edit_form) }}
+    </div>
+{% endblock %}

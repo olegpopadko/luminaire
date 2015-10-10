@@ -1,0 +1,13 @@
+{% extends '::base.html.twig' %}
+
+{% trans_default_domain "profile" %}
+
+{% block title %}{{ "Profile edit"|trans }}{% endblock %}
+
+{% block body -%}
+    <div class="container">
+        <h1>{{ "Profile edit"|trans }}</h1>
+
+        {{ form(edit_form) }}
+    </div>
+{% endblock %}

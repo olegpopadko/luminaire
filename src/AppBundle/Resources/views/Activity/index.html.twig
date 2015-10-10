@@ -1,0 +1,37 @@
+{% import 'AppBundle::macro.html.twig' as macro %}
+<h3>{{ "Activity"|trans }}</h3>
+<div class="activity-list">
+    {% if entities is empty %}
+        {{ "There is no available activity"|trans({}, "activity") }}
+    {% endif %}
+    {% for entity in entities %}
+        <div class="activity">
+            <div class="row">
+                <article class="event">
+                    <div class="event-desc">
+                        <h4 class="event-desc-header">
+                            {{ macro.user(entity.user) }}
+                            {% if entity.changes.type == 'issue_created' %}
+                                {{ "Issue created"|trans({}, 'issue') }}
+                            {% endif %}
+                            {% if entity.changes.type == 'issue_comment_created' %}
+                                {{ "Comment created"|trans({}, 'issue_comment') }}{{ macro.issue_comment(entity.issue, entity.changes.entity_id) }}
+                            {% endif %}
+                            {% if entity.changes.type == 'issue_status_changed' %}
+                                {% trans with {'%old_status%': entity.changes.old_status, '%new_status%': entity.changes.new_status} from "issue" %}
+                                Issue status changed from %old_status% to %new_status%
+                                {% endtrans %}
+                            {% endif %}
+                            {{ macro.issue(entity.issue) }}
+                        </h4>
+
+                        <p class="event-desc-detail">
+                            {{ macro.user_date(entity.createdAt) }}
+                        </p>
+                    </div>
+                </article>
+                <hr>
+            </div>
+        </div>
+    {% endfor %}
+</div>

@@ -1,0 +1,162 @@
+[
+    {
+        "email": "massa.Quisque@Phasellusataugue.edu",
+        "username": "euismod",
+        "full_name": "mauris sagittis placerat.",
+        "password": "secret",
+        "timezone": "Asia/Kathmandu",
+        "role": "manager"
+    },
+    {
+        "email": "arcu.et@in.edu",
+        "username": "placerat,",
+        "full_name": "eget",
+        "password": "secret",
+        "timezone": "Europe/Kiev",
+        "role": "manager"
+    },
+    {
+        "email": "massa.Suspendisse.eleifend@Nullamsuscipitest.org",
+        "username": "turpis.",
+        "full_name": "in",
+        "password": "secret",
+        "timezone": "America/Bahia",
+        "role": "operator"
+    },
+    {
+        "email": "nibh.Aliquam@Nullamnisl.com",
+        "username": "pharetra",
+        "full_name": "mattis velit justo",
+        "password": "secret",
+        "timezone": "America/Bahia",
+        "role": "manager"
+    },
+    {
+        "email": "nunc.sit@aliquetnec.net",
+        "username": "lorem,",
+        "full_name": "risus. Duis",
+        "password": "secret",
+        "timezone": "America/Fortaleza",
+        "role": "operator"
+    },
+    {
+        "email": "Aenean.massa.Integer@magnaSuspendisse.org",
+        "username": "luctus",
+        "full_name": "purus mauris",
+        "password": "secret",
+        "timezone": "America/Fortaleza",
+        "role": "manager"
+    },
+    {
+        "email": "consectetuer.cursus@semeget.ca",
+        "username": "Sed",
+        "full_name": "erat. Etiam",
+        "password": "secret",
+        "timezone": "America/Fortaleza",
+        "role": "operator"
+    },
+    {
+        "email": "dui@Morbi.com",
+        "username": "ultrices,",
+        "full_name": "sit amet risus.",
+        "password": "secret",
+        "timezone": "America/Bahia",
+        "role": "manager"
+    },
+    {
+        "email": "quam@turpis.com",
+        "username": "ante",
+        "full_name": "mi felis,",
+        "password": "secret",
+        "timezone": "Europe/Kiev",
+        "role": "manager"
+    },
+    {
+        "email": "sed.est@magnis.org",
+        "username": "mollis.",
+        "full_name": "erat",
+        "password": "secret",
+        "timezone": "America/Bahia",
+        "role": "manager"
+    },
+    {
+        "email": "luctus.vulputate.nisi@ut.com",
+        "username": "nibh",
+        "full_name": "eget, ipsum. Donec",
+        "password": "secret",
+        "timezone": "Asia/Kathmandu",
+        "role": "manager"
+    },
+    {
+        "email": "vestibulum.massa@arcu.edu",
+        "username": "eu",
+        "full_name": "diam. Pellentesque habitant",
+        "password": "secret",
+        "timezone": "UTC",
+        "role": "manager"
+    },
+    {
+        "email": "commodo@Integersem.org",
+        "username": "Donec",
+        "full_name": "ultrices.",
+        "password": "secret",
+        "timezone": "Asia/Kathmandu",
+        "role": "manager"
+    },
+    {
+        "email": "a.dui@condimentumDonec.com",
+        "username": "augue",
+        "full_name": "adipiscing elit.",
+        "password": "secret",
+        "timezone": "UTC",
+        "role": "manager"
+    },
+    {
+        "email": "mattis.velit.justo@sapien.com",
+        "username": "risus",
+        "full_name": "ut erat. Sed",
+        "password": "secret",
+        "timezone": "UTC",
+        "role": "manager"
+    },
+    {
+        "email": "auctor.odio.a@duilectus.ca",
+        "username": "Mauris",
+        "full_name": "semper.",
+        "password": "secret",
+        "timezone": "Europe/London",
+        "role": "manager"
+    },
+    {
+        "email": "dolor@Cumsociis.ca",
+        "username": "dolor,",
+        "full_name": "dolor. Fusce mi",
+        "password": "secret",
+        "timezone": "Europe/Kiev",
+        "role": "operator"
+    },
+    {
+        "email": "fringilla@acfermentumvel.ca",
+        "username": "nunc.",
+        "full_name": "enim.",
+        "password": "secret",
+        "timezone": "Asia/Kathmandu",
+        "role": "manager"
+    },
+    {
+        "email": "justo.Praesent.luctus@anteVivamus.ca",
+        "username": "iaculis",
+        "full_name": "purus sapien,",
+        "password": "secret",
+        "timezone": "Europe/Kiev",
+        "role": "operator"
+    },
+    {
+        "email": "Integer.vulputate@VivamusrhoncusDonec.edu",
+        "username": "Duis",
+        "full_name": "pede, ultrices",
+        "password": "secret",
+        "timezone": "UTC",
+        "role": "operator"
+    }
+]

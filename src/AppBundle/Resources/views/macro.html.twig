@@ -1,0 +1,19 @@
+{% macro user_date(date) %}
+    {{ date|date('Y-m-d H:i:s', app.user.timezone) }}
+{% endmacro %}
+
+{% macro user(user) %}
+    <a href="{{ path('profile', {'id': user.id}) }}">@{{ user.username }}</a>
+{% endmacro %}
+
+{% macro project(project) %}
+    <a href="{{ path('project_show', {'code': project.code}) }}">{{ project }}</a>
+{% endmacro %}
+
+{% macro issue(issue) %}
+    <a href="{{ path('issue_show', {'code': issue_code(issue)}) }}">{{ issue }}</a>
+{% endmacro %}
+
+{% macro issue_comment(issue, comment_id) %}
+    <a href="{{ path('issue_show', {'code': issue_code(issue)}) }}#comment-{{ comment_id }}">{{ issue_code(issue) }}#comment-{{ comment_id }}</a>
+{% endmacro %}

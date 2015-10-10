@@ -1,0 +1,27 @@
+<div>
+    <div>
+        <a href="{{ url('profile', {'id': entity.user.id}) }}">@{{ entity.user.username }}</a>
+    </div>
+    <div>
+        {% if entity.changes.type == 'issue_created' %}
+            {{ "Issue created"|trans({}, 'issue') }}
+        {% endif %}
+        {% if entity.changes.type == 'issue_comment_created' %}
+            {{ "Comment created"|trans({}, 'issue_comment') }}
+            <a href="{{ url('issue_show', {'code': issue_code(entity.issue)}) }}#comment-{{ entity.changes.entity_id }}">
+                {{ issue_code(entity.issue) }}#comment-{{ entity.changes.entity_id }}
+            </a>
+        {% endif %}
+        {% if entity.changes.type == 'issue_status_changed' %}
+            {% trans with {'%old_status%': entity.changes.old_status, '%new_status%': entity.changes.new_status} from "issue" %}
+            Issue status changed from %old_status% to %new_status%
+            {% endtrans %}
+        {% endif %}
+    </div>
+    <div>
+        <a href="{{ url('issue_show', {'code': issue_code(entity.issue)}) }}">{{ entity.issue }}</a>
+    </div>
+    <div>
+        {{ entity.createdAt|date('Y-m-d H:i:s') }}
+    </div>
+</div>

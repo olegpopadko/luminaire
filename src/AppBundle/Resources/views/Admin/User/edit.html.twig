@@ -1,0 +1,24 @@
+{% extends '::base.html.twig' %}
+
+{% trans_default_domain "user" %}
+
+{% block title %}{{ "User edit"|trans }}{% endblock %}
+
+{% block body -%}
+    <div class="container">
+        <h1>{{ "User edit"|trans }}</h1>
+
+        {{ form_start(edit_form) }}
+        {{ form_row(edit_form.user.email) }}
+        {{ form_row(edit_form.user.username) }}
+        {{ form_row(edit_form.user.fullName) }}
+        {{ form_row(edit_form.plainPassword) }}
+        {{ form_row(edit_form.user.timezone) }}
+        {{ form_row(edit_form.user.roles) }}
+        {{ form_end(edit_form) }}
+
+        <a href="{{ path('admin_user') }}" class="button">
+            {{ "Back to the list"|trans({}, "messages") }}
+        </a>
+    </div>
+{% endblock %}

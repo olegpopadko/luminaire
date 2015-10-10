@@ -1,0 +1,13 @@
+{{ form_start(find_form) }}
+<div class="row">
+    <div class="large-4 columns">
+        {{ form_errors(find_form.q) }}
+        {{ form_widget(find_form.q) }}
+    </div>
+    <div class="large-4 columns">
+        {{ form_row(find_form.submit, {'attr': {'class': 'tiny'}, 'label': 'Find'|trans }) }}
+    </div>
+    <div class="large-4 columns">
+    </div>
+</div>
+{{ form_end(find_form) }}

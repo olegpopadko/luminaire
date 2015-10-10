@@ -1,0 +1,23 @@
+parameters:
+    project_type_class: AppBundle\Form\ProjectType
+    issue_type_class: AppBundle\Form\IssueType
+    entity_hidden_type_class: AppBundle\Form\EntityHiddenType
+
+services:
+    app.form.type.project:
+        arguments: [@app.project_code_converter]
+        class:      %project_type_class%
+        tags:
+            - { name: form.type, alias: appbundle_project }
+
+    app.form.type.issue:
+        arguments: [@app.project_code_generator, @doctrine.orm.entity_manager]
+        class:      %issue_type_class%
+        tags:
+            - { name: form.type, alias: appbundle_issue }
+
+    app.form.type.entity_hidden:
+        arguments: [@doctrine.orm.entity_manager]
+        class:      %entity_hidden_type_class%
+        tags:
+            - { name: form.type, alias: app_entity_hidden }

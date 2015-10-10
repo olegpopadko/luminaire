@@ -1,0 +1,24 @@
+{% extends '::base.html.twig' %}
+
+{% trans_default_domain "user" %}
+
+{% block title %}{{ "User creation"|trans }}{% endblock %}
+
+{% block body -%}
+    <div class="container">
+        <h1>{{ "User creation"|trans }}</h1>
+
+        {{ form_start(form) }}
+        {{ form_row(form.email) }}
+        {{ form_row(form.username) }}
+        {{ form_row(form.fullName) }}
+        {{ form_row(form.password) }}
+        {{ form_row(form.timezone) }}
+        {{ form_row(form.roles) }}
+        {{ form_end(form) }}
+
+        <a href="{{ path('admin_user') }}" class="button">
+            {{ "Back to the list"|trans({}, "messages") }}
+        </a>
+    </div>
+{% endblock %}

@@ -1,0 +1,9 @@
+parameters:
+    activity_collector_class: AppBundle\EventListener\ActivityCollector
+
+services:
+    activity_collector:
+        arguments: [@app.activity_changes, @event_dispatcher]
+        class: %activity_collector_class%
+        tags:
+            - { name: doctrine.orm.entity_listener }

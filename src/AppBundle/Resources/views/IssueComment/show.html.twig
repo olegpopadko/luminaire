@@ -1,0 +1,35 @@
+{% import 'AppBundle::macro.html.twig' as macro %}
+
+<div class="comment" id="comment-{{ entity.id }}">
+    {% for parent in entity.parents %}
+    <div class="{% if entity.parent %}indented{% endif %} comment">
+        {% endfor %}
+        <section class="top">
+            <h6>
+                {{ macro.issue_comment(entity.issue, entity.id) }}{{ macro.user(entity.user) }}
+                <small>
+                <span class="data">
+                    {{ macro.user_date(entity.createdAt) }}
+                </span>
+                </small>
+            </h6>
+        </section>
+
+        <section class="content">
+            <p>{{ entity.body }}</p>
+        </section>
+
+        <section class="actions">
+            <a href="{{ path('issue_comment_new', {'code': issue_code(entity.issue), 'parent_id': entity.id}) }}"
+               class="button tiny">{{ "Reply"|trans }}</a>
+            {% if is_granted("edit", entity) %}
+                <a href="{{ path('issue_comment_edit', {'id': entity.id}) }}"
+                   class="button tiny">{{ "Edit"|trans }}</a>
+            {% endif %}
+        </section>
+
+        {% for parent in entity.parents %}
+    </div>
+    {% endfor %}
+    <hr>
+</div>

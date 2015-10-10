@@ -1,0 +1,46 @@
+{% extends '::base.html.twig' %}
+
+{% trans_default_domain "user" %}
+
+{% block title %}{{ "User list"|trans }}{% endblock %}
+
+{% block body -%}
+    <div class="row">
+        <div class="large-3 columns"></div>
+        <div class="large-9 columns">
+            <h1>{{ "User list"|trans }}</h1>
+
+            <table class="records_list">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Email</th>
+                    <th>{{ "Username"|trans({}, "messages") }}</th>
+                    <th>{{ "Full name"|trans({}, "messages") }}</th>
+                    <th>{{ "Password"|trans({}, "messages") }}</th>
+                    <th>{{ "Actions"|trans({}, "messages") }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for entity in entities %}
+                    <tr>
+                        <td><a href="{{ path('admin_user_edit', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                        <td>{{ entity.email }}</td>
+                        <td>{{ entity.username }}</td>
+                        <td>{{ entity.fullName }}</td>
+                        <td>{{ entity.timezone }}</td>
+                        <td>
+                            <a href="{{ path('admin_user_edit', { 'id': entity.id }) }}"
+                               class="button">{{ "Edit"|trans({}, "messages") }}</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <a href="{{ path('admin_user_new') }}" class="button">
+                {{ "Create new user"|trans }}
+            </a>
+        </div>
+    </div>
+{% endblock %}
